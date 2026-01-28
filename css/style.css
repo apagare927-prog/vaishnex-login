@@ -126,3 +126,22 @@ button.login:hover {
     padding: 22px;
   }
 }
+/* LOGIN BUTTON – CENTER & BIG */
+.login-btn {
+  width: 80%;
+  padding: 16px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: block;
+  margin: 24px auto;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.login-btn:hover {
+  background: #1d4ed8;
+  transform: scale(1.02);
+}
