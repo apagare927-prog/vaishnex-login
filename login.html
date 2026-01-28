@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vaishnex Login</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Vaishnex</h1>
+    <p class="subtitle">Welcome back! Please login to continue</p>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showEmail()">Email</button>
+      <button class="tab" onclick="showMobile()">Mobile</button>
+    </div>
+
+    <!-- EMAIL LOGIN -->
+    <div id="emailBox">
+      <input type="email" placeholder="Enter your email" />
+      <input type="password" placeholder="Enter your password" />
+    </div>
+
+    <!-- MOBILE LOGIN -->
+    <div id="mobileBox" style="display:none;">
+      <select>
+        <option>+91 India</option>
+        <option>+1 USA</option>
+        <option>+44 UK</option>
+      </select>
+      <input type="tel" placeholder="Mobile number" />
+    </div>
+
+    <button class="login-btn">Login</button>
+
+    <div class="links">
+      <a href="#">Create account</a>
+      <a href="#">Forgot password?</a>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>
