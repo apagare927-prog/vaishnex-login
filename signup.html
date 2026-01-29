@@ -1,41 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Account – Vaishnex</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vaishnex Sign Up</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(180deg,#020617,#03122e);
+color:white;
+}
+
+.container{
+width:92%;
+max-width:380px;
+padding:38px;
+border-radius:26px;
+background:rgba(15,23,42,.75);
+backdrop-filter:blur(20px);
+box-shadow:0 35px 90px rgba(0,0,0,.7);
+text-align:center;
+}
+
+.logo{
+font-size:44px;
+font-weight:900;
+margin-bottom:10px;
+color:#60a5fa;
+}
+
+h1{
+margin-bottom:6px;
+}
+
+.subtitle{
+color:#94a3b8;
+margin-bottom:24px;
+}
+
+input{
+width:100%;
+padding:16px;
+border-radius:14px;
+border:none;
+outline:none;
+background:#020617;
+color:white;
+font-size:16px;
+margin-bottom:16px;
+}
+
+button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:14px;
+font-size:18px;
+font-weight:600;
+cursor:pointer;
+
+background:linear-gradient(135deg,#2563eb,#3b82f6);
+color:white;
+}
+
+.login-link{
+margin-top:18px;
+color:#94a3b8;
+font-size:14px;
+}
+
+.login-link span{
+color:#60a5fa;
+font-weight:600;
+cursor:pointer;
+}
+
+</style>
 </head>
+
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <!-- Animated Logo -->
-    <div class="logo">
-      <span class="logo-v">V</span>
-    </div>
+<div class="logo">V</div>
 
-    <h1>Create Account</h1>
-    <p class="subtitle">Join Vaishnex to continue</p>
+<h1>Create Account</h1>
+<p class="subtitle">Join Vaishnex today</p>
 
-    <!-- Signup Form (frontend only) -->
-    <input type="text" placeholder="Full name" />
+<input placeholder="Full name">
+<input placeholder="Email">
+<input placeholder="Password" type="password">
 
-    <input type="email" placeholder="Email address (required)" />
+<button>Create Account</button>
 
-    <input type="tel" placeholder="Mobile number (optional)" />
+<div class="login-link">
+Already have an account?
+<span onclick="location.href='index.html'">
+Login
+</span>
+</div>
 
-    <input type="password" placeholder="Password" />
-
-    <input type="password" placeholder="Confirm password" />
-
-    <button class="login-btn">Create account</button>
-
-    <div class="links">
-      <a href="index.html">Already have an account?</a>
-    </div>
-
-  </div>
+</div>
 
 </body>
 </html>
