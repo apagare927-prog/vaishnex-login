@@ -218,4 +218,23 @@ color:white;
 border:none;
 border-radius:12px;
 padding:14px;
+}/* COUNTRY DROPDOWN FIX */
+
+.iti__country-list{
+background:#020617 !important;
+color:white !important;
+font-size:14px;
+}
+
+.iti__country{
+color:white !important;
+padding:10px !important;
+}
+
+.iti__dial-code{
+color:#94a3b8 !important;
+}
+
+.iti__country-name{
+color:white !important;
 }
