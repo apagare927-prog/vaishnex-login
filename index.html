@@ -52,43 +52,24 @@ display:flex;
 align-items:center;
 justify-content:center;
 
-font-size:52px;
+font-size:54px;
 font-weight:900;
-letter-spacing:3px;
+letter-spacing:4px;
 
+/* circle */
 background:linear-gradient(145deg,#2563eb,#38bdf8);
 
-position:relative;
-overflow:hidden;
+/* stylish text */
+color:transparent;
+background-clip:text;
+-webkit-background-clip:text;
+background-image:linear-gradient(180deg,#fff,#dbeafe,#93c5fd);
 
 box-shadow:
 0 0 70px rgba(37,99,235,.9),
-inset 0 0 20px rgba(255,255,255,.35);
+inset 0 0 25px rgba(255,255,255,.35);
 
 animation:pulse 3s infinite;
-}
-
-/* Shine */
-.logo::after{
-content:"";
-position:absolute;
-width:150%;
-height:150%;
-
-background:linear-gradient(
-120deg,
-transparent,
-rgba(255,255,255,.5),
-transparent
-);
-
-transform:rotate(25deg);
-animation:shine 4s infinite;
-}
-
-@keyframes shine{
-0%{left:-160%;}
-100%{left:160%;}
 }
 
 @keyframes pulse{
@@ -103,7 +84,7 @@ margin-bottom:6px;
 
 .subtitle{
 color:#94a3b8;
-margin-bottom:26px;
+margin-bottom:24px;
 }
 
 /* TOGGLE */
@@ -148,6 +129,18 @@ margin-bottom:20px;
 width:100%;
 }
 
+/* dropdown dark */
+.iti__country-list{
+background:#020617;
+color:white;
+}
+.iti__country{
+color:white;
+}
+.iti__country:hover{
+background:#1e293b;
+}
+
 /* ERROR */
 .input-error{
 border:2px solid #ef4444 !important;
@@ -165,13 +158,23 @@ cursor:pointer;
 
 background:linear-gradient(135deg,#2563eb,#3b82f6);
 color:white;
-
-transition:.25s;
 }
 
-.login-btn:hover{
-transform:translateY(-3px);
-box-shadow:0 15px 40px rgba(37,99,235,.7);
+/* SIGNUP */
+.bottom-text{
+margin-top:18px;
+color:#94a3b8;
+font-size:14px;
+}
+
+.signup-link{
+color:#60a5fa;
+font-weight:600;
+cursor:pointer;
+}
+
+.signup-link:hover{
+color:#93c5fd;
 }
 
 </style>
@@ -186,33 +189,32 @@ box-shadow:0 15px 40px rgba(37,99,235,.7);
 <h1>Vaishnex</h1>
 <p class="subtitle">Welcome to Vaishnex</p>
 
-<!-- Toggle -->
 <div class="toggle">
 <button id="phoneBtn" class="active">Phone</button>
 <button id="emailBtn">Email</button>
 </div>
 
-<!-- Phone -->
 <input id="phone" type="tel" placeholder="Enter mobile number">
-
-<!-- Email -->
-<input id="email"
-type="email"
+<input id="email" type="email"
 placeholder="Enter email"
 style="display:none;">
 
 <button class="login-btn">Continue</button>
 
+<div class="bottom-text">
+Don’t have an account?
+<span class="signup-link"
+onclick="location.href='signup.html'">
+Sign up
+</span>
 </div>
 
-<!-- Country JS -->
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script>
 
 <script>
-
-// COUNTRY SELECTOR
-const phoneInput = document.querySelector("#phone");
+const phoneInput=document.querySelector("#phone");
 
 window.intlTelInput(phoneInput,{
 initialCountry:"in",
@@ -220,8 +222,6 @@ separateDialCode:true,
 preferredCountries:["in","us","gb"]
 });
 
-
-// TOGGLE
 const phoneBtn=document.getElementById("phoneBtn");
 const emailBtn=document.getElementById("emailBtn");
 
@@ -229,57 +229,18 @@ const phone=document.getElementById("phone");
 const email=document.getElementById("email");
 
 phoneBtn.onclick=()=>{
-
 phone.style.display="block";
 email.style.display="none";
-
 phoneBtn.classList.add("active");
 emailBtn.classList.remove("active");
-
 };
 
 emailBtn.onclick=()=>{
-
 phone.style.display="none";
 email.style.display="block";
-
 emailBtn.classList.add("active");
 phoneBtn.classList.remove("active");
-
 };
-
-
-// VALIDATION
-const btn=document.querySelector(".login-btn");
-
-btn.addEventListener("click",()=>{
-
-if(phone.style.display!=="none"){
-
-if(phone.value.trim()===""){
-phone.classList.add("input-error");
-return;
-}
-
-}else{
-
-if(email.value.trim()===""){
-email.classList.add("input-error");
-return;
-}
-
-}
-
-// 👉 connect OTP / backend here
-alert("Ready for authentication!");
-
-});
-
-
-// remove red while typing
-phone.addEventListener("input",()=>phone.classList.remove("input-error"));
-email.addEventListener("input",()=>email.classList.remove("input-error"));
-
 </script>
 
 </body>
