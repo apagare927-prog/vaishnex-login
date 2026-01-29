@@ -5,13 +5,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vaishnex</title>
+<title>Vaishnex Login</title>
 
 <link rel="stylesheet" href="css/style.css">
 
-<!-- Phone Input -->
 <link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css"/>
+href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
 
 </head>
 
@@ -19,148 +18,152 @@ href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.
 
 <div class="container">
 
+<div class="logo">
 <div class="logo-v">V</div>
+</div>
 
 <h1>Vaishnex</h1>
 <p class="subtitle">Welcome to Vaishnex</p>
 
 
 <!-- TOGGLE -->
-<div class="toggle">
-<button id="phoneBtn" class="active">Phone</button>
-<button id="emailBtn">Email</button>
+<div class="tabs">
+<button class="tab active" onclick="showPhone()">Phone</button>
+<button class="tab" onclick="showEmail()">Email</button>
 </div>
 
 
-<!-- PHONE -->
-<input
-id="phone"
-type="tel"
-placeholder="Enter mobile number">
+<form id="loginForm">
+
+<!-- PHONE LOGIN -->
+<div id="phoneBox">
+
+<input id="phone" type="tel" placeholder="Enter mobile number">
+
+</div>
 
 
-<!-- EMAIL -->
-<input
-id="email"
-type="email"
-placeholder="Enter email"
-style="display:none;">
+<!-- EMAIL LOGIN -->
+<div id="emailBox" style="display:none;">
+
+<input type="email" id="email" placeholder="Enter email">
+
+<input type="password" id="password" placeholder="Enter password">
+
+</div>
+
+<button type="submit">Continue</button>
+
+</form>
 
 
-<button class="main-btn" onclick="validateLogin()">
-Continue
-</button>
-
-
-<div class="bottom-text">
+<p class="bottom-text">
 Don't have an account?
-
-<span class="link"
-onclick="location.href='signup.html'">
-Sign up
-</span>
-
-</div>
+<a href="signup.html">Sign up</a>
+</p>
 
 </div>
 
 
 
-<!-- JS LIBRARY -->
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 
 <script>
 
-/* PHONE SELECTOR */
-
-const phoneInput = document.querySelector("#phone");
-
-const iti = window.intlTelInput(phoneInput,{
-initialCountry:"in",
-separateDialCode:true,
-preferredCountries:["in","us","gb"]
-});
-
-
-
-/* TOGGLE SYSTEM */
-
-const phoneBtn=document.getElementById("phoneBtn");
-const emailBtn=document.getElementById("emailBtn");
-
-const phone=document.getElementById("phone");
-const email=document.getElementById("email");
+// COUNTRY SELECTOR
+const phoneInput = window.intlTelInput(
+document.querySelector("#phone"),
+{
+initialCountry:"auto",
+geoIpLookup:function(callback){
+fetch("https://ipapi.co/json")
+.then(res=>res.json())
+.then(data=>callback(data.country_code))
+.catch(()=>callback("us"));
+},
+separateDialCode:true
+}
+);
 
 
-phoneBtn.onclick=()=>{
-phone.style.display="block";
-email.style.display="none";
-phoneBtn.classList.add("active");
-emailBtn.classList.remove("active");
-};
+// TOGGLE
+function showPhone(){
+document.getElementById("phoneBox").style.display="block";
+document.getElementById("emailBox").style.display="none";
 
-emailBtn.onclick=()=>{
-phone.style.display="none";
-email.style.display="block";
-emailBtn.classList.add("active");
-phoneBtn.classList.remove("active");
-};
-
-
-
-/* LIVE ERROR REMOVE */
-
-document.querySelectorAll("input").forEach(input=>{
-
-input.addEventListener("input",()=>{
-
-if(input.value.trim()!==""){
-input.classList.remove("error");
+document.querySelectorAll(".tab")[0].classList.add("active");
+document.querySelectorAll(".tab")[1].classList.remove("active");
 }
 
-});
+function showEmail(){
+document.getElementById("phoneBox").style.display="none";
+document.getElementById("emailBox").style.display="block";
 
-});
-
-
-
-/* VALIDATION */
-
-function validateLogin(){
-
-let valid=true;
-
-/* Check visible field only */
-
-if(phone.style.display!=="none"){
-
-if(phone.value.trim()===""){
-phone.classList.add("error");
-valid=false;
+document.querySelectorAll(".tab")[1].classList.add("active");
+document.querySelectorAll(".tab")[0].classList.remove("active");
 }
 
-}else{
 
-if(email.value.trim()===""){
-email.classList.add("error");
+
+// VALIDATION
+document.getElementById("loginForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+let phone = document.getElementById("phone");
+let email = document.getElementById("email");
+let password = document.getElementById("password");
+
+let emailVisible =
+document.getElementById("emailBox").style.display==="block";
+
+
+// RESET
+[phone,email,password].forEach(field=>{
+if(field) field.style.border="none";
+});
+
+
+let valid = true;
+
+
+// PHONE LOGIN
+if(!emailVisible){
+
+if(!phoneInput.isValidNumber()){
+phone.style.border="2px solid red";
 valid=false;
 }
 
 }
 
 
-/* SUCCESS */
+// EMAIL LOGIN
+else{
+
+if(email.value===""){
+email.style.border="2px solid red";
+valid=false;
+}
+
+if(password.value.length < 6){
+password.style.border="2px solid red";
+valid=false;
+}
+
+}
+
 
 if(valid){
 
 alert("Login Success 🚀");
 
-/* Later → OTP backend connect */
+// Later → connect backend
 
 }
 
-}
+});
 
 </script>
 
