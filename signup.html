@@ -5,9 +5,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sign Up</title>
+<title>Create Account</title>
 
 <link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
 
 </head>
 
@@ -15,59 +18,115 @@
 
 <div class="container">
 
+<div class="logo">
 <div class="logo-v">V</div>
+</div>
 
 <h1>Create Account</h1>
 <p class="subtitle">Join Vaishnex</p>
 
-<input placeholder="Full Name">
-<input type="email" placeholder="Email">
-<input type="password" placeholder="Password">
 
-<button class="main-btn">Create Account</button>
+<form id="signupForm">
 
-<div class="bottom-text">
+<input type="text" id="name" placeholder="Full Name">
+
+<input type="email" id="email" placeholder="Email">
+
+<!-- OPTIONAL PHONE -->
+<input id="phone" type="tel" placeholder="Phone (optional)">
+
+<input type="password" id="password" placeholder="Password">
+
+<input type="password" id="confirm" placeholder="Confirm Password">
+
+<button type="submit">Create Account</button>
+
+</form>
+
+
+<p class="bottom-text">
 Already have an account?
-<span class="link" onclick="location.href='index.html'">
-Login
-</span>
-</div>
+<a href="index.html">Login</a>
+</p>
 
 </div>
 
-</body>
-</html>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+
 <script>
 
-function validateSignup(){
+const phoneInput = window.intlTelInput(
+document.querySelector("#phone"),
+{
+initialCountry:"auto",
+geoIpLookup:function(callback){
+fetch("https://ipwho.is/")
+.then(res=>res.json())
+.then(data=>callback(data.country_code))
+.catch(()=>callback("US"));
+},
+separateDialCode:true,
+preferredCountries:["in","us","gb"],
+utilsScript:"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+}
+);
 
-const inputs=document.querySelectorAll("input");
+
+
+signupForm.addEventListener("submit",function(e){
+
+e.preventDefault();
 
 let valid=true;
 
-inputs.forEach(input=>{
+let fields=[name,email,password,confirm,phone];
 
-if(input.value.trim()===""){
+fields.forEach(f=>f.style.border="none");
 
-input.classList.add("error");
+
+// REQUIRED
+if(name.value===""){
+name.style.border="2px solid red";
 valid=false;
+}
 
-}else{
+if(email.value===""){
+email.style.border="2px solid red";
+valid=false;
+}
 
-input.classList.remove("error");
+if(password.value.length < 6){
+password.style.border="2px solid red";
+valid=false;
+}
 
+
+// CONFIRM PASSWORD
+if(password.value!==confirm.value){
+password.style.border="2px solid red";
+confirm.style.border="2px solid red";
+valid=false;
+}
+
+
+// OPTIONAL PHONE
+if(phone.value.trim()!==""){
+if(!phoneInput.isValidNumber()){
+phone.style.border="2px solid red";
+valid=false;
+}
+}
+
+
+if(valid){
+alert("Account Created 🚀");
 }
 
 });
 
-if(valid){
-
-alert("Signup success ✅");
-
-/* Later yaha backend call hoga */
-
-}
-
-}
-
 </script>
+
+</body>
+</html>
