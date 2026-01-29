@@ -173,4 +173,13 @@ background:#1e293b !important;
 /* SELECTED */
 .iti__country.iti__highlight{
 background:#2563eb !important;
+}/* ERROR STATE */
+
+input.error{
+border:2px solid #ef4444;
+}
+
+/* Optional glow (premium feel) */
+input.error:focus{
+box-shadow:0 0 10px rgba(239,68,68,.4);
 }
