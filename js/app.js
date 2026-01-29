@@ -1,38 +1,18 @@
-<script>
+const phoneInput = window.intlTelInput(
+document.querySelector("#phone"),
+{
+initialCountry:"auto",
 
-const inputs=document.querySelectorAll("input");
+geoIpLookup: function(callback) {
+fetch('https://ipwho.is/')
+.then(res => res.json())
+.then(data => callback(data.country_code))
+.catch(() => callback("US"));
+},
 
-inputs.forEach(input=>{
-
-input.addEventListener("input",()=>{
-
-if(input.value.trim()!==""){
-input.classList.remove("error");
-}
-
-});
-
-});
-
-function validateSignup(){
-
-let valid=true;
-
-inputs.forEach(input=>{
-
-if(input.value.trim()===""){
-
-input.classList.add("error");
-valid=false;
-
-}
+separateDialCode:true,
+preferredCountries:["in","us","gb"],
+utilsScript:
+"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
 
 });
-
-if(valid){
-alert("Signup success ✅");
-}
-
-}
-
-</script>
