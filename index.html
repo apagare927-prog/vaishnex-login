@@ -7,39 +7,66 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="container">
+
+  <div class="page">
+    <div class="logo">
+      <span class="v">V</span>
+    </div>
+
     <h1>Vaishnex</h1>
     <p class="subtitle">Welcome back! Please login to continue</p>
 
-    <div class="tabs">
-      <button class="tab active" onclick="showEmail()">Email</button>
-      <button class="tab" onclick="showMobile()">Mobile</button>
-    </div>
+    <div class="card">
 
-    <!-- EMAIL LOGIN -->
-    <div id="emailBox">
-      <input type="email" placeholder="Enter your email" />
-      <input type="password" placeholder="Enter your password" />
-    </div>
+      <div class="tabs">
+        <button class="tab active" onclick="showEmail()">Email</button>
+        <button class="tab" onclick="showMobile()">Mobile</button>
+      </div>
 
-    <!-- MOBILE LOGIN -->
-    <div id="mobileBox" style="display:none;">
-      <select>
-        <option>+91 India</option>
-        <option>+1 USA</option>
-        <option>+44 UK</option>
-      </select>
-      <input type="tel" placeholder="Mobile number" />
-    </div>
+      <!-- EMAIL LOGIN -->
+      <div id="emailBox">
+        <input type="email" placeholder="Enter your email">
+        <input type="password" placeholder="Enter your password">
+      </div>
 
-    <button class="login-btn">Login</button>
+      <!-- MOBILE LOGIN -->
+      <div id="mobileBox" style="display:none;">
+        <div class="mobile-row">
+          <select>
+            <option>+91</option>
+            <option>+1</option>
+            <option>+44</option>
+          </select>
+          <input type="tel" placeholder="Mobile number">
+        </div>
+        <input type="password" placeholder="Enter your password">
+      </div>
 
-    <div class="links">
-      <a href="#">Create account</a>
-      <a href="#">Forgot password?</a>
+      <button class="login-btn">Login</button>
+
+      <div class="links">
+        <a href="signup.html">Create account</a>
+        <a href="#">Forgot password?</a>
+      </div>
+
     </div>
   </div>
 
-  <script src="js/auth.js"></script>
+<script>
+  function showEmail(){
+    document.getElementById("emailBox").style.display="block";
+    document.getElementById("mobileBox").style.display="none";
+    document.querySelectorAll(".tab")[0].classList.add("active");
+    document.querySelectorAll(".tab")[1].classList.remove("active");
+  }
+
+  function showMobile(){
+    document.getElementById("emailBox").style.display="none";
+    document.getElementById("mobileBox").style.display="block";
+    document.querySelectorAll(".tab")[1].classList.add("active");
+    document.querySelectorAll(".tab")[0].classList.remove("active");
+  }
+</script>
+
 </body>
 </html>
