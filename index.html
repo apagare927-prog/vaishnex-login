@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vaishnex</title>
 
 <link rel="stylesheet" href="css/style.css">
 
+<!-- Phone Country Selector -->
 <link rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css"/>
-
-<title>Vaishnex</title>
 
 </head>
 
@@ -17,38 +20,67 @@ href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.
 
 <div class="container">
 
+<!-- LOGO -->
 <div class="logo-v">V</div>
 
 <h1>Vaishnex</h1>
 <p class="subtitle">Welcome to Vaishnex</p>
 
+
+<!-- TOGGLE -->
 <div class="toggle">
-<button id="phoneBtn" class="active">Phone</button>
-<button id="emailBtn">Email</button>
+
+<button id="phoneBtn" class="active">
+Phone
+</button>
+
+<button id="emailBtn">
+Email
+</button>
+
 </div>
 
-<input id="phone" type="tel" placeholder="Enter mobile number">
 
-<input id="email"
+<!-- PHONE -->
+<input
+id="phone"
+type="tel"
+placeholder="Enter mobile number">
+
+
+<!-- EMAIL -->
+<input
+id="email"
 type="email"
 placeholder="Enter email"
 style="display:none;">
 
-<button class="main-btn">Continue</button>
+
+<button class="main-btn">
+Continue
+</button>
+
 
 <div class="bottom-text">
-Don’t have an account?
+Don't have an account?
+
 <span class="link"
 onclick="location.href='signup.html'">
 Sign up
 </span>
-</div>
 
 </div>
 
+</div>
+
+
+
+<!-- JS LIBRARY -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
 
+<!-- YOUR JS -->
 <script src="js/app.js"></script>
+
 
 </body>
 </html>
