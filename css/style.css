@@ -145,4 +145,32 @@ font-size:14px;
 color:#60a5fa;
 font-weight:600;
 cursor:pointer;
+}/* ✅ FINAL COUNTRY DROPDOWN FIX */
+
+.iti__country-list{
+background-color:#020617 !important;
+color:white !important;
+border-radius:12px;
+border:1px solid rgba(255,255,255,0.08);
+}
+
+/* COUNTRY NAME */
+.iti__country-name{
+color:white !important;
+font-size:14px;
+}
+
+/* DIAL CODE */
+.iti__dial-code{
+color:#94a3b8 !important;
+}
+
+/* HOVER */
+.iti__country:hover{
+background:#1e293b !important;
+}
+
+/* SELECTED */
+.iti__country.iti__highlight{
+background:#2563eb !important;
 }
