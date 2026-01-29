@@ -1,4 +1,19 @@
-<!DOCTYPE html>
+<script>
+fetch("https://ipapi.co/json/")
+.then(res => res.json())
+.then(data => {
+
+let countryCode = data.country_code; // IN, US, GB etc
+
+const input = document.querySelector("#phone");
+
+const iti = window.intlTelInput(input, {
+initialCountry: countryCode.toLowerCase(),
+separateDialCode:true
+});
+
+});
+</script><!DOCTYPE html>
 <html lang="en">
 <head>
 
