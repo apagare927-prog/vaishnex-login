@@ -37,3 +37,37 @@ Login
 
 </body>
 </html>
+<script>
+
+function validateSignup(){
+
+const inputs=document.querySelectorAll("input");
+
+let valid=true;
+
+inputs.forEach(input=>{
+
+if(input.value.trim()===""){
+
+input.classList.add("error");
+valid=false;
+
+}else{
+
+input.classList.remove("error");
+
+}
+
+});
+
+if(valid){
+
+alert("Signup success ✅");
+
+/* Later yaha backend call hoga */
+
+}
+
+}
+
+</script>
