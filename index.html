@@ -9,6 +9,7 @@
 
 <link rel="stylesheet" href="css/style.css">
 
+<!-- Phone Input -->
 <link rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css"/>
 
@@ -23,32 +24,145 @@ href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.
 <h1>Vaishnex</h1>
 <p class="subtitle">Welcome to Vaishnex</p>
 
+
+<!-- TOGGLE -->
 <div class="toggle">
 <button id="phoneBtn" class="active">Phone</button>
 <button id="emailBtn">Email</button>
 </div>
 
-<input id="phone" type="tel" placeholder="Enter mobile number">
 
-<input id="email"
+<!-- PHONE -->
+<input
+id="phone"
+type="tel"
+placeholder="Enter mobile number">
+
+
+<!-- EMAIL -->
+<input
+id="email"
 type="email"
 placeholder="Enter email"
 style="display:none;">
 
-<button class="main-btn">Continue</button>
+
+<button class="main-btn" onclick="validateLogin()">
+Continue
+</button>
+
 
 <div class="bottom-text">
 Don't have an account?
-<span class="link" onclick="location.href='signup.html'">
+
+<span class="link"
+onclick="location.href='signup.html'">
 Sign up
 </span>
-</div>
 
 </div>
 
+</div>
+
+
+
+<!-- JS LIBRARY -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
 
-<script src="js/app.js"></script>
+
+<script>
+
+/* PHONE SELECTOR */
+
+const phoneInput = document.querySelector("#phone");
+
+const iti = window.intlTelInput(phoneInput,{
+initialCountry:"in",
+separateDialCode:true,
+preferredCountries:["in","us","gb"]
+});
+
+
+
+/* TOGGLE SYSTEM */
+
+const phoneBtn=document.getElementById("phoneBtn");
+const emailBtn=document.getElementById("emailBtn");
+
+const phone=document.getElementById("phone");
+const email=document.getElementById("email");
+
+
+phoneBtn.onclick=()=>{
+phone.style.display="block";
+email.style.display="none";
+phoneBtn.classList.add("active");
+emailBtn.classList.remove("active");
+};
+
+emailBtn.onclick=()=>{
+phone.style.display="none";
+email.style.display="block";
+emailBtn.classList.add("active");
+phoneBtn.classList.remove("active");
+};
+
+
+
+/* LIVE ERROR REMOVE */
+
+document.querySelectorAll("input").forEach(input=>{
+
+input.addEventListener("input",()=>{
+
+if(input.value.trim()!==""){
+input.classList.remove("error");
+}
+
+});
+
+});
+
+
+
+/* VALIDATION */
+
+function validateLogin(){
+
+let valid=true;
+
+/* Check visible field only */
+
+if(phone.style.display!=="none"){
+
+if(phone.value.trim()===""){
+phone.classList.add("error");
+valid=false;
+}
+
+}else{
+
+if(email.value.trim()===""){
+email.classList.add("error");
+valid=false;
+}
+
+}
+
+
+/* SUCCESS */
+
+if(valid){
+
+alert("Login Success 🚀");
+
+/* Later → OTP backend connect */
+
+}
+
+}
+
+</script>
 
 </body>
 </html>
