@@ -1,31 +1,38 @@
-const phoneInput=document.querySelector("#phone");
+<script>
 
-if(phoneInput){
+const inputs=document.querySelectorAll("input");
 
-window.intlTelInput(phoneInput,{
-initialCountry:"in",
-separateDialCode:true,
-preferredCountries:["in","us","gb"]
+inputs.forEach(input=>{
+
+input.addEventListener("input",()=>{
+
+if(input.value.trim()!==""){
+input.classList.remove("error");
+}
+
 });
 
-const phoneBtn=document.getElementById("phoneBtn");
-const emailBtn=document.getElementById("emailBtn");
+});
 
-const phone=document.getElementById("phone");
-const email=document.getElementById("email");
+function validateSignup(){
 
-phoneBtn.onclick=()=>{
-phone.style.display="block";
-email.style.display="none";
-phoneBtn.classList.add("active");
-emailBtn.classList.remove("active");
-};
+let valid=true;
 
-emailBtn.onclick=()=>{
-phone.style.display="none";
-email.style.display="block";
-emailBtn.classList.add("active");
-phoneBtn.classList.remove("active");
-};
+inputs.forEach(input=>{
+
+if(input.value.trim()===""){
+
+input.classList.add("error");
+valid=false;
 
 }
+
+});
+
+if(valid){
+alert("Signup success ✅");
+}
+
+}
+
+</script>
