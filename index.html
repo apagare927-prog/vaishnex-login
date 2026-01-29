@@ -1,89 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vaishnex Login</title>
-  <link rel="stylesheet" href="css/style.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vaishnex Login</title>
+
+<!-- Country Selector CSS -->
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css"/>
+
+<style>
+
+/* GLOBAL */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(180deg,#020617,#03122e);
+color:white;
+}
+
+/* CARD */
+.container{
+width:92%;
+max-width:380px;
+padding:38px;
+border-radius:26px;
+background:rgba(15,23,42,.75);
+backdrop-filter:blur(20px);
+box-shadow:0 35px 90px rgba(0,0,0,.7);
+text-align:center;
+}
+
+/* 🔥 Animated Circle Logo */
+.logo{
+width:95px;
+height:95px;
+margin:auto;
+margin-bottom:20px;
+border-radius:50%;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:48px;
+font-weight:800;
+letter-spacing:2px;
+
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+
+box-shadow:0 0 40px rgba(37,99,235,.8);
+
+animation:pulse 2.6s infinite;
+}
+
+@keyframes pulse{
+0%{
+transform:scale(1);
+box-shadow:0 0 40px rgba(37,99,235,.8);
+}
+50%{
+transform:scale(1.09);
+box-shadow:0 0 70px rgba(56,189,248,1);
+}
+100%{
+transform:scale(1);
+box-shadow:0 0 40px rgba(37,99,235,.8);
+}
+}
+
+/* TEXT */
+h1{
+font-size:32px;
+margin-bottom:6px;
+}
+
+.subtitle{
+color:#94a3b8;
+margin-bottom:30px;
+}
+
+/* PHONE */
+#phone{
+width:100%;
+padding:16px;
+border-radius:14px;
+border:none;
+outline:none;
+background:#020617;
+color:white;
+font-size:16px;
+margin-bottom:22px;
+}
+
+.iti{
+width:100%;
+}
+
+/* ERROR */
+.input-error{
+border:2px solid #ef4444 !important;
+}
+
+/* BUTTON */
+.login-btn{
+width:100%;
+padding:16px;
+border:none;
+border-radius:14px;
+font-size:18px;
+font-weight:600;
+cursor:pointer;
+
+background:linear-gradient(135deg,#2563eb,#3b82f6);
+color:white;
+
+transition:.25s;
+}
+
+.login-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 15px 40px rgba(37,99,235,.7);
+}
+
+</style>
+
 </head>
+
 <body>
 
 <div class="container">
 
-  <!-- ANIMATED LOGO -->
-  <div class="logo">
-    <div class="logo-v">V</div>
-  </div>
+<div class="logo">V</div>
 
-  <h1>Vaishnex</h1>
-  <p class="subtitle">Welcome back! Please login to continue</p>
+<h1>Vaishnex</h1>
+<p class="subtitle">Login to continue</p>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab active" onclick="showEmail()">Email</button>
-    <button class="tab" onclick="showMobile()">Mobile</button>
-  </div>
+<input id="phone" type="tel" placeholder="Enter mobile number">
 
-  <!-- EMAIL LOGIN -->
-  <div id="emailBox">
-    <input type="email" placeholder="Enter your email">
-    <input type="password" placeholder="Enter your password">
-  </div>
-
-  <!-- MOBILE LOGIN -->
-  <div id="mobileBox" style="display:none;">
-    <div class="mobile-row">
-      <select id="countryCode"></select>
-      <input type="tel" placeholder="Mobile number">
-    </div>
-  </div>
-
-  <!-- LOGIN BUTTON -->
-  <button class="login-btn">Login</button>
-
-  <!-- LINKS -->
-  <div class="links">
-    <a href="signup.html">Create account</a>
-    <a href="#">Forgot password?</a>
-  </div>
+<button class="login-btn">Continue</button>
 
 </div>
 
-<!-- JS -->
+
+<!-- Country Selector JS -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script>
+
 <script>
-function showEmail() {
-  document.getElementById("emailBox").style.display = "block";
-  document.getElementById("mobileBox").style.display = "none";
-  document.querySelectorAll(".tab")[0].classList.add("active");
-  document.querySelectorAll(".tab")[1].classList.remove("active");
-}
 
-function showMobile() {
-  document.getElementById("emailBox").style.display = "none";
-  document.getElementById("mobileBox").style.display = "block";
-  document.querySelectorAll(".tab")[1].classList.add("active");
-  document.querySelectorAll(".tab")[0].classList.remove("active");
-}
+const input = document.querySelector("#phone");
 
-/* ALL COUNTRIES */
-const countries = [
-  ["🇮🇳","India","+91"],["🇺🇸","USA","+1"],["🇬🇧","UK","+44"],["🇨🇦","Canada","+1"],
-  ["🇦🇺","Australia","+61"],["🇩🇪","Germany","+49"],["🇫🇷","France","+33"],
-  ["🇯🇵","Japan","+81"],["🇨🇳","China","+86"],["🇧🇷","Brazil","+55"],
-  ["🇦🇪","UAE","+971"],["🇸🇦","Saudi","+966"],["🇿🇦","South Africa","+27"],
-  ["🇷🇺","Russia","+7"],["🇸🇬","Singapore","+65"],["🇮🇩","Indonesia","+62"],
-  ["🇵🇰","Pakistan","+92"],["🇧🇩","Bangladesh","+880"],["🇳🇵","Nepal","+977"],
-  ["🇱🇰","Sri Lanka","+94"]
-];
+window.intlTelInput(input, {
 
-const select = document.getElementById("countryCode");
-countries.forEach(c=>{
-  const o=document.createElement("option");
-  o.value=c[2];
-  o.textContent=`${c[0]} ${c[1]} (${c[2]})`;
-  select.appendChild(o);
+initialCountry: "in",
+separateDialCode: true,
+preferredCountries: ["in","us","gb"]
+
 });
-select.value="+91";
+
+
+// VALIDATION
+const btn = document.querySelector(".login-btn");
+
+btn.addEventListener("click", function(){
+
+if(input.value.trim() === ""){
+
+input.classList.add("input-error");
+input.placeholder="Mobile number required!";
+
+}else{
+
+input.classList.remove("input-error");
+
+// 👉 connect OTP / backend here
+alert("Ready for OTP verification");
+
+}
+
+});
+
+// remove red while typing
+input.addEventListener("input", ()=>{
+input.classList.remove("input-error");
+});
+
 </script>
 
 </body>
