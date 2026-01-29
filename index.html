@@ -6,7 +6,6 @@
 
 <title>Vaishnex Login</title>
 
-<!-- Country Selector CSS -->
 <link rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css"/>
 
@@ -41,10 +40,10 @@ box-shadow:0 35px 90px rgba(0,0,0,.7);
 text-align:center;
 }
 
-/* 🔥 Animated Circle Logo */
+/* 🔥 STYLISH V */
 .logo{
-width:95px;
-height:95px;
+width:100px;
+height:100px;
 margin:auto;
 margin-bottom:20px;
 border-radius:50%;
@@ -53,33 +52,50 @@ display:flex;
 align-items:center;
 justify-content:center;
 
-font-size:48px;
-font-weight:800;
-letter-spacing:2px;
+font-size:52px;
+font-weight:900;
+letter-spacing:3px;
 
-background:linear-gradient(135deg,#2563eb,#38bdf8);
+background:linear-gradient(145deg,#2563eb,#38bdf8);
 
-box-shadow:0 0 40px rgba(37,99,235,.8);
+position:relative;
+overflow:hidden;
 
-animation:pulse 2.6s infinite;
+box-shadow:
+0 0 70px rgba(37,99,235,.9),
+inset 0 0 20px rgba(255,255,255,.35);
+
+animation:pulse 3s infinite;
+}
+
+/* Shine */
+.logo::after{
+content:"";
+position:absolute;
+width:150%;
+height:150%;
+
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,.5),
+transparent
+);
+
+transform:rotate(25deg);
+animation:shine 4s infinite;
+}
+
+@keyframes shine{
+0%{left:-160%;}
+100%{left:160%;}
 }
 
 @keyframes pulse{
-0%{
-transform:scale(1);
-box-shadow:0 0 40px rgba(37,99,235,.8);
-}
-50%{
-transform:scale(1.09);
-box-shadow:0 0 70px rgba(56,189,248,1);
-}
-100%{
-transform:scale(1);
-box-shadow:0 0 40px rgba(37,99,235,.8);
-}
+0%,100%{transform:scale(1);}
+50%{transform:scale(1.07);}
 }
 
-/* TEXT */
 h1{
 font-size:32px;
 margin-bottom:6px;
@@ -87,11 +103,36 @@ margin-bottom:6px;
 
 .subtitle{
 color:#94a3b8;
-margin-bottom:30px;
+margin-bottom:26px;
 }
 
-/* PHONE */
-#phone{
+/* TOGGLE */
+.toggle{
+display:flex;
+background:#020617;
+border-radius:14px;
+padding:4px;
+margin-bottom:18px;
+}
+
+.toggle button{
+flex:1;
+padding:10px;
+border:none;
+background:none;
+color:#94a3b8;
+border-radius:10px;
+font-weight:600;
+cursor:pointer;
+}
+
+.toggle .active{
+background:linear-gradient(135deg,#2563eb,#3b82f6);
+color:white;
+}
+
+/* INPUT */
+input{
 width:100%;
 padding:16px;
 border-radius:14px;
@@ -100,7 +141,7 @@ outline:none;
 background:#020617;
 color:white;
 font-size:16px;
-margin-bottom:22px;
+margin-bottom:20px;
 }
 
 .iti{
@@ -134,7 +175,6 @@ box-shadow:0 15px 40px rgba(37,99,235,.7);
 }
 
 </style>
-
 </head>
 
 <body>
@@ -144,58 +184,101 @@ box-shadow:0 15px 40px rgba(37,99,235,.7);
 <div class="logo">V</div>
 
 <h1>Vaishnex</h1>
-<p class="subtitle">Login to continue</p>
+<p class="subtitle">Welcome to Vaishnex</p>
 
+<!-- Toggle -->
+<div class="toggle">
+<button id="phoneBtn" class="active">Phone</button>
+<button id="emailBtn">Email</button>
+</div>
+
+<!-- Phone -->
 <input id="phone" type="tel" placeholder="Enter mobile number">
+
+<!-- Email -->
+<input id="email"
+type="email"
+placeholder="Enter email"
+style="display:none;">
 
 <button class="login-btn">Continue</button>
 
 </div>
 
-
-<!-- Country Selector JS -->
+<!-- Country JS -->
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script>
 
 <script>
 
-const input = document.querySelector("#phone");
+// COUNTRY SELECTOR
+const phoneInput = document.querySelector("#phone");
 
-window.intlTelInput(input, {
-
-initialCountry: "in",
-separateDialCode: true,
-preferredCountries: ["in","us","gb"]
-
+window.intlTelInput(phoneInput,{
+initialCountry:"in",
+separateDialCode:true,
+preferredCountries:["in","us","gb"]
 });
+
+
+// TOGGLE
+const phoneBtn=document.getElementById("phoneBtn");
+const emailBtn=document.getElementById("emailBtn");
+
+const phone=document.getElementById("phone");
+const email=document.getElementById("email");
+
+phoneBtn.onclick=()=>{
+
+phone.style.display="block";
+email.style.display="none";
+
+phoneBtn.classList.add("active");
+emailBtn.classList.remove("active");
+
+};
+
+emailBtn.onclick=()=>{
+
+phone.style.display="none";
+email.style.display="block";
+
+emailBtn.classList.add("active");
+phoneBtn.classList.remove("active");
+
+};
 
 
 // VALIDATION
-const btn = document.querySelector(".login-btn");
+const btn=document.querySelector(".login-btn");
 
-btn.addEventListener("click", function(){
+btn.addEventListener("click",()=>{
 
-if(input.value.trim() === ""){
+if(phone.style.display!=="none"){
 
-input.classList.add("input-error");
-input.placeholder="Mobile number required!";
+if(phone.value.trim()===""){
+phone.classList.add("input-error");
+return;
+}
 
 }else{
 
-input.classList.remove("input-error");
-
-// 👉 connect OTP / backend here
-alert("Ready for OTP verification");
+if(email.value.trim()===""){
+email.classList.add("input-error");
+return;
+}
 
 }
 
+// 👉 connect OTP / backend here
+alert("Ready for authentication!");
+
 });
 
+
 // remove red while typing
-input.addEventListener("input", ()=>{
-input.classList.remove("input-error");
-});
+phone.addEventListener("input",()=>phone.classList.remove("input-error"));
+email.addEventListener("input",()=>email.classList.remove("input-error"));
 
 </script>
 
