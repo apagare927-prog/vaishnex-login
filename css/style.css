@@ -181,4 +181,16 @@ font-size:14px;
 color:#60a5fa;
 font-weight:600;
 cursor:pointer;
+}/* FIX COUNTRY DROPDOWN TEXT */
+
+.iti__country-list{
+background-color:#020617 !important;
+}
+
+.iti__country-name{
+color:white !important;
+}
+
+.iti__dial-code{
+color:#94a3b8 !important;
 }
