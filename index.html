@@ -28,28 +28,22 @@ href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelI
 
 <!-- TOGGLE -->
 <div class="tabs">
-<button class="tab active" onclick="showPhone()">Phone</button>
-<button class="tab" onclick="showEmail()">Email</button>
+<button type="button" class="tab active" onclick="showPhone()">Phone</button>
+<button type="button" class="tab" onclick="showEmail()">Email</button>
 </div>
 
 
 <form id="loginForm">
 
-<!-- PHONE LOGIN -->
+<!-- PHONE -->
 <div id="phoneBox">
-
 <input id="phone" type="tel" placeholder="Enter mobile number">
-
 </div>
-
 
 <!-- EMAIL LOGIN -->
 <div id="emailBox" style="display:none;">
-
 <input type="email" id="email" placeholder="Enter email">
-
 <input type="password" id="password" placeholder="Enter password">
-
 </div>
 
 <button type="submit">Continue</button>
@@ -70,34 +64,36 @@ Don't have an account?
 
 <script>
 
-// COUNTRY SELECTOR
+// AUTO COUNTRY DETECT
 const phoneInput = window.intlTelInput(
 document.querySelector("#phone"),
 {
 initialCountry:"auto",
 geoIpLookup:function(callback){
-fetch("https://ipapi.co/json")
+fetch("https://ipwho.is/")
 .then(res=>res.json())
 .then(data=>callback(data.country_code))
-.catch(()=>callback("us"));
+.catch(()=>callback("US"));
 },
-separateDialCode:true
+separateDialCode:true,
+preferredCountries:["in","us","gb"],
+utilsScript:"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
 }
 );
 
 
 // TOGGLE
 function showPhone(){
-document.getElementById("phoneBox").style.display="block";
-document.getElementById("emailBox").style.display="none";
+phoneBox.style.display="block";
+emailBox.style.display="none";
 
 document.querySelectorAll(".tab")[0].classList.add("active");
 document.querySelectorAll(".tab")[1].classList.remove("active");
 }
 
 function showEmail(){
-document.getElementById("phoneBox").style.display="none";
-document.getElementById("emailBox").style.display="block";
+phoneBox.style.display="none";
+emailBox.style.display="block";
 
 document.querySelectorAll(".tab")[1].classList.add("active");
 document.querySelectorAll(".tab")[0].classList.remove("active");
@@ -106,30 +102,20 @@ document.querySelectorAll(".tab")[0].classList.remove("active");
 
 
 // VALIDATION
-document.getElementById("loginForm")
-.addEventListener("submit",function(e){
+loginForm.addEventListener("submit",function(e){
 
 e.preventDefault();
 
-let phone = document.getElementById("phone");
-let email = document.getElementById("email");
-let password = document.getElementById("password");
-
-let emailVisible =
-document.getElementById("emailBox").style.display==="block";
-
-
-// RESET
-[phone,email,password].forEach(field=>{
-if(field) field.style.border="none";
-});
-
-
 let valid = true;
 
+[phone,email,password].forEach(el=>{
+if(el) el.style.border="none";
+});
+
+let emailMode = emailBox.style.display==="block";
 
 // PHONE LOGIN
-if(!emailVisible){
+if(!emailMode){
 
 if(!phoneInput.isValidNumber()){
 phone.style.border="2px solid red";
@@ -137,7 +123,6 @@ valid=false;
 }
 
 }
-
 
 // EMAIL LOGIN
 else{
@@ -154,13 +139,8 @@ valid=false;
 
 }
 
-
 if(valid){
-
 alert("Login Success 🚀");
-
-// Later → connect backend
-
 }
 
 });
