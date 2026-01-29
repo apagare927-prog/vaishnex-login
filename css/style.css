@@ -5,181 +5,217 @@ box-sizing:border-box;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 }
 
+
 body{
+
 height:100vh;
+
 display:flex;
-justify-content:center;
 align-items:center;
-background:linear-gradient(180deg,#020617,#03122e);
+justify-content:center;
+
+background:linear-gradient(180deg,#020617,#031525);
+
 color:white;
+
 }
+
 
 /* CARD */
+
 .container{
+
 width:92%;
 max-width:380px;
-padding:40px;
-border-radius:26px;
-background:rgba(15,23,42,.75);
+
+padding:35px 25px;
+
+border-radius:24px;
+
+background:rgba(10,18,35,.75);
+
+box-shadow:0 0 60px rgba(0,0,0,.6);
+
 backdrop-filter:blur(20px);
-box-shadow:0 40px 120px rgba(0,0,0,.7);
+
 text-align:center;
+
 }
 
-/* 🔥 Animated AI Logo */
+
+
+/* LOGO */
+
+.logo{
+display:flex;
+justify-content:center;
+margin-bottom:15px;
+}
+
+
 .logo-v{
-width:120px;
-height:120px;
+
+width:95px;
+height:95px;
+
 border-radius:50%;
+
+background:linear-gradient(145deg,#3b82f6,#1e40af);
 
 display:flex;
 align-items:center;
 justify-content:center;
 
-font-size:64px;
-font-weight:900;
-letter-spacing:6px;
+font-size:44px;
+font-weight:800;
 
-margin:auto;
-margin-bottom:20px;
+box-shadow:0 0 45px rgba(59,130,246,.6);
 
-background:radial-gradient(circle at 30% 30%,#2563eb,#020617 75%);
-color:#60a5fa;
+animation:float 3s ease-in-out infinite;
 
-box-shadow:
-0 0 120px rgba(59,130,246,.6),
-inset 0 0 40px rgba(255,255,255,.08);
-
-animation:float 4s ease-in-out infinite;
 }
+
 
 @keyframes float{
-0%{transform:translateY(0px);}
-50%{transform:translateY(-12px);}
-100%{transform:translateY(0px);}
+
+0%{transform:translateY(0)}
+50%{transform:translateY(-12px)}
+100%{transform:translateY(0)}
+
 }
 
+
 h1{
-font-size:34px;
+font-size:30px;
 margin-bottom:6px;
 }
 
 .subtitle{
 color:#94a3b8;
-margin-bottom:26px;
+margin-bottom:22px;
 }
 
-/* Toggle */
+
+
+/* TOGGLE */
+
 .toggle{
+
 display:flex;
 background:#020617;
 border-radius:14px;
 padding:4px;
+
 margin-bottom:18px;
+
 }
 
 .toggle button{
+
 flex:1;
 padding:12px;
+
 border:none;
-background:none;
-color:#94a3b8;
 border-radius:10px;
-font-weight:600;
+
+background:transparent;
+color:#94a3b8;
+
+font-size:15px;
 cursor:pointer;
+transition:.25s;
+
 }
 
 .toggle .active{
-background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+background:linear-gradient(135deg,#3b82f6,#2563eb);
 color:white;
-}
-
-/* Inputs */
-input{
-width:100%;
-padding:16px;
-border-radius:14px;
-border:none;
-outline:none;
-background:#020617;
-color:white;
-font-size:16px;
-margin-bottom:20px;
-}
-
-/* Phone dropdown dark */
-.iti{
-width:100%;
-}
-
-.iti__country-list{
-background:#020617;
-color:white;
-}
-
-.iti__country:hover{
-background:#1e293b;
-}
-
-/* Button */
-.main-btn{
-width:100%;
-padding:16px;
-border:none;
-border-radius:14px;
-font-size:18px;
 font-weight:600;
-cursor:pointer;
-background:linear-gradient(135deg,#2563eb,#3b82f6);
-color:white;
+
 }
 
-/* Bottom */
+
+
+/* INPUT */
+
+.input{
+
+width:100%;
+padding:14px;
+
+margin-bottom:14px;
+
+border-radius:12px;
+border:none;
+
+background:#020617;
+color:white;
+
+font-size:15px;
+
+outline:none;
+
+}
+
+.input:focus{
+border:2px solid #3b82f6;
+}
+
+
+
+/* BUTTON */
+
+.main-btn{
+
+width:100%;
+padding:14px;
+
+border:none;
+border-radius:14px;
+
+background:linear-gradient(135deg,#3b82f6,#2563eb);
+
+color:white;
+font-size:17px;
+font-weight:600;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+
+.main-btn:hover{
+transform:scale(1.03);
+}
+
+
+
+/* TEXT */
+
 .bottom-text{
+
 margin-top:18px;
 color:#94a3b8;
 font-size:14px;
+
 }
 
-.link{
-color:#60a5fa;
-font-weight:600;
-cursor:pointer;
-}/* ✅ FINAL COUNTRY DROPDOWN FIX */
 
-.iti__country-list{
-background-color:#020617 !important;
-color:white !important;
+
+/* PHONE LIB FIX */
+
+.iti{
+width:100%;
+margin-bottom:14px;
+}
+
+.iti input{
+background:#020617 !important;
+color:white;
+border:none;
 border-radius:12px;
-border:1px solid rgba(255,255,255,0.08);
-}
-
-/* COUNTRY NAME */
-.iti__country-name{
-color:white !important;
-font-size:14px;
-}
-
-/* DIAL CODE */
-.iti__dial-code{
-color:#94a3b8 !important;
-}
-
-/* HOVER */
-.iti__country:hover{
-background:#1e293b !important;
-}
-
-/* SELECTED */
-.iti__country.iti__highlight{
-background:#2563eb !important;
-}/* ERROR STATE */
-
-input.error{
-border:2px solid #ef4444;
-}
-
-/* Optional glow (premium feel) */
-input.error:focus{
-box-shadow:0 0 10px rgba(239,68,68,.4);
+padding:14px;
 }
