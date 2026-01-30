@@ -1,44 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vaishnex Secure Login</title>
+<title>Vaishnex Login</title>
 
 <link rel="stylesheet" href="css/style.css">
 
 <link rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
 
-<!-- LOGO -->
 <div class="logo"></div>
 
-<h1 id="dynamicText"></h1>
+<h1 id="title"></h1>
 
-<!-- TOGGLE -->
 <div class="toggle">
 <button id="emailBtn" class="active">Email</button>
 <button id="mobileBtn">Mobile</button>
 </div>
 
-<!-- EMAIL -->
-<input id="email" class="input" placeholder="Enter your email">
+<input id="email" class="input" placeholder="Email address">
 
-<!-- PHONE -->
-<input id="phone" class="input">
+<input id="phone">
 
-<!-- PASSWORD -->
-<input id="password" class="input" type="password" placeholder="Password">
+<input id="password"
+type="password"
+class="input"
+placeholder="Password">
 
-<button class="login-btn">Login</button>
+<button class="btn" id="loginBtn">
+Login
+</button>
 
-<button class="otp-btn">Login with OTP</button>
+<button class="btn-outline">
+Login with OTP
+</button>
 
 <div class="links">
 <a href="create.html">Create account</a>
