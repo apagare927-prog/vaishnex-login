@@ -4,145 +4,131 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
+<title>Vaishnex Login</title>
 
-<title>Vaishnex Auth</title>
+<!-- COUNTRY SELECTOR -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-}
-
 body{
+margin:0;
+font-family:system-ui;
+background: radial-gradient(circle at top,#0f2a5c,#020617);
 height:100vh;
 display:flex;
-justify-content:center;
 align-items:center;
-background:linear-gradient(180deg,#020617,#03122e);
+justify-content:center;
 color:white;
 }
 
 /* CARD */
 
 .card{
-width:95%;
+width:92%;
 max-width:420px;
-padding:32px;
-border-radius:28px;
-background:rgba(15,23,42,.75);
-backdrop-filter:blur(18px);
-box-shadow:0 40px 80px rgba(0,0,0,.7);
+padding:35px;
+border-radius:24px;
+background:rgba(15,23,42,.85);
+box-shadow:0 0 60px rgba(59,130,246,.35);
+text-align:center;
 }
 
-/* LOGO */
+/* BIG LOGO */
 
 .logo{
-width:110px;
-height:110px;
+width:120px;
+height:120px;
+margin:auto;
 border-radius:50%;
 display:flex;
-justify-content:center;
 align-items:center;
+justify-content:center;
 font-size:48px;
-font-weight:700;
-margin:auto;
-margin-bottom:20px;
-color:#7aa2ff;
-
-background:radial-gradient(circle at 30% 30%, #3b82f6, #020617);
-
-animation:pulse 2s infinite alternate;
+font-weight:bold;
+background:linear-gradient(145deg,#3b82f6,#1e3a8a);
+animation:glow 2s infinite alternate;
 }
 
-@keyframes pulse{
-from{box-shadow:0 0 15px #2563eb}
-to{box-shadow:0 0 45px #3b82f6}
+@keyframes glow{
+from{
+box-shadow:0 0 15px #3b82f6;
+transform:scale(1);
+}
+to{
+box-shadow:0 0 45px #60a5fa;
+transform:scale(1.08);
+}
 }
 
-h2{
-text-align:center;
-margin-bottom:24px;
-font-weight:600;
-}
-
-/* BUTTON */
-
-.auth-btn{
-width:100%;
-padding:16px;
-border-radius:14px;
-border:1px solid rgba(255,255,255,.08);
-background:transparent;
-color:white;
-font-size:15px;
-margin-bottom:14px;
-cursor:pointer;
-
-display:flex;
-align-items:center;
-justify-content:center;
-gap:12px;
-
-transition:.25s;
-}
-
-.auth-btn:hover{
-border:1px solid #3b82f6;
-}
-
-/* ICONS */
-
-.icon{
-width:22px;
-height:22px;
+h1{
+margin-top:18px;
 }
 
 /* INPUT */
 
-.input{
+input{
 width:100%;
-padding:15px;
+padding:14px;
 margin-top:12px;
-border-radius:14px;
-border:1px solid #1e293b;
+border-radius:12px;
+border:1px solid #334155;
 background:#020617;
 color:white;
-outline:none;
+font-size:16px;
 }
 
-.error{
-border:2px solid #ff4d4d !important;
+input:invalid{
+border:1px solid red;
 }
 
-/* PRIMARY */
+/* BUTTON */
 
-.primary{
-margin-top:18px;
+button{
 width:100%;
 padding:15px;
-border:none;
+margin-top:18px;
 border-radius:14px;
-font-size:16px;
+border:none;
+font-size:17px;
 font-weight:600;
-color:white;
 cursor:pointer;
-background:linear-gradient(135deg,#2563eb,#60a5fa);
+background:linear-gradient(90deg,#3b82f6,#60a5fa);
+color:white;
 }
 
-.back{
-margin-top:18px;
-color:#94a3b8;
-cursor:pointer;
+/* LINKS */
+
+.links{
+margin-top:14px;
+display:flex;
+justify-content:space-between;
 font-size:14px;
 }
 
-.hidden{
-display:none;
+a{
+color:#60a5fa;
+text-decoration:none;
+cursor:pointer;
+}
+
+/* SOCIAL */
+
+.social{
+margin-top:18px;
+}
+
+.social button{
+background:transparent;
+border:1px solid #334155;
+margin-top:10px;
+}
+
+/* COUNTRY WIDTH */
+
+.iti{
+width:100%;
 }
 
 </style>
@@ -154,186 +140,74 @@ display:none;
 
 <div class="logo">V</div>
 
-<h2>Continue to Vaishnex</h2>
-
-<!-- MAIN -->
-
-<div id="main">
-
-<button class="auth-btn" onclick="googleLogin()">
-<img class="icon"
-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
-Continue with Google
-</button>
-
-<button class="auth-btn">
-<img class="icon"
-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
-Continue with Apple
-</button>
-
-<button class="auth-btn">
-<img class="icon"
-src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg">
-Continue with Microsoft
-</button>
-
-<button class="auth-btn" onclick="openSection('phone')">
-📞 Continue with Phone
-</button>
-
-<button class="auth-btn" onclick="openSection('email')">
-✉️ Continue with Email
-</button>
-
-</div>
-
+<h1 id="title">Continue to Vaishnex</h1>
 
 <!-- PHONE -->
-
-<div id="phone" class="hidden">
-
-<input id="phoneInput" type="tel" class="input">
-
-<input id="phonePass"
-type="password"
-placeholder="Password"
-class="input">
-
-<button class="primary" onclick="validatePhone()">
-Continue
-</button>
-
-<div class="back" onclick="back()">← Back</div>
-
-</div>
-
+<input id="phone" type="tel" placeholder="Mobile number" required>
 
 <!-- EMAIL -->
+<input type="email" placeholder="Email address" required>
 
-<div id="email" class="hidden">
+<!-- PASSWORD -->
+<input type="password" placeholder="Password" required>
 
-<input id="emailInput"
-class="input"
-placeholder="Email address">
+<button>Login</button>
 
-<input id="emailPass"
-type="password"
-placeholder="Password"
-class="input">
+<div class="links">
+<a>Create account</a>
+<a>Forgot password?</a>
+</div>
 
-<button class="primary" onclick="validateEmail()">
-Continue
-</button>
+<div class="social">
 
-<div class="back" onclick="back()">← Back</div>
+<button>Continue with Google</button>
+<button>Continue with Apple</button>
+<button>Continue with Microsoft</button>
 
 </div>
 
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<!-- COUNTRY SCRIPT -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 
 <script>
 
-const phoneInput =
-window.intlTelInput(
-document.querySelector("#phoneInput"),
+const phoneInput = window.intlTelInput(
+document.querySelector("#phone"),
 {
 initialCountry:"auto",
+
 geoIpLookup:function(callback){
-fetch("https://ipapi.co/json")
+fetch("https://ipwho.is/")
 .then(res=>res.json())
 .then(data=>callback(data.country_code))
 .catch(()=>callback("IN"));
 },
+
 separateDialCode:true,
-}
-);
+preferredCountries:["in","us","gb","ae"],
 
-/* NAVIGATION */
-
-function openSection(id){
-
-document.getElementById("main").style.display="none";
-
-["phone","email"].forEach(sec=>{
-document.getElementById(sec).style.display="none";
+utilsScript:
+"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
 });
 
-document.getElementById(id).style.display="block";
-}
 
-function back(){
+// RANDOM TITLE
 
-document.getElementById("main").style.display="block";
+const titles=[
+"Continue to Vaishnex",
+"Welcome to Vaishnex",
+"Login to your account",
+"Secure access",
+"Enter Vaishnex",
+"Hello again 👋"
+];
 
-["phone","email"].forEach(sec=>{
-document.getElementById(sec).style.display="none";
-});
-
-}
-
-/* VALIDATION */
-
-function validatePhone(){
-
-let phone=document.getElementById("phoneInput");
-let pass=document.getElementById("phonePass");
-
-phone.classList.remove("error");
-pass.classList.remove("error");
-
-let ok=true;
-
-if(phone.value===""){
-phone.classList.add("error");
-ok=false;
-}
-
-if(pass.value===""){
-pass.classList.add("error");
-ok=false;
-}
-
-if(ok){
-alert("Phone Login Success 🚀");
-}
-
-}
-
-function validateEmail(){
-
-let email=document.getElementById("emailInput");
-let pass=document.getElementById("emailPass");
-
-email.classList.remove("error");
-pass.classList.remove("error");
-
-let ok=true;
-
-if(email.value===""){
-email.classList.add("error");
-ok=false;
-}
-
-if(pass.value===""){
-pass.classList.add("error");
-ok=false;
-}
-
-if(ok){
-alert("Email Login Success 🚀");
-}
-
-}
-
-/* GOOGLE DEMO */
-
-function googleLogin(){
-alert("Google auth coming soon 🔥");
-}
+document.getElementById("title").innerText=
+titles[Math.floor(Math.random()*titles.length)];
 
 </script>
 
