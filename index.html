@@ -39,7 +39,7 @@ backdrop-filter:blur(20px);
 box-shadow:0 40px 90px rgba(0,0,0,.7);
 }
 
-/* 🔥 PREMIUM LOGO ANIMATION */
+/* PREMIUM LOGO */
 
 .logo{
 width:95px;
@@ -56,13 +56,13 @@ color:#7aa2ff;
 
 background:radial-gradient(circle at 30% 30%, #3b82f6, #020617);
 
-animation:breath 5s ease-in-out infinite;
+animation:float 4s ease-in-out infinite;
 }
 
-@keyframes breath{
-0%{transform:scale(1)}
-50%{transform:scale(1.08)}
-100%{transform:scale(1)}
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-10px)}
+100%{transform:translateY(0)}
 }
 
 h2{
@@ -94,11 +94,8 @@ transition:.25s;
 background:rgba(255,255,255,.05);
 }
 
-/* REAL LOGOS */
-
 .auth-btn img{
 width:20px;
-height:20px;
 }
 
 /* INPUT */
@@ -118,7 +115,7 @@ outline:none;
 border:2px solid #ff4d4d !important;
 }
 
-/* PRIMARY */
+/* PRIMARY BUTTON */
 
 .primary{
 margin-top:16px;
@@ -133,22 +130,17 @@ cursor:pointer;
 background:linear-gradient(135deg,#2563eb,#60a5fa);
 }
 
-/* LINKS */
+/* BACK BUTTON */
 
-.links{
-margin-top:14px;
-display:flex;
-justify-content:space-between;
-font-size:14px;
+.back{
+margin-top:18px;
 color:#94a3b8;
-}
-
-.links span{
 cursor:pointer;
+font-size:14px;
 }
 
-.hidden{
-display:none;
+.back:hover{
+color:white;
 }
 
 /* PHONE DARK FIX */
@@ -164,6 +156,10 @@ background:#020617;
 color:white;
 }
 
+.hidden{
+display:none;
+}
+
 </style>
 </head>
 
@@ -176,7 +172,7 @@ color:white;
 <h2>Log in or sign up</h2>
 
 
-<!-- MAIN -->
+<!-- MAIN OPTIONS -->
 
 <div id="main">
 
@@ -196,14 +192,56 @@ Continue with Microsoft
 </button>
 
 <button class="auth-btn" onclick="openSection('phone')">
-📞 Continue with Phone
+Continue with Phone
 </button>
 
 <button class="auth-btn" onclick="openSection('email')">
-✉️ Continue with Email
+Continue with Email
 </button>
 
 </div>
+
+
+<!-- GOOGLE -->
+
+<div id="google" class="hidden">
+
+<h2>Google Login</h2>
+
+<button class="primary">Authenticate Google</button>
+
+<div class="back" onclick="back()">← Back</div>
+
+</div>
+
+
+
+<!-- APPLE -->
+
+<div id="apple" class="hidden">
+
+<h2>Apple Login</h2>
+
+<button class="primary">Authenticate Apple</button>
+
+<div class="back" onclick="back()">← Back</div>
+
+</div>
+
+
+
+<!-- MICROSOFT -->
+
+<div id="microsoft" class="hidden">
+
+<h2>Microsoft Login</h2>
+
+<button class="primary">Authenticate Microsoft</button>
+
+<div class="back" onclick="back()">← Back</div>
+
+</div>
+
 
 
 <!-- PHONE -->
@@ -213,14 +251,9 @@ Continue with Microsoft
 <input id="phoneInput" type="tel" class="input">
 <input id="phonePass" type="password" placeholder="Password" class="input">
 
-<button class="primary" onclick="validatePhone()">
-Login
-</button>
+<button class="primary" onclick="validatePhone()">Login</button>
 
-<div class="links">
-<span onclick="back()">← Back</span>
-<span>Forgot password?</span>
-</div>
+<div class="back" onclick="back()">← Back</div>
 
 </div>
 
@@ -233,14 +266,9 @@ Login
 <input id="emailInput" class="input" placeholder="Email">
 <input id="emailPass" class="input" type="password" placeholder="Password">
 
-<button class="primary" onclick="validateEmail()">
-Login
-</button>
+<button class="primary" onclick="validateEmail()">Login</button>
 
-<div class="links">
-<span onclick="back()">← Back</span>
-<span>Forgot password?</span>
-</div>
+<div class="back" onclick="back()">← Back</div>
 
 </div>
 
@@ -254,23 +282,19 @@ Login
 
 <script>
 
-// COUNTRY AUTO DETECT
+// AUTO COUNTRY SELECTOR
 
 const phoneInput = document.querySelector("#phoneInput");
 
-window.intlTelInput(phoneInput, {
-
+window.intlTelInput(phoneInput,{
 initialCountry:"auto",
-
 geoIpLookup:function(callback){
 fetch("https://ipapi.co/json")
 .then(res=>res.json())
 .then(data=>callback(data.country_code))
 .catch(()=>callback("IN"));
 },
-
 separateDialCode:true,
-
 });
 
 
@@ -280,7 +304,8 @@ function openSection(id){
 
 document.getElementById("main").style.display="none";
 
-["phone","email"].forEach(sec=>{
+["google","apple","microsoft","phone","email"]
+.forEach(sec=>{
 document.getElementById(sec).style.display="none";
 });
 
@@ -292,12 +317,12 @@ function back(){
 
 document.getElementById("main").style.display="block";
 
-["phone","email"].forEach(sec=>{
+["google","apple","microsoft","phone","email"]
+.forEach(sec=>{
 document.getElementById(sec).style.display="none";
 });
 
 }
-
 
 
 // VALIDATION
@@ -327,6 +352,7 @@ alert("Login Success 🚀");
 }
 
 }
+
 
 function validateEmail(){
 
