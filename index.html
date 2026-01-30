@@ -39,7 +39,7 @@ backdrop-filter:blur(20px);
 box-shadow:0 40px 90px rgba(0,0,0,.7);
 }
 
-/* 🔥 ANIMATED LOGO */
+/* 🔥 PREMIUM LOGO ANIMATION */
 
 .logo{
 width:95px;
@@ -56,13 +56,13 @@ color:#7aa2ff;
 
 background:radial-gradient(circle at 30% 30%, #3b82f6, #020617);
 
-animation:float 4s ease-in-out infinite;
+animation:breath 5s ease-in-out infinite;
 }
 
-@keyframes float{
-0%{transform:translateY(0)}
-50%{transform:translateY(-12px)}
-100%{transform:translateY(0)}
+@keyframes breath{
+0%{transform:scale(1)}
+50%{transform:scale(1.08)}
+100%{transform:scale(1)}
 }
 
 h2{
@@ -86,7 +86,7 @@ cursor:pointer;
 display:flex;
 align-items:center;
 justify-content:center;
-gap:10px;
+gap:12px;
 transition:.25s;
 }
 
@@ -94,10 +94,11 @@ transition:.25s;
 background:rgba(255,255,255,.05);
 }
 
-/* ICON */
+/* REAL LOGOS */
 
-.icon{
-font-size:18px;
+.auth-btn img{
+width:20px;
+height:20px;
 }
 
 /* INPUT */
@@ -112,6 +113,12 @@ background:#020617;
 color:white;
 outline:none;
 }
+
+.error{
+border:2px solid #ff4d4d !important;
+}
+
+/* PRIMARY */
 
 .primary{
 margin-top:16px;
@@ -144,7 +151,7 @@ cursor:pointer;
 display:none;
 }
 
-/* DARK FIX FOR PHONE */
+/* PHONE DARK FIX */
 
 .iti input{
 background:#020617 !important;
@@ -169,22 +176,22 @@ color:white;
 <h2>Log in or sign up</h2>
 
 
-<!-- MAIN OPTIONS -->
+<!-- MAIN -->
 
 <div id="main">
 
 <button class="auth-btn" onclick="openSection('google')">
-<span class="icon">🔵</span>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
 Continue with Google
 </button>
 
 <button class="auth-btn" onclick="openSection('apple')">
-<span class="icon">🍎</span>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
 Continue with Apple
 </button>
 
 <button class="auth-btn" onclick="openSection('microsoft')">
-<span class="icon">🪟</span>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg">
 Continue with Microsoft
 </button>
 
@@ -199,66 +206,20 @@ Continue with Microsoft
 </div>
 
 
-<!-- GOOGLE -->
-
-<div id="google" class="hidden">
-
-<h2>Google Login</h2>
-
-<button class="primary">Authenticate Google</button>
-
-<div class="links">
-<span onclick="back()">← Back</span>
-<span onclick="openSection('signup')">Sign up</span>
-</div>
-
-</div>
-
-
-<!-- APPLE -->
-
-<div id="apple" class="hidden">
-
-<h2>Apple Login</h2>
-
-<button class="primary">Authenticate Apple</button>
-
-<div class="links">
-<span onclick="back()">← Back</span>
-<span onclick="openSection('signup')">Sign up</span>
-</div>
-
-</div>
-
-
-<!-- MICROSOFT -->
-
-<div id="microsoft" class="hidden">
-
-<h2>Microsoft Login</h2>
-
-<button class="primary">Authenticate Microsoft</button>
-
-<div class="links">
-<span onclick="back()">← Back</span>
-<span onclick="openSection('signup')">Sign up</span>
-</div>
-
-</div>
-
-
-
 <!-- PHONE -->
 
 <div id="phone" class="hidden">
 
 <input id="phoneInput" type="tel" class="input">
+<input id="phonePass" type="password" placeholder="Password" class="input">
 
-<button class="primary">Send OTP</button>
+<button class="primary" onclick="validatePhone()">
+Login
+</button>
 
 <div class="links">
 <span onclick="back()">← Back</span>
-<span onclick="openSection('signup')">Sign up</span>
+<span>Forgot password?</span>
 </div>
 
 </div>
@@ -269,29 +230,12 @@ Continue with Microsoft
 
 <div id="email" class="hidden">
 
-<input class="input" placeholder="Email">
-<input class="input" type="password" placeholder="Password">
+<input id="emailInput" class="input" placeholder="Email">
+<input id="emailPass" class="input" type="password" placeholder="Password">
 
-<button class="primary">Login</button>
-
-<div class="links">
-<span onclick="back()">← Back</span>
-<span>Forgot password?</span>
-</div>
-
-</div>
-
-
-
-<!-- SIGNUP -->
-
-<div id="signup" class="hidden">
-
-<input class="input" placeholder="Full name">
-<input class="input" placeholder="Email">
-<input class="input" type="password" placeholder="Password">
-
-<button class="primary">Create Account</button>
+<button class="primary" onclick="validateEmail()">
+Login
+</button>
 
 <div class="links">
 <span onclick="back()">← Back</span>
@@ -299,6 +243,8 @@ Continue with Microsoft
 </div>
 
 </div>
+
+
 
 </div>
 
@@ -308,7 +254,7 @@ Continue with Microsoft
 
 <script>
 
-// 🔥 AUTO COUNTRY DETECT (200+)
+// COUNTRY AUTO DETECT
 
 const phoneInput = document.querySelector("#phoneInput");
 
@@ -317,12 +263,10 @@ window.intlTelInput(phoneInput, {
 initialCountry:"auto",
 
 geoIpLookup:function(callback){
-
 fetch("https://ipapi.co/json")
 .then(res=>res.json())
 .then(data=>callback(data.country_code))
 .catch(()=>callback("IN"));
-
 },
 
 separateDialCode:true,
@@ -336,8 +280,7 @@ function openSection(id){
 
 document.getElementById("main").style.display="none";
 
-["google","apple","microsoft","phone","email","signup"]
-.forEach(sec=>{
+["phone","email"].forEach(sec=>{
 document.getElementById(sec).style.display="none";
 });
 
@@ -349,10 +292,65 @@ function back(){
 
 document.getElementById("main").style.display="block";
 
-["google","apple","microsoft","phone","email","signup"]
-.forEach(sec=>{
+["phone","email"].forEach(sec=>{
 document.getElementById(sec).style.display="none";
 });
+
+}
+
+
+
+// VALIDATION
+
+function validatePhone(){
+
+let phone=document.getElementById("phoneInput");
+let pass=document.getElementById("phonePass");
+
+phone.classList.remove("error");
+pass.classList.remove("error");
+
+let valid=true;
+
+if(phone.value===""){
+phone.classList.add("error");
+valid=false;
+}
+
+if(pass.value===""){
+pass.classList.add("error");
+valid=false;
+}
+
+if(valid){
+alert("Login Success 🚀");
+}
+
+}
+
+function validateEmail(){
+
+let email=document.getElementById("emailInput");
+let pass=document.getElementById("emailPass");
+
+email.classList.remove("error");
+pass.classList.remove("error");
+
+let valid=true;
+
+if(email.value===""){
+email.classList.add("error");
+valid=false;
+}
+
+if(pass.value===""){
+pass.classList.add("error");
+valid=false;
+}
+
+if(valid){
+alert("Login Success 🚀");
+}
 
 }
 
