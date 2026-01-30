@@ -1,128 +1,248 @@
-.logo-wrap{
+body{
+
+margin:0;
+font-family:system-ui;
+background:
+radial-gradient(circle at top,
+#0f2a60,
+#020617);
+
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-margin-bottom:25px;
+color:white;
+
 }
 
-/* MAIN LOGO */
+.container{
+
+width:90%;
+max-width:420px;
+background:#071226;
+padding:40px;
+border-radius:30px;
+text-align:center;
+
+box-shadow:0 0 80px rgba(0,140,255,.35);
+
+}
+
+/* LOGO */
 
 .logo{
-position:relative;
-width:150px;
-height:150px;
-border-radius:50%;
 
-display:flex;
-align-items:center;
-justify-content:center;
-
-font-size:58px;
-font-weight:800;
-color:white;
-letter-spacing:2px;
-
-/* Moving gradient */
-background:linear-gradient(
-270deg,
-#2563eb,
-#4f8cff,
-#60a5fa,
-#2563eb
-);
-
-background-size:600% 600%;
-
-animation:
-gradientMove 8s ease infinite,
-float 4s ease-in-out infinite;
-
-/* depth */
-box-shadow:
-0 20px 60px rgba(37,99,235,.55),
-inset 0 6px 25px rgba(255,255,255,.25);
-}
-
-
-/* OUTER ENERGY RING */
-
-.logo::before{
-content:'';
-position:absolute;
 width:170px;
 height:170px;
+margin:auto;
 border-radius:50%;
 
-border:2px solid rgba(79,140,255,.5);
+background:
+linear-gradient(145deg,#3b82f6,#1e40af);
 
-animation:spin 10s linear infinite;
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:80px;
+font-weight:bold;
+
+animation:
+pulse 3s infinite,
+rotate 12s linear infinite;
+
 }
-
-/* PULSE WAVE */
 
 .logo::after{
-content:'';
-position:absolute;
-width:150px;
-height:150px;
-border-radius:50%;
-
-background:rgba(79,140,255,.35);
-
-z-index:-1;
-
-animation:pulse 2.5s infinite;
+content:"V";
 }
 
-
-/* ANIMATIONS */
-
-@keyframes gradientMove{
-
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-
+.small{
+width:100px;
+height:100px;
+font-size:45px;
+margin-bottom:20px;
 }
 
-@keyframes float{
-
-0%,100%{
-transform:translateY(0);
-}
-
-50%{
-transform:translateY(-12px);
-}
-
-}
+/* BIG PROFESSIONAL ANIMATION */
 
 @keyframes pulse{
 
 0%{
+box-shadow:0 0 20px #3b82f6;
 transform:scale(1);
-opacity:.6;
+}
+
+50%{
+box-shadow:0 0 90px #60a5fa;
+transform:scale(1.1);
 }
 
 100%{
-transform:scale(1.7);
-opacity:0;
+box-shadow:0 0 20px #3b82f6;
 }
 
 }
 
-@keyframes spin{
+@keyframes rotate{
 
 from{
-transform:rotate(0deg);
+filter:hue-rotate(0deg);
 }
 
 to{
-transform:rotate(360deg);
+filter:hue-rotate(360deg);
 }
 
-}.iti__country-list{
-z-index:9999 !important;
-background:#020617 !important;
+}
+
+
+/* TOGGLE */
+
+.toggle{
+
+display:flex;
+margin:25px 0;
+background:#020617;
+border-radius:14px;
+overflow:hidden;
+
+}
+
+.toggle button{
+
+flex:1;
+padding:14px;
+border:none;
+background:transparent;
 color:white;
+cursor:pointer;
+
+}
+
+.active{
+background:#2563eb;
+}
+
+
+/* INPUT */
+
+.input{
+
+width:100%;
+padding:16px;
+margin:10px 0;
+border-radius:12px;
+border:2px solid transparent;
+background:#020617;
+color:white;
+font-size:16px;
+transition:.25s;
+
+}
+
+.input:focus{
+border:2px solid #3b82f6;
+outline:none;
+}
+
+
+/* RED ERROR ANIMATION */
+
+.error{
+
+border:2px solid red;
+
+animation:shake .4s;
+
+}
+
+@keyframes shake{
+
+0%{transform:translateX(0);}
+25%{transform:translateX(-6px);}
+50%{transform:translateX(6px);}
+75%{transform:translateX(-6px);}
+100%{transform:translateX(0);}
+
+}
+
+
+/* BUTTONS */
+
+.login-btn{
+
+width:100%;
+padding:16px;
+margin-top:15px;
+border:none;
+border-radius:14px;
+font-size:18px;
+
+background:
+linear-gradient(90deg,#3b82f6,#60a5fa);
+
+color:white;
+cursor:pointer;
+
+}
+
+.otp-btn{
+
+width:100%;
+padding:14px;
+margin-top:10px;
+border-radius:14px;
+border:1px solid #3b82f6;
+background:transparent;
+color:white;
+cursor:pointer;
+
+}
+
+/* LINKS */
+
+.links{
+
+margin-top:20px;
+display:flex;
+justify-content:space-between;
+font-size:14px;
+
+}
+
+.links span{
+cursor:pointer;
+color:#60a5fa;
+}
+
+
+/* PAGES */
+
+.page{
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background:#020617;
+
+display:none;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+padding:40px;
+
+}
+
+.back{
+margin-top:20px;
+cursor:pointer;
+color:#60a5fa;
+}
+
+.hidden{
+display:none;
 }
