@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vaishnex Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- COUNTRY SELECTOR -->
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
 
 <style>
 
+/* GLOBAL */
+
 body{
 margin:0;
 font-family:system-ui;
-background: radial-gradient(circle at top,#0f2a5c,#020617);
+background: radial-gradient(circle,#0f172a,#020617);
 height:100vh;
 display:flex;
 align-items:center;
@@ -23,42 +22,52 @@ justify-content:center;
 color:white;
 }
 
-/* CARD */
+/* GLASS CARD */
 
 .card{
 width:92%;
-max-width:420px;
-padding:35px;
-border-radius:24px;
-background:rgba(15,23,42,.85);
-box-shadow:0 0 60px rgba(59,130,246,.35);
+max-width:440px;
+padding:38px;
+border-radius:30px;
+
+background:rgba(15,23,42,.7);
+backdrop-filter:blur(20px);
+
+border:1px solid rgba(255,255,255,.06);
+
+box-shadow:0 0 80px rgba(59,130,246,.2);
+
 text-align:center;
 }
 
-/* BIG LOGO */
+/* LOGO */
 
 .logo{
-width:120px;
-height:120px;
-margin:auto;
+width:115px;
+height:115px;
 border-radius:50%;
+margin:auto;
+
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:48px;
-font-weight:bold;
-background:linear-gradient(145deg,#3b82f6,#1e3a8a);
-animation:glow 2s infinite alternate;
+
+font-size:46px;
+font-weight:700;
+
+background:linear-gradient(145deg,#3b82f6,#2563eb);
+
+animation:breathe 3s infinite;
 }
 
-@keyframes glow{
-from{
-box-shadow:0 0 15px #3b82f6;
+@keyframes breathe{
+0%,100%{
 transform:scale(1);
+box-shadow:0 0 25px rgba(59,130,246,.4);
 }
-to{
-box-shadow:0 0 45px #60a5fa;
-transform:scale(1.08);
+50%{
+transform:scale(1.15);
+box-shadow:0 0 80px rgba(59,130,246,.9);
 }
 }
 
@@ -66,66 +75,69 @@ h1{
 margin-top:18px;
 }
 
+/* BUTTON */
+
+.btn{
+width:100%;
+padding:15px;
+margin-top:12px;
+
+border-radius:14px;
+border:1px solid rgba(255,255,255,.08);
+
+background:transparent;
+color:white;
+font-size:16px;
+
+cursor:pointer;
+}
+
+.btn:hover{
+background:rgba(255,255,255,.05);
+}
+
 /* INPUT */
 
 input{
 width:100%;
-padding:14px;
+padding:15px;
 margin-top:12px;
+
 border-radius:12px;
 border:1px solid #334155;
+
 background:#020617;
 color:white;
-font-size:16px;
 }
 
-input:invalid{
-border:1px solid red;
-}
-
-/* BUTTON */
-
-button{
-width:100%;
-padding:15px;
-margin-top:18px;
-border-radius:14px;
-border:none;
-font-size:17px;
-font-weight:600;
-cursor:pointer;
+.main{
 background:linear-gradient(90deg,#3b82f6,#60a5fa);
-color:white;
+border:none;
+font-weight:600;
 }
-
-/* LINKS */
 
 .links{
-margin-top:14px;
 display:flex;
 justify-content:space-between;
+margin-top:14px;
 font-size:14px;
 }
 
 a{
 color:#60a5fa;
-text-decoration:none;
 cursor:pointer;
+text-decoration:none;
 }
 
-/* SOCIAL */
+/* HIDE */
 
-.social{
-margin-top:18px;
+.page{
+display:none;
 }
 
-.social button{
-background:transparent;
-border:1px solid #334155;
-margin-top:10px;
+.active{
+display:block;
 }
-
-/* COUNTRY WIDTH */
 
 .iti{
 width:100%;
@@ -134,76 +146,173 @@ width:100%;
 </style>
 </head>
 
+
 <body>
 
 <div class="card">
 
 <div class="logo">V</div>
 
-<h1 id="title">Continue to Vaishnex</h1>
+<h1 id="title">Welcome</h1>
 
-<!-- PHONE -->
-<input id="phone" type="tel" placeholder="Mobile number" required>
 
-<!-- EMAIL -->
-<input type="email" placeholder="Email address" required>
+<!-- ========= MAIN LOGIN ========= -->
 
-<!-- PASSWORD -->
-<input type="password" placeholder="Password" required>
+<div id="main" class="page active">
 
-<button>Login</button>
+<button class="btn">Continue with Google</button>
+<button class="btn">Continue with Apple</button>
+<button class="btn">Continue with Microsoft</button>
+
+<button class="btn" onclick="show('emailLogin')">
+Continue with Email
+</button>
+
+<button class="btn" onclick="show('phoneLogin')">
+Continue with Phone
+</button>
 
 <div class="links">
-<a>Create account</a>
-<a>Forgot password?</a>
-</div>
-
-<div class="social">
-
-<button>Continue with Google</button>
-<button>Continue with Apple</button>
-<button>Continue with Microsoft</button>
-
+<a onclick="show('signup')">Create account</a>
+<a onclick="show('forgot')">Forgot password?</a>
 </div>
 
 </div>
 
 
-<!-- COUNTRY SCRIPT -->
+<!-- ========= EMAIL LOGIN ========= -->
+
+<div id="emailLogin" class="page">
+
+<input placeholder="Email">
+<input placeholder="Password" type="password">
+
+<button class="btn main">Login</button>
+
+<div class="links">
+<a onclick="show('forgot')">Forgot password?</a>
+<a onclick="show('signup')">Create account</a>
+</div>
+
+<button class="btn" onclick="show('main')">← Back</button>
+
+</div>
+
+
+<!-- ========= PHONE LOGIN ========= -->
+
+<div id="phoneLogin" class="page">
+
+<input id="phone" type="tel">
+<input placeholder="Password" type="password">
+
+<button class="btn main">Login</button>
+<button class="btn">Login with OTP</button>
+
+<button class="btn" onclick="show('main')">← Back</button>
+
+</div>
+
+
+<!-- ========= SIGNUP ========= -->
+
+<div id="signup" class="page">
+
+<input placeholder="Full name">
+<input placeholder="Email">
+<input id="signupPhone" type="tel">
+<input placeholder="Create password" type="password">
+
+<button class="btn main">Create account</button>
+
+<div class="links">
+<a onclick="show('main')">Login instead</a>
+</div>
+
+</div>
+
+
+<!-- ========= OTP VERIFY ========= -->
+
+<div id="otp" class="page">
+
+<h2>Verify OTP</h2>
+
+<input placeholder="Enter code">
+
+<button class="btn main">Verify</button>
+
+<button class="btn">Resend OTP</button>
+
+</div>
+
+
+<!-- ========= FORGOT ========= -->
+
+<div id="forgot" class="page">
+
+<input placeholder="Enter your email">
+
+<button class="btn main">Send reset link</button>
+
+<button class="btn" onclick="show('main')">← Back</button>
+
+</div>
+
+</div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 
 <script>
 
-const phoneInput = window.intlTelInput(
-document.querySelector("#phone"),
-{
+/* COUNTRY SELECTOR */
+
+window.intlTelInput(document.querySelector("#phone"),{
 initialCountry:"auto",
-
-geoIpLookup:function(callback){
+geoIpLookup:cb=>{
 fetch("https://ipwho.is/")
-.then(res=>res.json())
-.then(data=>callback(data.country_code))
-.catch(()=>callback("IN"));
+.then(r=>r.json())
+.then(d=>cb(d.country_code))
+.catch(()=>cb("IN"));
 },
-
 separateDialCode:true,
-preferredCountries:["in","us","gb","ae"],
+});
 
-utilsScript:
-"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+window.intlTelInput(document.querySelector("#signupPhone"),{
+initialCountry:"auto",
+geoIpLookup:cb=>{
+fetch("https://ipwho.is/")
+.then(r=>r.json())
+.then(d=>cb(d.country_code))
+.catch(()=>cb("IN"));
+},
+separateDialCode:true,
 });
 
 
-// RANDOM TITLE
+/* PAGE SWITCHER */
+
+function show(id){
+
+document
+.querySelectorAll(".page")
+.forEach(p=>p.classList.remove("active"));
+
+document
+.getElementById(id)
+.classList.add("active");
+
+}
+
+
+/* DYNAMIC TITLE */
 
 const titles=[
-"Continue to Vaishnex",
-"Welcome to Vaishnex",
-"Login to your account",
-"Secure access",
+"Welcome back",
+"Secure login",
 "Enter Vaishnex",
-"Hello again 👋"
+"Access your world"
 ];
 
 document.getElementById("title").innerText=
