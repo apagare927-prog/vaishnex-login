@@ -1,142 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaishnex Auth</title>
 
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
 
 <style>
 
-/* GLOBAL */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
 
 body{
-margin:0;
-font-family:system-ui;
-background: radial-gradient(circle,#0f172a,#020617);
 height:100vh;
 display:flex;
-align-items:center;
 justify-content:center;
+align-items:center;
+background: radial-gradient(circle at top,#0f2a5a,#020617);
 color:white;
 }
 
-/* GLASS CARD */
+/* CARD */
 
 .card{
-width:92%;
-max-width:440px;
-padding:38px;
-border-radius:30px;
-
-background:rgba(15,23,42,.7);
-backdrop-filter:blur(20px);
-
-border:1px solid rgba(255,255,255,.06);
-
-box-shadow:0 0 80px rgba(59,130,246,.2);
-
+width:95%;
+max-width:420px;
+padding:40px 28px;
+border-radius:28px;
+background:linear-gradient(145deg,#0b1736,#020617);
+box-shadow:0 0 60px rgba(37,99,235,.25);
 text-align:center;
 }
 
-/* LOGO */
+/* 🔥 INSANE LOGO */
 
 .logo{
-width:115px;
-height:115px;
-border-radius:50%;
+width:135px;
+height:135px;
 margin:auto;
-
+border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-
-font-size:46px;
+font-size:56px;
 font-weight:700;
 
-background:linear-gradient(145deg,#3b82f6,#2563eb);
+background:linear-gradient(270deg,#3b82f6,#60a5fa,#2563eb);
+background-size:600% 600%;
 
-animation:breathe 3s infinite;
-}
+animation:
+gradientMove 8s ease infinite,
+pulse 2.5s infinite;
 
-@keyframes breathe{
-0%,100%{
-transform:scale(1);
-box-shadow:0 0 25px rgba(59,130,246,.4);
-}
-50%{
-transform:scale(1.15);
-box-shadow:0 0 80px rgba(59,130,246,.9);
-}
+box-shadow:0 0 80px rgba(59,130,246,.7);
 }
 
-h1{
-margin-top:18px;
+@keyframes gradientMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.1);}
+100%{transform:scale(1);}
+}
+
+/* TITLE FADE */
+
+#title{
+margin:20px 0 26px;
+transition:opacity .5s;
+}
+
+.fade{
+opacity:0;
+}
+
+/* INPUT */
+
+.input{
+width:100%;
+padding:16px;
+margin:10px 0;
+border-radius:14px;
+border:2px solid transparent;
+background:#020617;
+color:white;
+font-size:16px;
+transition:.25s;
+}
+
+.input:focus{
+border-color:#3b82f6;
+outline:none;
+}
+
+/* ERROR */
+
+.error{
+border-color:#ef4444 !important;
+animation:shake .25s;
+}
+
+@keyframes shake{
+25%{transform:translateX(4px);}
+50%{transform:translateX(-4px);}
+75%{transform:translateX(4px);}
 }
 
 /* BUTTON */
 
 .btn{
 width:100%;
-padding:15px;
-margin-top:12px;
-
+padding:16px;
+margin-top:14px;
+border:none;
 border-radius:14px;
-border:1px solid rgba(255,255,255,.08);
-
-background:transparent;
-color:white;
-font-size:16px;
-
+font-size:17px;
+font-weight:600;
 cursor:pointer;
+background:linear-gradient(90deg,#3b82f6,#60a5fa);
+color:white;
+transition:.25s;
 }
 
 .btn:hover{
-background:rgba(255,255,255,.05);
+transform:scale(1.03);
 }
 
-/* INPUT */
+/* TOGGLE */
 
-input{
-width:100%;
-padding:15px;
-margin-top:12px;
-
-border-radius:12px;
-border:1px solid #334155;
-
+.toggle{
+display:flex;
 background:#020617;
-color:white;
+border-radius:14px;
+margin-bottom:14px;
 }
 
-.main{
-background:linear-gradient(90deg,#3b82f6,#60a5fa);
+.toggle button{
+flex:1;
+padding:12px;
 border:none;
+background:none;
+color:#aaa;
+cursor:pointer;
 font-weight:600;
 }
 
-.links{
-display:flex;
-justify-content:space-between;
-margin-top:14px;
-font-size:14px;
+.toggle .active{
+background:#2563eb;
+color:white;
+border-radius:14px;
 }
 
-a{
+/* SOCIAL */
+
+.social{
+margin:10px 0;
+padding:14px;
+border-radius:14px;
+border:1px solid rgba(255,255,255,.1);
+cursor:pointer;
+transition:.2s;
+}
+
+.social:hover{
+background:rgba(255,255,255,.05);
+}
+
+.link{
+margin-top:12px;
 color:#60a5fa;
 cursor:pointer;
-text-decoration:none;
 }
 
-/* HIDE */
-
-.page{
+.hidden{
 display:none;
-}
-
-.active{
-display:block;
 }
 
 .iti{
@@ -145,124 +193,36 @@ width:100%;
 
 </style>
 </head>
-
-
 <body>
 
 <div class="card">
 
 <div class="logo">V</div>
 
-<h1 id="title">Welcome</h1>
+<h1 id="title"></h1>
 
+<!-- TOGGLE -->
 
-<!-- ========= MAIN LOGIN ========= -->
-
-<div id="main" class="page active">
-
-<button class="btn">Continue with Google</button>
-<button class="btn">Continue with Apple</button>
-<button class="btn">Continue with Microsoft</button>
-
-<button class="btn" onclick="show('emailLogin')">
-Continue with Email
-</button>
-
-<button class="btn" onclick="show('phoneLogin')">
-Continue with Phone
-</button>
-
-<div class="links">
-<a onclick="show('signup')">Create account</a>
-<a onclick="show('forgot')">Forgot password?</a>
+<div class="toggle">
+<button id="emailBtn" class="active">Email</button>
+<button id="mobileBtn">Mobile</button>
 </div>
+
+<input id="email" class="input" placeholder="Email address">
+<input id="phone" class="input hidden">
+<input id="password" type="password" class="input" placeholder="Password">
+
+<button class="btn" onclick="login()">Login</button>
+
+<div class="social">🔑 Login with OTP</div>
+
+<div class="link">Create account</div>
+<div class="link">Forgot password?</div>
 
 </div>
 
 
-<!-- ========= EMAIL LOGIN ========= -->
-
-<div id="emailLogin" class="page">
-
-<input placeholder="Email">
-<input placeholder="Password" type="password">
-
-<button class="btn main">Login</button>
-
-<div class="links">
-<a onclick="show('forgot')">Forgot password?</a>
-<a onclick="show('signup')">Create account</a>
-</div>
-
-<button class="btn" onclick="show('main')">← Back</button>
-
-</div>
-
-
-<!-- ========= PHONE LOGIN ========= -->
-
-<div id="phoneLogin" class="page">
-
-<input id="phone" type="tel">
-<input placeholder="Password" type="password">
-
-<button class="btn main">Login</button>
-<button class="btn">Login with OTP</button>
-
-<button class="btn" onclick="show('main')">← Back</button>
-
-</div>
-
-
-<!-- ========= SIGNUP ========= -->
-
-<div id="signup" class="page">
-
-<input placeholder="Full name">
-<input placeholder="Email">
-<input id="signupPhone" type="tel">
-<input placeholder="Create password" type="password">
-
-<button class="btn main">Create account</button>
-
-<div class="links">
-<a onclick="show('main')">Login instead</a>
-</div>
-
-</div>
-
-
-<!-- ========= OTP VERIFY ========= -->
-
-<div id="otp" class="page">
-
-<h2>Verify OTP</h2>
-
-<input placeholder="Enter code">
-
-<button class="btn main">Verify</button>
-
-<button class="btn">Resend OTP</button>
-
-</div>
-
-
-<!-- ========= FORGOT ========= -->
-
-<div id="forgot" class="page">
-
-<input placeholder="Enter your email">
-
-<button class="btn main">Send reset link</button>
-
-<button class="btn" onclick="show('main')">← Back</button>
-
-</div>
-
-</div>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 
 <script>
 
@@ -272,51 +232,103 @@ window.intlTelInput(document.querySelector("#phone"),{
 initialCountry:"auto",
 geoIpLookup:cb=>{
 fetch("https://ipwho.is/")
-.then(r=>r.json())
-.then(d=>cb(d.country_code))
-.catch(()=>cb("IN"));
+.then(res=>res.json())
+.then(data=>cb(data.country_code))
+.catch(()=>cb("US"));
 },
 separateDialCode:true,
-});
-
-window.intlTelInput(document.querySelector("#signupPhone"),{
-initialCountry:"auto",
-geoIpLookup:cb=>{
-fetch("https://ipwho.is/")
-.then(r=>r.json())
-.then(d=>cb(d.country_code))
-.catch(()=>cb("IN"));
-},
-separateDialCode:true,
+utilsScript:
+"https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
 });
 
 
-/* PAGE SWITCHER */
+/* 🔥 VAISHNEX UNLIMITED LINES */
 
-function show(id){
+const vaishnexLines=[
 
-document
-.querySelectorAll(".page")
-.forEach(p=>p.classList.remove("active"));
+"Welcome to Vaishnex 🚀",
+"Secure your Vaishnex account",
+"Continue to Vaishnex",
+"Access Vaishnex safely",
+"Vaishnex is ready for you",
+"Step into Vaishnex",
+"Experience the power of Vaishnex",
+"Vaishnex welcomes you",
+"Login to Vaishnex",
+"Create your Vaishnex identity",
+"Future begins with Vaishnex",
+"Enter the world of Vaishnex",
+"Vaishnex — Smart. Secure. Fast.",
+"Your journey starts with Vaishnex"
 
-document
-.getElementById(id)
-.classList.add("active");
+];
+
+let used=[];
+
+function changeLine(){
+
+if(used.length===vaishnexLines.length){
+used=[];
+}
+
+let remaining=vaishnexLines.filter(x=>!used.includes(x));
+
+let text=
+remaining[Math.floor(Math.random()*remaining.length)];
+
+used.push(text);
+
+const title=document.getElementById("title");
+
+title.classList.add("fade");
+
+setTimeout(()=>{
+title.innerText=text;
+title.classList.remove("fade");
+},300);
 
 }
 
+changeLine();
+setInterval(changeLine,4000);
 
-/* DYNAMIC TITLE */
 
-const titles=[
-"Welcome back",
-"Secure login",
-"Enter Vaishnex",
-"Access your world"
-];
+/* TOGGLE */
 
-document.getElementById("title").innerText=
-titles[Math.floor(Math.random()*titles.length)];
+emailBtn.onclick=()=>{
+email.classList.remove("hidden");
+phone.classList.add("hidden");
+emailBtn.classList.add("active");
+mobileBtn.classList.remove("active");
+}
+
+mobileBtn.onclick=()=>{
+phone.classList.remove("hidden");
+email.classList.add("hidden");
+mobileBtn.classList.add("active");
+emailBtn.classList.remove("active");
+}
+
+
+/* VALIDATION */
+
+function login(){
+
+let valid=true;
+
+[email,phone,password].forEach(i=>{
+if(!i.classList.contains("hidden") && !i.value){
+i.classList.add("error");
+valid=false;
+setTimeout(()=>i.classList.remove("error"),600);
+}
+});
+
+if(valid){
+alert("Auth UI ready 🚀 Connect backend.");
+}
+
+}
 
 </script>
 
