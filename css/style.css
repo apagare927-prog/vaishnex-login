@@ -1,58 +1,103 @@
+.logo-wrap{
+display:flex;
+justify-content:center;
+align-items:center;
+margin-bottom:25px;
+}
+
+/* MAIN LOGO */
+
 .logo{
-width:130px;
-height:130px;
+position:relative;
+width:150px;
+height:150px;
 border-radius:50%;
-margin:auto;
 
 display:flex;
 align-items:center;
 justify-content:center;
 
-font-size:52px;
-font-weight:700;
+font-size:58px;
+font-weight:800;
 color:white;
+letter-spacing:2px;
 
-/* Premium gradient */
-background:linear-gradient(145deg,#4f8cff,#2563eb);
+/* Moving gradient */
+background:linear-gradient(
+270deg,
+#2563eb,
+#4f8cff,
+#60a5fa,
+#2563eb
+);
 
-/* 3D depth */
+background-size:600% 600%;
+
+animation:
+gradientMove 8s ease infinite,
+float 4s ease-in-out infinite;
+
+/* depth */
 box-shadow:
-0 10px 40px rgba(37,99,235,.6),
-inset 0 4px 18px rgba(255,255,255,.25);
-
-/* SUPER animation */
-animation:logoPulse 2.8s infinite ease-in-out;
+0 20px 60px rgba(37,99,235,.55),
+inset 0 6px 25px rgba(255,255,255,.25);
 }
 
-/* Glow wave */
+
+/* OUTER ENERGY RING */
+
 .logo::before{
 content:'';
 position:absolute;
-width:130px;
-height:130px;
+width:170px;
+height:170px;
 border-radius:50%;
 
-background:rgba(59,130,246,.35);
+border:2px solid rgba(79,140,255,.5);
 
-animation:ring 2.8s infinite;
-z-index:-1;
+animation:spin 10s linear infinite;
 }
 
-/* Animations */
+/* PULSE WAVE */
 
-@keyframes logoPulse{
+.logo::after{
+content:'';
+position:absolute;
+width:150px;
+height:150px;
+border-radius:50%;
+
+background:rgba(79,140,255,.35);
+
+z-index:-1;
+
+animation:pulse 2.5s infinite;
+}
+
+
+/* ANIMATIONS */
+
+@keyframes gradientMove{
+
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+
+}
+
+@keyframes float{
 
 0%,100%{
-transform:scale(1);
+transform:translateY(0);
 }
 
 50%{
-transform:scale(1.18);
+transform:translateY(-12px);
 }
 
 }
 
-@keyframes ring{
+@keyframes pulse{
 
 0%{
 transform:scale(1);
@@ -60,8 +105,20 @@ opacity:.6;
 }
 
 100%{
-transform:scale(1.8);
+transform:scale(1.7);
 opacity:0;
+}
+
+}
+
+@keyframes spin{
+
+from{
+transform:rotate(0deg);
+}
+
+to{
+transform:rotate(360deg);
 }
 
 }
