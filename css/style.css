@@ -2,7 +2,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+font-family: 'Inter', sans-serif;
 }
 
 body{
@@ -10,79 +10,65 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#081c3a,#020617);
-overflow:hidden;
+background: radial-gradient(circle at top,#0a1f44,#020617);
+color:white;
 }
 
-/* animated premium background */
-
-.bg{
-position:absolute;
-width:200%;
-height:200%;
-background:
-radial-gradient(circle at 20% 30%,#1d4ed8,transparent),
-radial-gradient(circle at 80% 70%,#06b6d4,transparent),
-radial-gradient(circle at 40% 80%,#2563eb,transparent);
-animation:moveBG 18s infinite alternate;
-filter:blur(90px);
-}
-
-@keyframes moveBG{
-0%{transform:translate(0,0);}
-100%{transform:translate(-20%,-20%);}
-}
-
-/* CARD */
-
-.card{
-position:relative;
-width:95%;
+.container{
+width:92%;
 max-width:420px;
-padding:40px 28px;
-border-radius:26px;
+padding:40px;
+border-radius:28px;
+
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(30px);
-box-shadow:0 0 60px rgba(37,99,235,.35);
-z-index:10;
+backdrop-filter:blur(20px);
+
+box-shadow:
+0 0 60px rgba(0,180,255,.15),
+inset 0 0 30px rgba(255,255,255,.03);
 }
 
-/* LOGO */
+/* 🔥 Animated Logo */
 
 .logo{
 width:110px;
 height:110px;
 margin:auto;
 border-radius:50%;
-background:linear-gradient(135deg,#3b82f6,#06b6d4);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:44px;
-font-weight:700;
-color:white;
-box-shadow:0 0 45px #3b82f6;
+
+background:linear-gradient(135deg,#00d2ff,#3a7bd5);
+
+position:relative;
 animation:pulse 2.5s infinite;
 }
 
+.logo::after{
+content:"V";
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:48px;
+font-weight:700;
+}
+
 @keyframes pulse{
-0%{box-shadow:0 0 25px #3b82f6;}
-50%{box-shadow:0 0 70px #06b6d4;}
-100%{box-shadow:0 0 25px #3b82f6;}
+0%{box-shadow:0 0 20px #00d2ff;}
+50%{box-shadow:0 0 60px #00d2ff;}
+100%{box-shadow:0 0 20px #00d2ff;}
 }
 
 h1{
 text-align:center;
-color:white;
-margin:22px 0 28px;
+margin:25px 0;
 font-weight:600;
 }
 
-/* toggle */
+/* Toggle */
 
 .toggle{
 display:flex;
-background:#020617;
+background:#07142c;
 border-radius:14px;
 overflow:hidden;
 margin-bottom:18px;
@@ -92,62 +78,66 @@ margin-bottom:18px;
 flex:1;
 padding:12px;
 border:none;
-background:transparent;
-color:#94a3b8;
-font-size:15px;
+background:none;
+color:#aaa;
+font-size:16px;
 cursor:pointer;
 }
 
 .toggle .active{
-background:linear-gradient(135deg,#3b82f6,#06b6d4);
+background:linear-gradient(90deg,#00d2ff,#3a7bd5);
 color:white;
 }
 
-/* inputs */
+/* Inputs */
 
 .input{
 width:100%;
 padding:15px;
 margin-top:14px;
-border-radius:12px;
+border-radius:14px;
 border:1px solid transparent;
-background:#020617;
+background:#07142c;
 color:white;
 font-size:15px;
+transition:.3s;
 }
 
 .input:focus{
+border:1px solid #00d2ff;
 outline:none;
-border:1px solid #3b82f6;
 }
 
-/* buttons */
+.input.error{
+border:1px solid red;
+}
 
-.loginBtn{
+/* Buttons */
+
+.login-btn{
 width:100%;
 padding:16px;
-margin-top:20px;
+margin-top:18px;
 border:none;
-border-radius:14px;
-background:linear-gradient(135deg,#3b82f6,#06b6d4);
-color:white;
+border-radius:16px;
 font-size:17px;
 font-weight:600;
 cursor:pointer;
+
+background:linear-gradient(90deg,#00d2ff,#3a7bd5);
+color:white;
 }
 
-.otpBtn{
+.otp-btn{
 width:100%;
-padding:16px;
+padding:15px;
 margin-top:12px;
-border-radius:14px;
-border:1px solid #3b82f6;
-background:transparent;
+border-radius:16px;
+background:none;
+border:1px solid #00d2ff;
 color:white;
 cursor:pointer;
 }
-
-/* links */
 
 .links{
 display:flex;
@@ -156,14 +146,6 @@ margin-top:18px;
 }
 
 .links a{
-color:#60a5fa;
+color:#7dd3fc;
 text-decoration:none;
-font-size:14px;
-}
-
-/* intl fix */
-
-.iti{
-width:100%;
-margin-top:14px;
 }
