@@ -4,286 +4,202 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vaishnex</title>
+<title>Vaishnex Login</title>
 
-<!-- COUNTRY SELECTOR FIX -->
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Country Selector -->
 <link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
+href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
 
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
-
-<style>
-
-/* BACKGROUND */
-
-body{
-margin:0;
-font-family: 'Segoe UI', sans-serif;
-background: radial-gradient(circle at top,#0a1f44,#020617);
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-}
-
-/* CARD */
-
-.card{
-width:380px;
-max-width:92%;
-padding:40px 30px;
-border-radius:28px;
-background:linear-gradient(145deg,#0f172a,#020617);
-box-shadow:0 0 60px rgba(59,130,246,.25);
-text-align:center;
-}
-
-/* LOGO */
-
-.logo{
-width:140px;
-height:140px;
-margin:auto;
-border-radius:50%;
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:60px;
-font-weight:bold;
-background:linear-gradient(135deg,#3b82f6,#60a5fa);
-animation:float 4s ease-in-out infinite,
-glow 2.5s infinite alternate;
-}
-
-@keyframes float{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-12px)}
-}
-
-@keyframes glow{
-from{box-shadow:0 0 20px #3b82f6}
-to{box-shadow:0 0 60px #60a5fa}
-}
-
-/* DYNAMIC TITLE */
-
-.title{
-font-size:28px;
-font-weight:600;
-margin:25px 0;
-min-height:70px;
-}
-
-/* TOGGLE */
-
-.toggle{
-display:flex;
-background:#020617;
-border-radius:14px;
-overflow:hidden;
-margin-bottom:20px;
-}
-
-.toggle button{
-flex:1;
-padding:12px;
-border:none;
-background:none;
-color:#94a3b8;
-font-size:15px;
-cursor:pointer;
-}
-
-.toggle .active{
-background:#3b82f6;
-color:white;
-}
-
-/* INPUTS */
-
-input{
-width:100%;
-padding:15px;
-margin:10px 0;
-border-radius:12px;
-border:2px solid transparent;
-background:#020617;
-color:white;
-font-size:15px;
-outline:none;
-transition:.25s;
-}
-
-input:focus{
-border-color:#3b82f6;
-}
-
-/* RED ERROR LINE */
-
-.error{
-border-color:#ef4444 !important;
-animation:shake .25s;
-}
-
-@keyframes shake{
-25%{transform:translateX(4px)}
-75%{transform:translateX(-4px)}
-}
-
-/* BUTTON */
-
-.btn{
-width:100%;
-padding:15px;
-margin-top:10px;
-border:none;
-border-radius:14px;
-background:linear-gradient(135deg,#3b82f6,#60a5fa);
-color:white;
-font-size:17px;
-cursor:pointer;
-}
-
-.link{
-margin-top:16px;
-color:#60a5fa;
-cursor:pointer;
-display:inline-block;
-}
-
-/* HIDE SECTIONS */
-
-.hidden{
-display:none;
-}
-
-</style>
 </head>
-
 
 <body>
 
 <div class="card">
 
-<div class="logo">V</div>
+<div class="logo"></div>
 
-<div id="title" class="title"></div>
+<h1 id="title">Welcome to Vaishnex</h1>
 
-<!-- TOGGLE -->
-
+<!-- Toggle -->
 <div class="toggle">
 <button id="emailBtn" class="active">Email</button>
 <button id="mobileBtn">Mobile</button>
 </div>
 
-<input id="email" placeholder="Email address">
+<!-- Email -->
+<input id="email"
+type="email"
+placeholder="Email address"
+class="input"/>
 
-<input id="phone" placeholder="Mobile number">
+<!-- Phone -->
+<input id="phone"
+type="tel"
+class="input hidden"/>
 
-<input id="password" type="password" placeholder="Password">
+<!-- Password -->
+<input id="password"
+type="password"
+placeholder="Password"
+class="input"/>
 
-<button class="btn" onclick="login()">Login</button>
+<button class="loginBtn">Login</button>
 
-<button class="btn" style="background:#020617;border:1px solid #3b82f6"
-onclick="otp()">Login with OTP</button>
+<button class="otpBtn">Login with OTP</button>
 
-<div class="link" onclick="openSignup()">Create account</div>
-<div class="link" onclick="openForgot()">Forgot password?</div>
+<div class="links">
+<span onclick="openSignup()">Create account</span>
+<span onclick="openForgot()">Forgot password?</span>
+</div>
 
 </div>
 
+
+<!-- SIGNUP -->
+<div id="signup" class="popup hidden">
+
+<h2>Create Vaishnex Account</h2>
+
+<input placeholder="Full Name" class="input"/>
+<input placeholder="Email" class="input"/>
+
+<input id="signupPhone" type="tel" class="input"/>
+
+<input placeholder="Password" type="password" class="input"/>
+
+<button class="loginBtn">Create Account</button>
+
+<div class="back" onclick="closeSignup()">← Back</div>
+
+</div>
+
+
+<!-- FORGOT -->
+<div id="forgot" class="popup hidden">
+
+<h2>Recover Password</h2>
+
+<input placeholder="Enter Email or Mobile"
+class="input"/>
+
+<button class="loginBtn">Send Reset Link</button>
+
+<div class="back" onclick="closeForgot()">← Back</div>
+
+</div>
+
+
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+
 <script>
 
-/* UNLIMITED DYNAMIC LINES */
+//////////////////////////////
+// COUNTRY SELECTOR
+//////////////////////////////
 
-const lines=[];
-
-for(let i=1;i<=5000;i++){
-lines.push(`Welcome to Vaishnex ${i}`);
-lines.push(`Secure access to Vaishnex ${i}`);
-lines.push(`Enter Vaishnex ${i}`);
-lines.push(`Your network awaits — Vaishnex ${i}`);
-}
-
-function randomTitle(){
-document.getElementById("title").innerText=
-lines[Math.floor(Math.random()*lines.length)];
-}
-
-randomTitle();
-setInterval(randomTitle,3000);
-
-/* TOGGLE */
-
-const email=document.getElementById("email");
-const phone=document.getElementById("phone");
-
-phone.style.display="none";
-
-emailBtn.onclick=()=>{
-email.style.display="block";
-phone.style.display="none";
-emailBtn.classList.add("active");
-mobileBtn.classList.remove("active");
-}
-
-mobileBtn.onclick=()=>{
-email.style.display="none";
-phone.style.display="block";
-mobileBtn.classList.add("active");
-emailBtn.classList.remove("active");
-}
-
-/* COUNTRY SELECTOR */
-
-const iti=window.intlTelInput(phone,{
+const phoneInput =
+window.intlTelInput(document.querySelector("#phone"),{
 initialCountry:"auto",
-geoIpLookup:(cb)=>{
+geoIpLookup:function(callback){
 fetch("https://ipapi.co/json")
 .then(res=>res.json())
-.then(data=>cb(data.country_code))
-.catch(()=>cb("IN"));
+.then(data=>callback(data.country_code))
+.catch(()=>callback("IN"));
 },
-utilsScript:
-"https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+separateDialCode:true
 });
 
-/* LOGIN VALIDATION */
-
-function login(){
-
-let valid=true;
-
-[email,phone,password].forEach(el=>{
-if(el.style.display!=="none" && el.value===""){
-el.classList.add("error");
-valid=false;
-setTimeout(()=>el.classList.remove("error"),800);
-}
+window.intlTelInput(document.querySelector("#signupPhone"),{
+initialCountry:"auto",
+separateDialCode:true
 });
 
-if(valid){
-alert("Vaishnex Login Success (Demo)");
+//////////////////////////////
+// TOGGLE
+//////////////////////////////
+
+const emailBtn = document.getElementById("emailBtn");
+const mobileBtn = document.getElementById("mobileBtn");
+
+emailBtn.onclick = () => {
+emailBtn.classList.add("active");
+mobileBtn.classList.remove("active");
+
+document.getElementById("email").classList.remove("hidden");
+document.getElementById("phone").classList.add("hidden");
 }
 
+mobileBtn.onclick = () => {
+mobileBtn.classList.add("active");
+emailBtn.classList.remove("active");
+
+document.getElementById("phone").classList.remove("hidden");
+document.getElementById("email").classList.add("hidden");
 }
 
-/* OTP */
+//////////////////////////////
+// DYNAMIC LINES (NO NUMBERS)
+//////////////////////////////
 
-function otp(){
-alert("OTP system ready — connect backend later.");
-}
+const lines = [
+"Welcome to Vaishnex",
+"Secure access to Vaishnex",
+"Enter Vaishnex",
+"Your network awaits",
+"Experience the future with Vaishnex",
+"Power your world with Vaishnex",
+"Step into Vaishnex",
+"Vaishnex is ready",
+"Start your journey with Vaishnex",
+"Connect smarter with Vaishnex"
+];
 
-/* PAGES */
+document.getElementById("title").innerText =
+lines[Math.floor(Math.random()*lines.length)];
+
+//////////////////////////////
+// POPUPS
+//////////////////////////////
 
 function openSignup(){
-alert("Create Account page — backend connect karna hoga.");
+document.getElementById("signup").classList.remove("hidden");
+}
+
+function closeSignup(){
+document.getElementById("signup").classList.add("hidden");
 }
 
 function openForgot(){
-alert("Password recovery — backend required.");
+document.getElementById("forgot").classList.remove("hidden");
 }
+
+function closeForgot(){
+document.getElementById("forgot").classList.add("hidden");
+}
+
+//////////////////////////////
+// RED VALIDATION
+//////////////////////////////
+
+document.querySelectorAll(".input").forEach(input=>{
+
+input.addEventListener("blur",()=>{
+
+if(!input.value){
+
+input.style.border="2px solid red";
+
+}else{
+
+input.style.border="none";
+}
+
+})
+
+});
 
 </script>
 
