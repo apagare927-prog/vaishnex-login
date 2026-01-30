@@ -1,90 +1,71 @@
-// COUNTRY AUTO DETECT
+// AUTO COUNTRY
+
 const phoneInput = window.intlTelInput(
 document.querySelector("#phone"),
 {
- initialCountry:"auto",
-
- geoIpLookup: function(callback){
-   fetch("https://ipapi.co/json")
-   .then(res=>res.json())
-   .then(data=>callback(data.country_code))
-   .catch(()=>callback("US"));
- },
-
- separateDialCode:true,
+initialCountry:"auto",
+geoIpLookup:function(callback){
+fetch("https://ipapi.co/json")
+.then(res=>res.json())
+.then(data=>callback(data.country_code))
+.catch(()=>callback("in"));
+}
 }
 );
 
+// EMAIL / MOBILE toggle
 
-// EMAIL / MOBILE TOGGLE
+const emailBtn=document.getElementById("emailBtn");
+const mobileBtn=document.getElementById("mobileBtn");
+const email=document.getElementById("email");
+const phone=document.getElementById("phone");
 
-const emailBtn = document.getElementById("emailBtn");
-const mobileBtn = document.getElementById("mobileBtn");
+phone.style.display="none";
 
-const emailField = document.getElementById("emailField");
-const phoneField = document.getElementById("phone");
+emailBtn.onclick=()=>{
+email.style.display="block";
+phone.style.display="none";
 
-emailBtn.onclick = () =>{
- emailField.classList.remove("hidden");
- phoneField.classList.add("hidden");
-
- emailBtn.classList.add("active");
- mobileBtn.classList.remove("active");
+emailBtn.classList.add("active");
+mobileBtn.classList.remove("active");
 };
 
-mobileBtn.onclick = () =>{
- phoneField.classList.remove("hidden");
- emailField.classList.add("hidden");
+mobileBtn.onclick=()=>{
+email.style.display="none";
+phone.style.display="block";
 
- mobileBtn.classList.add("active");
- emailBtn.classList.remove("active");
+mobileBtn.classList.add("active");
+emailBtn.classList.remove("active");
 };
 
+// Unlimited Premium Lines
 
-
-// UNLIMITED DYNAMIC LINES
-
-const titles=[
-
+const lines=[
 "Welcome to Vaishnex",
 "Secure access to Vaishnex",
 "Enter the future with Vaishnex",
-"Your network awaits at Vaishnex",
-"Vaishnex keeps you connected",
-"Smart people choose Vaishnex",
-"Power your world with Vaishnex",
-"Experience next-gen Vaishnex",
-"Trusted login by Vaishnex",
-"Vaishnex — fast & secure"
-
+"Your network begins at Vaishnex",
+"Experience premium security",
+"Connect smarter with Vaishnex"
 ];
 
-document.getElementById("dynamicTitle").innerText =
-titles[Math.floor(Math.random()*titles.length)];
+document.getElementById("dynamicText")
+.innerText=lines[Math.floor(Math.random()*lines.length)];
 
 
+// RED validation
 
+document.querySelector(".login-btn")
+.onclick=()=>{
 
-// AUTO OTP READ (WEB OTP API)
-
-async function autoReadOTP(){
-
-if("OTPCredential" in window){
-
-try{
-
-const content = await navigator.credentials.get({
- otp:{transport:["sms"]},
- signal:new AbortController().signal
+document.querySelectorAll(".input")
+.forEach(input=>{
+if(input.offsetParent!==null && !input.value){
+input.classList.add("error");
+}
+else{
+input.classList.remove("error");
+}
 });
 
-console.log("OTP received:",content.code);
-
-}catch(e){
-console.log("Auto OTP failed");
-}
-
-}
-}
-
-autoReadOTP();
+};
