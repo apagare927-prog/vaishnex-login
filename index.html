@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Vaishnex Auth</title>
 
 <link rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
@@ -33,44 +30,52 @@ color:white;
 width:95%;
 max-width:420px;
 padding:32px;
-border-radius:28px;
+border-radius:30px;
 background:rgba(15,23,42,.75);
 backdrop-filter:blur(20px);
 box-shadow:0 40px 90px rgba(0,0,0,.7);
 }
 
-/* PREMIUM LOGO */
+/* LOGO */
 
 .logo{
-width:95px;
-height:95px;
+width:105px;
+height:105px;
 border-radius:50%;
 display:flex;
 justify-content:center;
 align-items:center;
-font-size:42px;
+font-size:46px;
 font-weight:700;
 margin:auto;
-margin-bottom:20px;
+margin-bottom:18px;
 color:#7aa2ff;
 
 background:radial-gradient(circle at 30% 30%, #3b82f6, #020617);
 
-animation:float 4s ease-in-out infinite;
+animation:
+float 4s ease-in-out infinite,
+pulse 2.5s infinite alternate;
 }
 
 @keyframes float{
 0%{transform:translateY(0)}
-50%{transform:translateY(-10px)}
+50%{transform:translateY(-12px)}
 100%{transform:translateY(0)}
+}
+
+@keyframes pulse{
+from{box-shadow:0 0 15px #2563eb}
+to{box-shadow:0 0 40px #3b82f6}
 }
 
 h2{
 text-align:center;
-margin-bottom:20px;
+margin-bottom:22px;
+font-weight:600;
 }
 
-/* BUTTONS */
+/* BUTTON */
 
 .auth-btn{
 width:100%;
@@ -87,15 +92,10 @@ display:flex;
 align-items:center;
 justify-content:center;
 gap:12px;
-transition:.25s;
-}
-
-.auth-btn:hover{
-background:rgba(255,255,255,.05);
 }
 
 .auth-btn img{
-width:20px;
+width:22px;
 }
 
 /* INPUT */
@@ -115,7 +115,7 @@ outline:none;
 border:2px solid #ff4d4d !important;
 }
 
-/* PRIMARY BUTTON */
+/* PRIMARY */
 
 .primary{
 margin-top:16px;
@@ -130,34 +130,20 @@ cursor:pointer;
 background:linear-gradient(135deg,#2563eb,#60a5fa);
 }
 
-/* BACK BUTTON */
-
 .back{
 margin-top:18px;
 color:#94a3b8;
 cursor:pointer;
-font-size:14px;
 }
 
-.back:hover{
-color:white;
+.hidden{
+display:none;
 }
-
-/* PHONE DARK FIX */
 
 .iti input{
 background:#020617 !important;
 color:white;
 border:none;
-}
-
-.iti__country-list{
-background:#020617;
-color:white;
-}
-
-.hidden{
-display:none;
 }
 
 </style>
@@ -169,79 +155,36 @@ display:none;
 
 <div class="logo">V</div>
 
-<h2>Log in or sign up</h2>
+<h2>Continue to Vaishnex</h2>
 
-
-<!-- MAIN OPTIONS -->
+<!-- MAIN -->
 
 <div id="main">
 
-<button class="auth-btn" onclick="openSection('google')">
+<button class="auth-btn">
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
 Continue with Google
 </button>
 
-<button class="auth-btn" onclick="openSection('apple')">
+<button class="auth-btn">
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
 Continue with Apple
 </button>
 
-<button class="auth-btn" onclick="openSection('microsoft')">
+<button class="auth-btn">
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg">
 Continue with Microsoft
 </button>
 
 <button class="auth-btn" onclick="openSection('phone')">
-Continue with Phone
+📞 Continue with Phone
 </button>
 
 <button class="auth-btn" onclick="openSection('email')">
-Continue with Email
+✉ Continue with Email
 </button>
 
 </div>
-
-
-<!-- GOOGLE -->
-
-<div id="google" class="hidden">
-
-<h2>Google Login</h2>
-
-<button class="primary">Authenticate Google</button>
-
-<div class="back" onclick="back()">← Back</div>
-
-</div>
-
-
-
-<!-- APPLE -->
-
-<div id="apple" class="hidden">
-
-<h2>Apple Login</h2>
-
-<button class="primary">Authenticate Apple</button>
-
-<div class="back" onclick="back()">← Back</div>
-
-</div>
-
-
-
-<!-- MICROSOFT -->
-
-<div id="microsoft" class="hidden">
-
-<h2>Microsoft Login</h2>
-
-<button class="primary">Authenticate Microsoft</button>
-
-<div class="back" onclick="back()">← Back</div>
-
-</div>
-
 
 
 <!-- PHONE -->
@@ -251,7 +194,7 @@ Continue with Email
 <input id="phoneInput" type="tel" class="input">
 <input id="phonePass" type="password" placeholder="Password" class="input">
 
-<button class="primary" onclick="validatePhone()">Login</button>
+<button class="primary" onclick="validatePhone()">Continue</button>
 
 <div class="back" onclick="back()">← Back</div>
 
@@ -259,14 +202,15 @@ Continue with Email
 
 
 
-<!-- EMAIL -->
+<!-- EMAIL STEP 1 -->
 
 <div id="email" class="hidden">
 
-<input id="emailInput" class="input" placeholder="Email">
-<input id="emailPass" class="input" type="password" placeholder="Password">
+<input id="emailInput" class="input" placeholder="Email address">
 
-<button class="primary" onclick="validateEmail()">Login</button>
+<button class="primary" onclick="openSection('otp')">
+Continue
+</button>
 
 <div class="back" onclick="back()">← Back</div>
 
@@ -274,15 +218,33 @@ Continue with Email
 
 
 
+<!-- OTP SCREEN -->
+
+<div id="otp" class="hidden">
+
+<h2>Check your inbox</h2>
+
+<input class="input" placeholder="Enter code">
+
+<button class="primary">
+Continue
+</button>
+
+<button class="auth-btn">
+Continue with password
+</button>
+
+<div class="back" onclick="back()">← Back</div>
+
 </div>
 
+
+</div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 
 <script>
-
-// AUTO COUNTRY SELECTOR
 
 const phoneInput = document.querySelector("#phoneInput");
 
@@ -297,16 +259,14 @@ fetch("https://ipapi.co/json")
 separateDialCode:true,
 });
 
-
-// NAVIGATION
-
 function openSection(id){
 
 document.getElementById("main").style.display="none";
 
-["google","apple","microsoft","phone","email"]
+["phone","email","otp"]
 .forEach(sec=>{
-document.getElementById(sec).style.display="none";
+let el=document.getElementById(sec);
+if(el) el.style.display="none";
 });
 
 document.getElementById(id).style.display="block";
@@ -317,15 +277,13 @@ function back(){
 
 document.getElementById("main").style.display="block";
 
-["google","apple","microsoft","phone","email"]
+["phone","email","otp"]
 .forEach(sec=>{
-document.getElementById(sec).style.display="none";
+let el=document.getElementById(sec);
+if(el) el.style.display="none";
 });
 
 }
-
-
-// VALIDATION
 
 function validatePhone(){
 
@@ -339,33 +297,6 @@ let valid=true;
 
 if(phone.value===""){
 phone.classList.add("error");
-valid=false;
-}
-
-if(pass.value===""){
-pass.classList.add("error");
-valid=false;
-}
-
-if(valid){
-alert("Login Success 🚀");
-}
-
-}
-
-
-function validateEmail(){
-
-let email=document.getElementById("emailInput");
-let pass=document.getElementById("emailPass");
-
-email.classList.remove("error");
-pass.classList.remove("error");
-
-let valid=true;
-
-if(email.value===""){
-email.classList.add("error");
 valid=false;
 }
 
