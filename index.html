@@ -6,6 +6,9 @@
 
 <title>Vaishnex Auth</title>
 
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
+
 <style>
 
 *{
@@ -51,18 +54,6 @@ margin:auto;
 margin-bottom:20px;
 color:#7aa2ff;
 background:radial-gradient(circle at 30% 30%, #3b82f6, #020617);
-animation:pulse 2.5s infinite;
-}
-
-@keyframes pulse{
-0%{transform:scale(.95);box-shadow:0 0 0 0 rgba(59,130,246,.6);}
-70%{transform:scale(1);box-shadow:0 0 0 25px rgba(59,130,246,0);}
-100%{transform:scale(.95);}
-}
-
-h2{
-text-align:center;
-margin-bottom:20px;
 }
 
 /* BUTTONS */
@@ -77,11 +68,6 @@ color:white;
 font-size:15px;
 margin-bottom:10px;
 cursor:pointer;
-transition:.25s;
-}
-
-.auth-btn:hover{
-background:rgba(255,255,255,.05);
 }
 
 /* INPUT */
@@ -96,12 +82,6 @@ background:#020617;
 color:white;
 outline:none;
 }
-
-.input:focus{
-border-color:#3b82f6;
-}
-
-/* PRIMARY BUTTON */
 
 .primary{
 margin-top:16px;
@@ -130,14 +110,21 @@ color:#94a3b8;
 cursor:pointer;
 }
 
-.links span:hover{
-color:white;
-}
-
-/* HIDE */
-
 .hidden{
 display:none;
+}
+
+/* FIX PHONE INPUT DARK */
+
+.iti input{
+background:#020617 !important;
+color:white;
+border:none;
+}
+
+.iti__country-list{
+background:#020617;
+color:white;
 }
 
 </style>
@@ -149,23 +136,14 @@ display:none;
 
 <div class="logo">V</div>
 
-<h2 id="title">Log in or sign up</h2>
+<h2 style="text-align:center;margin-bottom:20px;">
+Log in or sign up
+</h2>
+
 
 <!-- MAIN OPTIONS -->
 
 <div id="main">
-
-<button class="auth-btn" onclick="openSection('google')">
-Continue with Google
-</button>
-
-<button class="auth-btn" onclick="openSection('apple')">
-Continue with Apple
-</button>
-
-<button class="auth-btn" onclick="openSection('microsoft')">
-Continue with Microsoft
-</button>
 
 <button class="auth-btn" onclick="openSection('phone')">
 Continue with Phone
@@ -175,39 +153,45 @@ Continue with Phone
 Continue with Email
 </button>
 
+<button class="auth-btn" onclick="openSection('signup')">
+Create Account
+</button>
+
 </div>
 
-<!-- PHONE -->
+
+<!-- PHONE LOGIN -->
 
 <div id="phone" class="hidden">
 
-<input class="input" placeholder="Mobile number">
-<input class="input" placeholder="Enter OTP">
+<input id="phoneInput" type="tel" class="input">
 
-<button class="primary">Verify & Continue</button>
+<button class="primary">Send OTP</button>
 
 <div class="links">
 <span onclick="back()">← Back</span>
-<span>Sign up</span>
+<span onclick="openSection('signup')">Sign up</span>
 </div>
 
 </div>
 
-<!-- EMAIL LOGIN -->
+
+<!-- EMAIL LOGIN (NOW WITH BACK BUTTON) -->
 
 <div id="email" class="hidden">
 
-<input class="input" placeholder="Email address">
+<input class="input" placeholder="Email">
 <input class="input" type="password" placeholder="Password">
 
 <button class="primary">Login</button>
 
 <div class="links">
+<span onclick="back()">← Back</span>
 <span>Forgot password?</span>
-<span onclick="showSignup()">Sign up</span>
 </div>
 
 </div>
+
 
 <!-- SIGNUP -->
 
@@ -216,57 +200,54 @@ Continue with Email
 <input class="input" placeholder="Full name">
 <input class="input" placeholder="Email">
 <input class="input" type="password" placeholder="Password">
-<input class="input" type="password" placeholder="Confirm password">
 
 <button class="primary">Create Account</button>
 
 <div class="links">
-<span onclick="showLogin()">← Login</span>
+<span onclick="back()">← Back</span>
 <span>Forgot password?</span>
 </div>
 
 </div>
 
-<!-- SOCIAL PLACEHOLDER -->
-
-<div id="google" class="hidden">
-<h2 style="text-align:center;">Google Authentication</h2>
-<button class="primary">Continue Securely</button>
-<div class="links">
-<span onclick="back()">← Back</span>
-<span>Sign up</span>
-</div>
 </div>
 
-<div id="apple" class="hidden">
-<h2 style="text-align:center;">Apple Authentication</h2>
-<button class="primary">Continue Securely</button>
-<div class="links">
-<span onclick="back()">← Back</span>
-<span>Sign up</span>
-</div>
-</div>
 
-<div id="microsoft" class="hidden">
-<h2 style="text-align:center;">Microsoft Authentication</h2>
-<button class="primary">Continue Securely</button>
-<div class="links">
-<span onclick="back()">← Back</span>
-<span>Sign up</span>
-</div>
-</div>
 
-</div>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 
 <script>
+
+// 200+ COUNTRIES + AUTO DETECT
+
+const phoneInput = document.querySelector("#phoneInput");
+
+window.intlTelInput(phoneInput, {
+
+initialCountry:"auto",
+
+geoIpLookup:function(callback){
+
+fetch("https://ipapi.co/json")
+.then(res=>res.json())
+.then(data=>callback(data.country_code))
+.catch(()=>callback("IN"));
+
+},
+
+separateDialCode:true,
+
+});
+
+
+
+// NAVIGATION
 
 function openSection(id){
 
 document.getElementById("main").style.display="none";
 
-let sections=["phone","email","signup","google","apple","microsoft"];
-
-sections.forEach(sec=>{
+["phone","email","signup"].forEach(sec=>{
 document.getElementById(sec).style.display="none";
 });
 
@@ -278,22 +259,10 @@ function back(){
 
 document.getElementById("main").style.display="block";
 
-let sections=["phone","email","signup","google","apple","microsoft"];
-
-sections.forEach(sec=>{
+["phone","email","signup"].forEach(sec=>{
 document.getElementById(sec).style.display="none";
 });
 
-}
-
-function showSignup(){
-document.getElementById("email").style.display="none";
-document.getElementById("signup").style.display="block";
-}
-
-function showLogin(){
-document.getElementById("signup").style.display="none";
-document.getElementById("email").style.display="block";
 }
 
 </script>
