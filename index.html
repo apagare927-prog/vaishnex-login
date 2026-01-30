@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
+
+<title>Vaishnex Auth</title>
 
 <style>
 
@@ -30,48 +33,40 @@ color:white;
 width:95%;
 max-width:420px;
 padding:32px;
-border-radius:30px;
+border-radius:28px;
 background:rgba(15,23,42,.75);
-backdrop-filter:blur(20px);
-box-shadow:0 40px 90px rgba(0,0,0,.7);
+backdrop-filter:blur(18px);
+box-shadow:0 40px 80px rgba(0,0,0,.7);
 }
 
 /* LOGO */
 
 .logo{
-width:105px;
-height:105px;
+width:110px;
+height:110px;
 border-radius:50%;
 display:flex;
 justify-content:center;
 align-items:center;
-font-size:46px;
+font-size:48px;
 font-weight:700;
 margin:auto;
-margin-bottom:18px;
+margin-bottom:20px;
 color:#7aa2ff;
 
 background:radial-gradient(circle at 30% 30%, #3b82f6, #020617);
 
-animation:
-float 4s ease-in-out infinite,
-pulse 2.5s infinite alternate;
-}
-
-@keyframes float{
-0%{transform:translateY(0)}
-50%{transform:translateY(-12px)}
-100%{transform:translateY(0)}
+animation:pulse 2s infinite alternate;
 }
 
 @keyframes pulse{
 from{box-shadow:0 0 15px #2563eb}
-to{box-shadow:0 0 40px #3b82f6}
+to{box-shadow:0 0 45px #3b82f6}
 }
 
 h2{
 text-align:center;
-margin-bottom:22px;
+margin-bottom:24px;
 font-weight:600;
 }
 
@@ -85,17 +80,26 @@ border:1px solid rgba(255,255,255,.08);
 background:transparent;
 color:white;
 font-size:15px;
-margin-bottom:12px;
+margin-bottom:14px;
 cursor:pointer;
 
 display:flex;
 align-items:center;
 justify-content:center;
 gap:12px;
+
+transition:.25s;
 }
 
-.auth-btn img{
+.auth-btn:hover{
+border:1px solid #3b82f6;
+}
+
+/* ICONS */
+
+.icon{
 width:22px;
+height:22px;
 }
 
 /* INPUT */
@@ -103,7 +107,7 @@ width:22px;
 .input{
 width:100%;
 padding:15px;
-margin-top:10px;
+margin-top:12px;
 border-radius:14px;
 border:1px solid #1e293b;
 background:#020617;
@@ -118,7 +122,7 @@ border:2px solid #ff4d4d !important;
 /* PRIMARY */
 
 .primary{
-margin-top:16px;
+margin-top:18px;
 width:100%;
 padding:15px;
 border:none;
@@ -134,16 +138,11 @@ background:linear-gradient(135deg,#2563eb,#60a5fa);
 margin-top:18px;
 color:#94a3b8;
 cursor:pointer;
+font-size:14px;
 }
 
 .hidden{
 display:none;
-}
-
-.iti input{
-background:#020617 !important;
-color:white;
-border:none;
 }
 
 </style>
@@ -161,18 +160,21 @@ border:none;
 
 <div id="main">
 
-<button class="auth-btn">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
+<button class="auth-btn" onclick="googleLogin()">
+<img class="icon"
+src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
 Continue with Google
 </button>
 
 <button class="auth-btn">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
+<img class="icon"
+src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
 Continue with Apple
 </button>
 
 <button class="auth-btn">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg">
+<img class="icon"
+src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg">
 Continue with Microsoft
 </button>
 
@@ -181,7 +183,7 @@ Continue with Microsoft
 </button>
 
 <button class="auth-btn" onclick="openSection('email')">
-✉ Continue with Email
+✉️ Continue with Email
 </button>
 
 </div>
@@ -192,52 +194,41 @@ Continue with Microsoft
 <div id="phone" class="hidden">
 
 <input id="phoneInput" type="tel" class="input">
-<input id="phonePass" type="password" placeholder="Password" class="input">
 
-<button class="primary" onclick="validatePhone()">Continue</button>
+<input id="phonePass"
+type="password"
+placeholder="Password"
+class="input">
+
+<button class="primary" onclick="validatePhone()">
+Continue
+</button>
 
 <div class="back" onclick="back()">← Back</div>
 
 </div>
 
 
-
-<!-- EMAIL STEP 1 -->
+<!-- EMAIL -->
 
 <div id="email" class="hidden">
 
-<input id="emailInput" class="input" placeholder="Email address">
+<input id="emailInput"
+class="input"
+placeholder="Email address">
 
-<button class="primary" onclick="openSection('otp')">
+<input id="emailPass"
+type="password"
+placeholder="Password"
+class="input">
+
+<button class="primary" onclick="validateEmail()">
 Continue
 </button>
 
 <div class="back" onclick="back()">← Back</div>
 
 </div>
-
-
-
-<!-- OTP SCREEN -->
-
-<div id="otp" class="hidden">
-
-<h2>Check your inbox</h2>
-
-<input class="input" placeholder="Enter code">
-
-<button class="primary">
-Continue
-</button>
-
-<button class="auth-btn">
-Continue with password
-</button>
-
-<div class="back" onclick="back()">← Back</div>
-
-</div>
-
 
 </div>
 
@@ -246,9 +237,10 @@ Continue with password
 
 <script>
 
-const phoneInput = document.querySelector("#phoneInput");
-
-window.intlTelInput(phoneInput,{
+const phoneInput =
+window.intlTelInput(
+document.querySelector("#phoneInput"),
+{
 initialCountry:"auto",
 geoIpLookup:function(callback){
 fetch("https://ipapi.co/json")
@@ -257,33 +249,33 @@ fetch("https://ipapi.co/json")
 .catch(()=>callback("IN"));
 },
 separateDialCode:true,
-});
+}
+);
+
+/* NAVIGATION */
 
 function openSection(id){
 
 document.getElementById("main").style.display="none";
 
-["phone","email","otp"]
-.forEach(sec=>{
-let el=document.getElementById(sec);
-if(el) el.style.display="none";
+["phone","email"].forEach(sec=>{
+document.getElementById(sec).style.display="none";
 });
 
 document.getElementById(id).style.display="block";
-
 }
 
 function back(){
 
 document.getElementById("main").style.display="block";
 
-["phone","email","otp"]
-.forEach(sec=>{
-let el=document.getElementById(sec);
-if(el) el.style.display="none";
+["phone","email"].forEach(sec=>{
+document.getElementById(sec).style.display="none";
 });
 
 }
+
+/* VALIDATION */
 
 function validatePhone(){
 
@@ -293,22 +285,54 @@ let pass=document.getElementById("phonePass");
 phone.classList.remove("error");
 pass.classList.remove("error");
 
-let valid=true;
+let ok=true;
 
 if(phone.value===""){
 phone.classList.add("error");
-valid=false;
+ok=false;
 }
 
 if(pass.value===""){
 pass.classList.add("error");
-valid=false;
+ok=false;
 }
 
-if(valid){
-alert("Login Success 🚀");
+if(ok){
+alert("Phone Login Success 🚀");
 }
 
+}
+
+function validateEmail(){
+
+let email=document.getElementById("emailInput");
+let pass=document.getElementById("emailPass");
+
+email.classList.remove("error");
+pass.classList.remove("error");
+
+let ok=true;
+
+if(email.value===""){
+email.classList.add("error");
+ok=false;
+}
+
+if(pass.value===""){
+pass.classList.add("error");
+ok=false;
+}
+
+if(ok){
+alert("Email Login Success 🚀");
+}
+
+}
+
+/* GOOGLE DEMO */
+
+function googleLogin(){
+alert("Google auth coming soon 🔥");
 }
 
 </script>
