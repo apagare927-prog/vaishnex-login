@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vaishnex</title>
+<title>Vaishnex Login</title>
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 
+<!-- Country Selector -->
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
 
 </head>
 
@@ -18,262 +18,54 @@ href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelI
 
 <div class="container">
 
+<div class="card">
+
+<!-- Animated Logo -->
 <div class="logo"></div>
 
-<h1 id="title"></h1>
+<h1 id="dynamicText">Welcome to Vaishnex</h1>
 
-<!-- TOGGLE -->
+<!-- Toggle -->
 <div class="toggle">
-
 <button id="emailBtn" class="active">Email</button>
 <button id="mobileBtn">Mobile</button>
-
 </div>
 
-<input type="email"
-id="email"
-placeholder="Email address"
-class="input">
+<!-- EMAIL -->
+<input id="email"
+class="input"
+placeholder="Email address">
 
-<input type="tel"
-id="phone"
-class="input hidden">
+<!-- MOBILE -->
+<input id="phone"
+class="input hidden"
+placeholder="Mobile number">
 
-<input type="password"
-id="password"
-placeholder="Password"
-class="input">
+<!-- PASSWORD -->
+<input id="password"
+type="password"
+class="input"
+placeholder="Password">
 
-<button class="login-btn" onclick="login()">
+<button class="login-btn">
 Login
 </button>
 
-<button class="otp-btn" onclick="otpLogin()">
+<button class="otp-btn">
 Login with OTP
 </button>
 
 <div class="links">
-<span onclick="openCreate()">Create account</span>
-<span onclick="openForgot()">Forgot password?</span>
+<a href="signup.html">Create account</a>
+<a href="signup.html#recover">Forgot password?</a>
 </div>
 
 </div>
-
-
-
-<!-- CREATE PAGE -->
-
-<div id="createPage" class="page">
-
-<div class="logo small"></div>
-
-<h1>Create Vaishnex Account</h1>
-
-<input placeholder="Full name" class="input">
-<input placeholder="Email" class="input">
-<input id="createPhone" type="tel" class="input">
-<input placeholder="Password" type="password" class="input">
-
-<button class="login-btn">
-Create Account
-</button>
-
-<span class="back" onclick="closePages()">← Back</span>
-
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 
-
-<!-- FORGOT PAGE -->
-
-<div id="forgotPage" class="page">
-
-<div class="logo small"></div>
-
-<h1>Recover Vaishnex Password</h1>
-
-<input placeholder="Enter Email or Mobile"
-class="input">
-
-<button class="login-btn">
-Send Reset Link
-</button>
-
-<span class="back" onclick="closePages()">← Back</span>
-
-</div>
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-
-<script>
-
-//////////////////////////////////
-// COUNTRY SELECTOR
-//////////////////////////////////
-
-window.intlTelInput(document.querySelector("#phone"),{
-
-initialCountry:"auto",
-
-geoIpLookup:function(callback){
-
-fetch("https://ipapi.co/json")
-.then(res=>res.json())
-.then(data=>callback(data.country_code))
-.catch(()=>callback("IN"));
-
-},
-
-separateDialCode:true,
-utilsScript:
-"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
-
-});
-
-
-window.intlTelInput(document.querySelector("#createPhone"),{
-
-initialCountry:"auto",
-separateDialCode:true,
-utilsScript:
-"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
-
-});
-
-
-
-//////////////////////////////////
-// TOGGLE
-//////////////////////////////////
-
-const emailBtn=document.getElementById("emailBtn");
-const mobileBtn=document.getElementById("mobileBtn");
-
-const email=document.getElementById("email");
-const phone=document.getElementById("phone");
-
-emailBtn.onclick=()=>{
-
-email.classList.remove("hidden");
-phone.classList.add("hidden");
-
-emailBtn.classList.add("active");
-mobileBtn.classList.remove("active");
-
-}
-
-mobileBtn.onclick=()=>{
-
-phone.classList.remove("hidden");
-email.classList.add("hidden");
-
-mobileBtn.classList.add("active");
-emailBtn.classList.remove("active");
-
-}
-
-
-
-//////////////////////////////////
-// RED ANIMATION
-//////////////////////////////////
-
-function showError(el){
-
-el.classList.add("error");
-
-setTimeout(()=>{
-el.classList.remove("error");
-},600);
-
-}
-
-
-
-//////////////////////////////////
-// LOGIN
-//////////////////////////////////
-
-function login(){
-
-let valid=true;
-
-if(!email.classList.contains("hidden") && email.value===""){
-showError(email);
-valid=false;
-}
-
-if(!phone.classList.contains("hidden") && phone.value===""){
-showError(phone);
-valid=false;
-}
-
-if(password.value===""){
-showError(password);
-valid=false;
-}
-
-if(valid){
-alert("Welcome to Vaishnex 🚀");
-}
-
-}
-
-
-function otpLogin(){
-
-if(email.value==="" && phone.value===""){
-showError(email);
-showError(phone);
-return;
-}
-
-alert("Vaishnex OTP Sent ✅");
-
-}
-
-
-
-//////////////////////////////////
-// PAGES
-//////////////////////////////////
-
-function openCreate(){
-document.getElementById("createPage").style.display="flex";
-}
-
-function openForgot(){
-document.getElementById("forgotPage").style.display="flex";
-}
-
-function closePages(){
-document.getElementById("createPage").style.display="none";
-document.getElementById("forgotPage").style.display="none";
-}
-
-
-
-//////////////////////////////////
-// UNLIMITED DYNAMIC LINES
-//////////////////////////////////
-
-const lines=[];
-
-for(let i=1;i<=2000;i++){
-
-lines.push(`Welcome to Vaishnex ${i}`);
-lines.push(`Secure your Vaishnex ${i}`);
-lines.push(`Access Vaishnex ${i}`);
-lines.push(`Enter Vaishnex ${i}`);
-
-}
-
-document.getElementById("title").innerText=
-lines[Math.floor(Math.random()*lines.length)];
-
-</script>
+<script src="js/app.js"></script>
 
 </body>
 </html>
