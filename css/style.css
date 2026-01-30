@@ -2,7 +2,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family: 'Inter', sans-serif;
+font-family:'Inter',sans-serif;
 }
 
 body{
@@ -10,34 +10,30 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background: radial-gradient(circle at top,#0a1f44,#020617);
+background:radial-gradient(circle at top,#0a1f44,#020617);
 color:white;
 }
 
-.container{
+/* CARD */
+
+.card{
 width:92%;
 max-width:420px;
 padding:40px;
-border-radius:28px;
-
+border-radius:26px;
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(20px);
-
-box-shadow:
-0 0 60px rgba(0,180,255,.15),
-inset 0 0 30px rgba(255,255,255,.03);
+box-shadow:0 0 60px rgba(0,180,255,.15);
 }
 
-/* 🔥 Animated Logo */
+/* LOGO */
 
 .logo{
-width:110px;
-height:110px;
+width:100px;
+height:100px;
 margin:auto;
 border-radius:50%;
-
 background:linear-gradient(135deg,#00d2ff,#3a7bd5);
-
 position:relative;
 animation:pulse 2.5s infinite;
 }
@@ -48,7 +44,7 @@ position:absolute;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-font-size:48px;
+font-size:42px;
 font-weight:700;
 }
 
@@ -61,10 +57,9 @@ font-weight:700;
 h1{
 text-align:center;
 margin:25px 0;
-font-weight:600;
 }
 
-/* Toggle */
+/* TOGGLE */
 
 .toggle{
 display:flex;
@@ -80,7 +75,6 @@ padding:12px;
 border:none;
 background:none;
 color:#aaa;
-font-size:16px;
 cursor:pointer;
 }
 
@@ -89,7 +83,7 @@ background:linear-gradient(90deg,#00d2ff,#3a7bd5);
 color:white;
 }
 
-/* Inputs */
+/* INPUT */
 
 .input{
 width:100%;
@@ -99,7 +93,6 @@ border-radius:14px;
 border:1px solid transparent;
 background:#07142c;
 color:white;
-font-size:15px;
 transition:.3s;
 }
 
@@ -108,36 +101,44 @@ border:1px solid #00d2ff;
 outline:none;
 }
 
+/* 🔴 ERROR ANIMATION */
+
 .input.error{
 border:1px solid red;
+animation:shake .25s;
 }
 
-/* Buttons */
+@keyframes shake{
+25%{transform:translateX(4px);}
+75%{transform:translateX(-4px);}
+}
 
-.login-btn{
+/* BUTTON */
+
+.btn{
 width:100%;
 padding:16px;
 margin-top:18px;
 border:none;
 border-radius:16px;
 font-size:17px;
-font-weight:600;
 cursor:pointer;
-
 background:linear-gradient(90deg,#00d2ff,#3a7bd5);
 color:white;
 }
 
-.otp-btn{
+.btn-outline{
 width:100%;
 padding:15px;
 margin-top:12px;
 border-radius:16px;
-background:none;
 border:1px solid #00d2ff;
+background:none;
 color:white;
 cursor:pointer;
 }
+
+/* LINKS */
 
 .links{
 display:flex;
@@ -148,4 +149,11 @@ margin-top:18px;
 .links a{
 color:#7dd3fc;
 text-decoration:none;
+}
+
+/* COUNTRY FIX */
+
+.iti{
+width:100%;
+margin-top:14px;
 }
