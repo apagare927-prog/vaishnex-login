@@ -1,6 +1,5 @@
-// AUTO COUNTRY
-
-const phoneInput = window.intlTelInput(
+// COUNTRY AUTO DETECT
+const iti = window.intlTelInput(
 document.querySelector("#phone"),
 {
 initialCountry:"auto",
@@ -13,10 +12,10 @@ fetch("https://ipapi.co/json")
 }
 );
 
-// EMAIL / MOBILE toggle
-
+// TOGGLE
 const emailBtn=document.getElementById("emailBtn");
 const mobileBtn=document.getElementById("mobileBtn");
+
 const email=document.getElementById("email");
 const phone=document.getElementById("phone");
 
@@ -25,7 +24,6 @@ phone.style.display="none";
 emailBtn.onclick=()=>{
 email.style.display="block";
 phone.style.display="none";
-
 emailBtn.classList.add("active");
 mobileBtn.classList.remove("active");
 };
@@ -33,39 +31,40 @@ mobileBtn.classList.remove("active");
 mobileBtn.onclick=()=>{
 email.style.display="none";
 phone.style.display="block";
-
 mobileBtn.classList.add("active");
 emailBtn.classList.remove("active");
 };
 
-// Unlimited Premium Lines
-
-const lines=[
+// DYNAMIC HEADLINES
+const titles=[
 "Welcome to Vaishnex",
 "Secure access to Vaishnex",
-"Enter the future with Vaishnex",
-"Your network begins at Vaishnex",
-"Experience premium security",
-"Connect smarter with Vaishnex"
+"Connect smarter with Vaishnex",
+"Your digital gateway",
+"Next-gen authentication"
 ];
 
-document.getElementById("dynamicText")
-.innerText=lines[Math.floor(Math.random()*lines.length)];
+document.getElementById("title")
+.innerText=titles[Math.floor(Math.random()*titles.length)];
 
 
-// RED validation
-
-document.querySelector(".login-btn")
+// EMPTY FIELD ERROR
+document.getElementById("loginBtn")
 .onclick=()=>{
 
 document.querySelectorAll(".input")
-.forEach(input=>{
-if(input.offsetParent!==null && !input.value){
-input.classList.add("error");
+.forEach(field=>{
+
+if(field.offsetParent!==null && !field.value){
+
+field.classList.add("error");
+
+setTimeout(()=>{
+field.classList.remove("error");
+},600);
+
 }
-else{
-input.classList.remove("error");
-}
+
 });
 
 };
