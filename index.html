@@ -1,284 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Vaishnex</title>
 
+<link rel="stylesheet" href="style.css">
+
 <link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
+href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
 
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
-
-body{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background: radial-gradient(circle at top,#0f2a5a,#020617);
-color:white;
-}
-
-/* CARD */
-
-.card{
-width:95%;
-max-width:420px;
-padding:42px 28px;
-border-radius:30px;
-background:linear-gradient(145deg,#071028,#020617);
-box-shadow:0 0 80px rgba(59,130,246,.25);
-text-align:center;
-position:relative;
-overflow:hidden;
-}
-
-/* 🔥 PROFESSIONAL LOGO */
-
-.logo{
-width:140px;
-height:140px;
-margin:auto;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:60px;
-font-weight:700;
-
-background:linear-gradient(135deg,#60a5fa,#2563eb);
-
-box-shadow:
-0 0 60px rgba(96,165,250,.6),
-inset 0 0 25px rgba(255,255,255,.2);
-
-animation:float 4s ease-in-out infinite;
-}
-
-@keyframes float{
-0%{transform:translateY(0);}
-50%{transform:translateY(-12px);}
-100%{transform:translateY(0);}
-}
-
-/* TITLE */
-
-#title{
-margin:22px 0;
-transition:.4s;
-}
-
-/* INPUT */
-
-.input{
-width:100%;
-padding:16px;
-margin:10px 0;
-border-radius:14px;
-border:2px solid transparent;
-background:#020617;
-color:white;
-font-size:16px;
-}
-
-.input:focus{
-border-color:#3b82f6;
-outline:none;
-}
-
-.error{
-border-color:#ef4444 !important;
-}
-
-/* BUTTON */
-
-.btn{
-width:100%;
-padding:16px;
-margin-top:14px;
-border:none;
-border-radius:14px;
-font-size:17px;
-font-weight:600;
-cursor:pointer;
-background:linear-gradient(90deg,#3b82f6,#60a5fa);
-color:white;
-}
-
-/* LINKS */
-
-.link{
-margin-top:14px;
-color:#60a5fa;
-cursor:pointer;
-}
-
-/* COUNTRY FIX */
-
-.iti{
-width:100%;
-}
-
-.iti__country-list{
-z-index:9999 !important;
-background:#020617 !important;
-color:white;
-}
-
-/* HIDE PAGES */
-
-.page{
-display:none;
-}
-
-.active{
-display:block;
-}
-
-</style>
 </head>
+
 <body>
 
-<div class="card">
+<div class="container">
 
-<div class="logo">V</div>
+<div class="logo"></div>
 
-<h1 id="title">Welcome to Vaishnex</h1>
+<h1 id="title"></h1>
 
-<!-- LOGIN PAGE -->
+<!-- TOGGLE -->
+<div class="toggle">
 
-<div id="login" class="page active">
-
-<input id="email" class="input" placeholder="Email">
-
-<input id="phone" class="input" placeholder="Mobile">
-
-<input id="password" type="password"
-class="input" placeholder="Password">
-
-<button class="btn" onclick="validate()">Login</button>
-
-<div class="link"
-onclick="openPage('create')">
-Create account
-</div>
-
-<div class="link"
-onclick="openPage('forgot')">
-Forgot password?
-</div>
+<button id="emailBtn" class="active">Email</button>
+<button id="mobileBtn">Mobile</button>
 
 </div>
 
+<input type="email"
+id="email"
+placeholder="Email address"
+class="input">
 
-<!-- CREATE ACCOUNT -->
-
-<div id="create" class="page">
-
-<input class="input"
-placeholder="Full name">
-
-<input class="input"
-placeholder="Email">
-
-<input class="input"
-placeholder="Mobile">
+<input type="tel"
+id="phone"
+class="input hidden">
 
 <input type="password"
-class="input"
-placeholder="Create password">
+id="password"
+placeholder="Password"
+class="input">
 
-<button class="btn">
+<button class="login-btn" onclick="login()">
+Login
+</button>
+
+<button class="otp-btn" onclick="otpLogin()">
+Login with OTP
+</button>
+
+<div class="links">
+<span onclick="openCreate()">Create account</span>
+<span onclick="openForgot()">Forgot password?</span>
+</div>
+
+</div>
+
+
+
+<!-- CREATE PAGE -->
+
+<div id="createPage" class="page">
+
+<div class="logo small"></div>
+
+<h1>Create Vaishnex Account</h1>
+
+<input placeholder="Full name" class="input">
+<input placeholder="Email" class="input">
+<input id="createPhone" type="tel" class="input">
+<input placeholder="Password" type="password" class="input">
+
+<button class="login-btn">
 Create Account
 </button>
 
-<div class="link"
-onclick="openPage('login')">
-Back to login
-</div>
+<span class="back" onclick="closePages()">← Back</span>
 
 </div>
 
 
-<!-- FORGOT -->
 
-<div id="forgot" class="page">
+<!-- FORGOT PAGE -->
 
-<input class="input"
-placeholder="Enter email">
+<div id="forgotPage" class="page">
 
-<button class="btn">
+<div class="logo small"></div>
+
+<h1>Recover Vaishnex Password</h1>
+
+<input placeholder="Enter Email or Mobile"
+class="input">
+
+<button class="login-btn">
 Send Reset Link
 </button>
 
-<div class="link"
-onclick="openPage('login')">
-Back to login
-</div>
-
-</div>
+<span class="back" onclick="closePages()">← Back</span>
 
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 
 <script>
 
-/* COUNTRY */
+//////////////////////////////////
+// COUNTRY SELECTOR
+//////////////////////////////////
 
-window.intlTelInput(
-document.querySelector("#phone"),
-{
+window.intlTelInput(document.querySelector("#phone"),{
+
 initialCountry:"auto",
-geoIpLookup:cb=>{
-fetch("https://ipwho.is/")
-.then(r=>r.json())
-.then(d=>cb(d.country_code))
-.catch(()=>cb("US"));
+
+geoIpLookup:function(callback){
+
+fetch("https://ipapi.co/json")
+.then(res=>res.json())
+.then(data=>callback(data.country_code))
+.catch(()=>callback("IN"));
+
 },
+
+separateDialCode:true,
 utilsScript:
-"https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
-});
-
-/* PAGE SWITCH */
-
-function openPage(id){
-
-document
-.querySelectorAll(".page")
-.forEach(p=>p.classList.remove("active"));
-
-document
-.getElementById(id)
-.classList.add("active");
-
-}
-
-/* VALIDATION */
-
-function validate(){
-
-document
-.querySelectorAll("#login .input")
-.forEach(i=>{
-
-if(!i.value){
-i.classList.add("error");
-setTimeout(()=>i.classList.remove("error"),700);
-}
+"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
 
 });
 
+
+window.intlTelInput(document.querySelector("#createPhone"),{
+
+initialCountry:"auto",
+separateDialCode:true,
+utilsScript:
+"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+
+});
+
+
+
+//////////////////////////////////
+// TOGGLE
+//////////////////////////////////
+
+const emailBtn=document.getElementById("emailBtn");
+const mobileBtn=document.getElementById("mobileBtn");
+
+const email=document.getElementById("email");
+const phone=document.getElementById("phone");
+
+emailBtn.onclick=()=>{
+
+email.classList.remove("hidden");
+phone.classList.add("hidden");
+
+emailBtn.classList.add("active");
+mobileBtn.classList.remove("active");
+
 }
+
+mobileBtn.onclick=()=>{
+
+phone.classList.remove("hidden");
+email.classList.add("hidden");
+
+mobileBtn.classList.add("active");
+emailBtn.classList.remove("active");
+
+}
+
+
+
+//////////////////////////////////
+// RED ANIMATION
+//////////////////////////////////
+
+function showError(el){
+
+el.classList.add("error");
+
+setTimeout(()=>{
+el.classList.remove("error");
+},600);
+
+}
+
+
+
+//////////////////////////////////
+// LOGIN
+//////////////////////////////////
+
+function login(){
+
+let valid=true;
+
+if(!email.classList.contains("hidden") && email.value===""){
+showError(email);
+valid=false;
+}
+
+if(!phone.classList.contains("hidden") && phone.value===""){
+showError(phone);
+valid=false;
+}
+
+if(password.value===""){
+showError(password);
+valid=false;
+}
+
+if(valid){
+alert("Welcome to Vaishnex 🚀");
+}
+
+}
+
+
+function otpLogin(){
+
+if(email.value==="" && phone.value===""){
+showError(email);
+showError(phone);
+return;
+}
+
+alert("Vaishnex OTP Sent ✅");
+
+}
+
+
+
+//////////////////////////////////
+// PAGES
+//////////////////////////////////
+
+function openCreate(){
+document.getElementById("createPage").style.display="flex";
+}
+
+function openForgot(){
+document.getElementById("forgotPage").style.display="flex";
+}
+
+function closePages(){
+document.getElementById("createPage").style.display="none";
+document.getElementById("forgotPage").style.display="none";
+}
+
+
+
+//////////////////////////////////
+// UNLIMITED DYNAMIC LINES
+//////////////////////////////////
+
+const lines=[];
+
+for(let i=1;i<=2000;i++){
+
+lines.push(`Welcome to Vaishnex ${i}`);
+lines.push(`Secure your Vaishnex ${i}`);
+lines.push(`Access Vaishnex ${i}`);
+lines.push(`Enter Vaishnex ${i}`);
+
+}
+
+document.getElementById("title").innerText=
+lines[Math.floor(Math.random()*lines.length)];
 
 </script>
 
