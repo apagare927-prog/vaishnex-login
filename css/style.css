@@ -1,61 +1,52 @@
 body{
 margin:0;
-font-family:system-ui;
-background:linear-gradient(135deg,#06142e,#0a1f44);
 height:100vh;
 display:flex;
-align-items:center;
 justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#071b34,#0a2a52);
+font-family:sans-serif;
 color:white;
 }
 
-.container{
-width:100%;
-padding:20px;
-}
-
 .card{
-max-width:420px;
-margin:auto;
+width:360px;
 padding:40px;
 border-radius:30px;
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(20px);
-box-shadow:0 0 40px rgba(0,0,0,.6);
 text-align:center;
+box-shadow:0 0 60px rgba(0,140,255,.2);
 }
 
-/* 🔥 Animated Professional Logo */
 .logo{
-width:120px;
-height:120px;
+width:140px;
+height:140px;
 margin:auto;
 border-radius:50%;
-background:linear-gradient(145deg,#3b82f6,#60a5fa);
-
-animation:glow 2s infinite alternate;
+background:linear-gradient(145deg,#4facfe,#00f2fe);
+animation:pulse 2s infinite;
 }
 
-@keyframes glow{
-from{
-box-shadow:0 0 20px #3b82f6;
-}
-to{
-box-shadow:0 0 60px #60a5fa;
-}
+@keyframes pulse{
+
+0%{box-shadow:0 0 20px #4facfe;}
+50%{box-shadow:0 0 60px #00f2fe;}
+100%{box-shadow:0 0 20px #4facfe;}
+
 }
 
 h1{
-margin:20px 0;
+margin-top:20px;
 font-weight:600;
 }
 
 .toggle{
 display:flex;
-background:#08152d;
+background:#081a33;
 border-radius:12px;
 overflow:hidden;
-margin-bottom:15px;
+margin:25px 0;
 }
 
 .toggle button{
@@ -68,7 +59,7 @@ cursor:pointer;
 }
 
 .toggle .active{
-background:#3b82f6;
+background:#4facfe;
 }
 
 .input{
@@ -76,50 +67,31 @@ width:100%;
 padding:14px;
 margin:10px 0;
 border-radius:12px;
-border:1px solid transparent;
-background:#08152d;
+border:none;
+background:#081a33;
 color:white;
 outline:none;
-transition:.3s;
 }
 
-.input:focus{
-border:1px solid #3b82f6;
-}
-
-/* 🔥 RED ERROR LINE */
-.input.error{
-border:1px solid red;
-animation:shake .2s 2;
-}
-
-@keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-4px)}
-50%{transform:translateX(4px)}
-75%{transform:translateX(-4px)}
-100%{transform:translateX(0)}
-}
-
-.login-btn{
+.loginBtn{
 width:100%;
-padding:15px;
-margin-top:10px;
+padding:14px;
 border:none;
 border-radius:14px;
-background:linear-gradient(90deg,#3b82f6,#60a5fa);
+margin-top:10px;
+background:linear-gradient(90deg,#4facfe,#00f2fe);
 color:white;
-font-size:18px;
+font-size:16px;
 cursor:pointer;
 }
 
-.otp-btn{
+.otpBtn{
 width:100%;
-padding:15px;
+padding:14px;
 margin-top:10px;
 border-radius:14px;
-border:1px solid #3b82f6;
-background:none;
+background:transparent;
+border:1px solid #4facfe;
 color:white;
 cursor:pointer;
 }
@@ -128,13 +100,29 @@ cursor:pointer;
 display:flex;
 justify-content:space-between;
 margin-top:15px;
+font-size:14px;
 }
 
-.links a{
-color:#60a5fa;
-text-decoration:none;
+.links span{
+cursor:pointer;
+color:#4facfe;
+}
+
+.popup{
+position:absolute;
+width:360px;
+padding:40px;
+border-radius:30px;
+background:#071b34;
+text-align:center;
 }
 
 .hidden{
 display:none;
+}
+
+.back{
+margin-top:20px;
+cursor:pointer;
+color:#4facfe;
 }
