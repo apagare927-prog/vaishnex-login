@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vaishnex Login</title>
+<title>Vaishnex Auth</title>
 
 <style>
 
@@ -20,7 +20,7 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(180deg,#020617,#020617,#03122e);
+background:linear-gradient(180deg,#020617,#03122e);
 color:white;
 }
 
@@ -29,8 +29,8 @@ color:white;
 .card{
 width:95%;
 max-width:420px;
-padding:32px;
-border-radius:24px;
+padding:30px;
+border-radius:26px;
 background:rgba(15,23,42,.75);
 backdrop-filter:blur(20px);
 box-shadow:0 40px 80px rgba(0,0,0,.6);
@@ -39,18 +39,17 @@ box-shadow:0 40px 80px rgba(0,0,0,.6);
 /* LOGO */
 
 .logo{
-width:95px;
-height:95px;
+width:90px;
+height:90px;
 border-radius:50%;
 display:flex;
 justify-content:center;
 align-items:center;
-font-size:42px;
+font-size:40px;
 font-weight:700;
 margin:auto;
-margin-bottom:22px;
+margin-bottom:20px;
 color:#7aa2ff;
-
 background:radial-gradient(circle at 30% 30%, #3b82f6, #020617);
 animation:pulse 2.5s infinite;
 }
@@ -61,110 +60,84 @@ animation:pulse 2.5s infinite;
 100%{transform:scale(.95);}
 }
 
-h1{
+h2{
 text-align:center;
-margin-bottom:8px;
-}
-
-p{
-text-align:center;
-color:#94a3b8;
-margin-bottom:25px;
+margin-bottom:20px;
 }
 
 /* BUTTONS */
 
-.login-btn{
+.auth-btn{
 width:100%;
-padding:16px;
+padding:15px;
 border-radius:14px;
 border:1px solid rgba(255,255,255,.08);
 background:transparent;
 color:white;
-font-size:16px;
-margin-bottom:12px;
+font-size:15px;
+margin-bottom:10px;
 cursor:pointer;
 transition:.25s;
 }
 
-.login-btn:hover{
+.auth-btn:hover{
 background:rgba(255,255,255,.05);
-}
-
-/* DIVIDER */
-
-.divider{
-display:flex;
-align-items:center;
-margin:18px 0;
-color:#64748b;
-}
-
-.divider::before,
-.divider::after{
-content:"";
-flex:1;
-height:1px;
-background:#1e293b;
-}
-
-.divider span{
-margin:0 10px;
 }
 
 /* INPUT */
 
-.input-group{
-position:relative;
-margin-bottom:14px;
-}
-
-input{
+.input{
 width:100%;
-padding:16px;
+padding:15px;
+margin-top:10px;
 border-radius:14px;
 border:1px solid #1e293b;
 background:#020617;
 color:white;
-font-size:15px;
 outline:none;
 }
 
-input:focus{
+.input:focus{
 border-color:#3b82f6;
 }
 
-/* SHOW PASSWORD */
+/* PRIMARY BUTTON */
 
-.toggle{
-position:absolute;
-right:14px;
-top:50%;
-transform:translateY(-50%);
-cursor:pointer;
-color:#94a3b8;
-font-size:13px;
-}
-
-/* CONTINUE */
-
-.continue{
-margin-top:10px;
+.primary{
+margin-top:16px;
 width:100%;
-padding:16px;
+padding:15px;
 border:none;
 border-radius:14px;
 font-size:16px;
 font-weight:600;
 color:white;
 cursor:pointer;
-
 background:linear-gradient(135deg,#2563eb,#60a5fa);
-transition:.25s;
 }
 
-.continue:hover{
-transform:translateY(-2px);
+/* LINKS */
+
+.links{
+margin-top:14px;
+display:flex;
+justify-content:space-between;
+font-size:14px;
+color:#94a3b8;
+}
+
+.links span{
+cursor:pointer;
+}
+
+.links span:hover{
+color:white;
+}
+
+/* HIDE */
+
+.hidden{
+display:none;
 }
 
 </style>
@@ -176,45 +149,151 @@ transform:translateY(-2px);
 
 <div class="logo">V</div>
 
-<h1>Log in or sign up</h1>
-<p>Welcome to Vaishnex</p>
+<h2 id="title">Log in or sign up</h2>
 
-<button class="login-btn">Continue with Google</button>
-<button class="login-btn">Continue with Apple</button>
-<button class="login-btn">Continue with Microsoft</button>
-<button class="login-btn">Continue with phone</button>
+<!-- MAIN OPTIONS -->
 
-<div class="divider">
-<span>OR</span>
+<div id="main">
+
+<button class="auth-btn" onclick="openSection('google')">
+Continue with Google
+</button>
+
+<button class="auth-btn" onclick="openSection('apple')">
+Continue with Apple
+</button>
+
+<button class="auth-btn" onclick="openSection('microsoft')">
+Continue with Microsoft
+</button>
+
+<button class="auth-btn" onclick="openSection('phone')">
+Continue with Phone
+</button>
+
+<button class="auth-btn" onclick="openSection('email')">
+Continue with Email
+</button>
+
 </div>
 
-<div class="input-group">
-<input type="email" placeholder="Email address">
+<!-- PHONE -->
+
+<div id="phone" class="hidden">
+
+<input class="input" placeholder="Mobile number">
+<input class="input" placeholder="Enter OTP">
+
+<button class="primary">Verify & Continue</button>
+
+<div class="links">
+<span onclick="back()">← Back</span>
+<span>Sign up</span>
 </div>
 
-<div class="input-group">
-<input id="password" type="password" placeholder="Password">
-<span class="toggle" onclick="togglePass()">Show</span>
 </div>
 
-<button class="continue">Continue</button>
+<!-- EMAIL LOGIN -->
+
+<div id="email" class="hidden">
+
+<input class="input" placeholder="Email address">
+<input class="input" type="password" placeholder="Password">
+
+<button class="primary">Login</button>
+
+<div class="links">
+<span>Forgot password?</span>
+<span onclick="showSignup()">Sign up</span>
+</div>
+
+</div>
+
+<!-- SIGNUP -->
+
+<div id="signup" class="hidden">
+
+<input class="input" placeholder="Full name">
+<input class="input" placeholder="Email">
+<input class="input" type="password" placeholder="Password">
+<input class="input" type="password" placeholder="Confirm password">
+
+<button class="primary">Create Account</button>
+
+<div class="links">
+<span onclick="showLogin()">← Login</span>
+<span>Forgot password?</span>
+</div>
+
+</div>
+
+<!-- SOCIAL PLACEHOLDER -->
+
+<div id="google" class="hidden">
+<h2 style="text-align:center;">Google Authentication</h2>
+<button class="primary">Continue Securely</button>
+<div class="links">
+<span onclick="back()">← Back</span>
+<span>Sign up</span>
+</div>
+</div>
+
+<div id="apple" class="hidden">
+<h2 style="text-align:center;">Apple Authentication</h2>
+<button class="primary">Continue Securely</button>
+<div class="links">
+<span onclick="back()">← Back</span>
+<span>Sign up</span>
+</div>
+</div>
+
+<div id="microsoft" class="hidden">
+<h2 style="text-align:center;">Microsoft Authentication</h2>
+<button class="primary">Continue Securely</button>
+<div class="links">
+<span onclick="back()">← Back</span>
+<span>Sign up</span>
+</div>
+</div>
 
 </div>
 
 <script>
 
-function togglePass(){
+function openSection(id){
 
-let pass=document.getElementById("password");
+document.getElementById("main").style.display="none";
 
-if(pass.type==="password"){
-pass.type="text";
-event.target.innerText="Hide";
-}else{
-pass.type="password";
-event.target.innerText="Show";
+let sections=["phone","email","signup","google","apple","microsoft"];
+
+sections.forEach(sec=>{
+document.getElementById(sec).style.display="none";
+});
+
+document.getElementById(id).style.display="block";
+
 }
 
+function back(){
+
+document.getElementById("main").style.display="block";
+
+let sections=["phone","email","signup","google","apple","microsoft"];
+
+sections.forEach(sec=>{
+document.getElementById(sec).style.display="none";
+});
+
+}
+
+function showSignup(){
+document.getElementById("email").style.display="none";
+document.getElementById("signup").style.display="block";
+}
+
+function showLogin(){
+document.getElementById("signup").style.display="none";
+document.getElementById("email").style.display="block";
 }
 
 </script>
