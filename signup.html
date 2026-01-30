@@ -1,31 +1,12 @@
-<script>
-fetch("https://ipapi.co/json/")
-.then(res => res.json())
-.then(data => {
-
-let countryCode = data.country_code; // IN, US, GB etc
-
-const input = document.querySelector("#phone");
-
-const iti = window.intlTelInput(input, {
-initialCountry: countryCode.toLowerCase(),
-separateDialCode:true
-});
-
-});
-</script><!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
 
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Create Account</title>
 
 <link rel="stylesheet" href="css/style.css">
 
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
+<title>Create Vaishnex Account</title>
 
 </head>
 
@@ -33,142 +14,49 @@ href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.
 
 <div class="container">
 
-<div class="logo">
-<div class="logo-v">V</div>
-</div>
+<div class="card">
 
-<h1>Create Account</h1>
-<p class="subtitle">Join Vaishnex</p>
+<div class="logo"></div>
 
+<h1>Create Vaishnex Account</h1>
 
-<!-- TOGGLE -->
-<div class="toggle">
+<input class="input" placeholder="Full Name">
+<input class="input" placeholder="Email">
 
-<button id="mobileBtn" class="active">Mobile</button>
-<button id="emailBtn">Email</button>
-
-</div>
-
-
-<form id="signupForm">
-
-<input type="text" placeholder="Full Name" required>
-
-
-<!-- EMAIL -->
-<input id="emailField"
-type="email"
-placeholder="Email"
-style="display:none;">
-
-
-<!-- PHONE -->
-<input id="phone"
-type="tel"
-placeholder="Enter mobile number">
-
+<input id="phone2"
+class="input"
+placeholder="Mobile number">
 
 <input type="password"
-id="password"
-placeholder="Password"
-required>
+class="input"
+placeholder="Password">
 
-<input type="password"
-id="confirmPassword"
-placeholder="Confirm Password"
-required>
-
-<button class="main-btn">
+<button class="login-btn">
 Create Account
 </button>
 
-</form>
-
-<p class="bottom-text">
-Already have an account?
-<a href="index.html">Login</a>
-</p>
+<div class="links">
+<a href="index.html">← Back to Login</a>
+</div>
 
 </div>
 
-
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 
 <script>
 
-const phoneInput = document.querySelector("#phone");
-
-window.intlTelInput(phoneInput, {
+const phone2 =
+window.intlTelInput(document.querySelector("#phone2"), {
 
 initialCountry:"auto",
 
-geoIpLookup:function(callback){
+geoIpLookup:(callback)=>{
 fetch("https://ipapi.co/json")
 .then(res=>res.json())
 .then(data=>callback(data.country_code))
 .catch(()=>callback("IN"));
-},
-
-separateDialCode:true,
-preferredCountries:["in","us","gb"]
-
-});
-
-
-// TOGGLE LOGIC
-
-const mobileBtn = document.getElementById("mobileBtn");
-const emailBtn = document.getElementById("emailBtn");
-
-const phone = document.getElementById("phone");
-const email = document.getElementById("emailField");
-
-mobileBtn.onclick = () => {
-
-mobileBtn.classList.add("active");
-emailBtn.classList.remove("active");
-
-phone.style.display="block";
-email.style.display="none";
-
-phone.required=true;
-email.required=false;
-
-}
-
-emailBtn.onclick = () => {
-
-emailBtn.classList.add("active");
-mobileBtn.classList.remove("active");
-
-phone.style.display="none";
-email.style.display="block";
-
-phone.required=false;
-email.required=true;
-
-}
-
-
-
-// PASSWORD MATCH CHECK
-
-document
-.getElementById("signupForm")
-.addEventListener("submit",function(e){
-
-const pass = password.value;
-const confirm = confirmPassword.value;
-
-if(pass !== confirm){
-
-e.preventDefault();
-
-confirmPassword.style.border="2px solid red";
-
-alert("Passwords do not match");
-
 }
 
 });
