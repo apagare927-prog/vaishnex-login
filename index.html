@@ -32,42 +32,72 @@ color:white;
 .card{
 width:95%;
 max-width:420px;
-padding:30px;
-border-radius:26px;
+padding:32px;
+border-radius:28px;
 background:rgba(15,23,42,.75);
 backdrop-filter:blur(20px);
-box-shadow:0 40px 80px rgba(0,0,0,.6);
+box-shadow:0 40px 90px rgba(0,0,0,.7);
 }
 
-/* LOGO */
+/* 🔥 ANIMATED LOGO */
 
 .logo{
-width:90px;
-height:90px;
+width:95px;
+height:95px;
 border-radius:50%;
 display:flex;
 justify-content:center;
 align-items:center;
-font-size:40px;
+font-size:42px;
 font-weight:700;
 margin:auto;
 margin-bottom:20px;
 color:#7aa2ff;
+
 background:radial-gradient(circle at 30% 30%, #3b82f6, #020617);
+
+animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-12px)}
+100%{transform:translateY(0)}
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
 }
 
 /* BUTTONS */
 
 .auth-btn{
 width:100%;
-padding:15px;
+padding:16px;
 border-radius:14px;
 border:1px solid rgba(255,255,255,.08);
 background:transparent;
 color:white;
 font-size:15px;
-margin-bottom:10px;
+margin-bottom:12px;
 cursor:pointer;
+
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+transition:.25s;
+}
+
+.auth-btn:hover{
+background:rgba(255,255,255,.05);
+}
+
+/* ICON */
+
+.icon{
+font-size:18px;
 }
 
 /* INPUT */
@@ -114,7 +144,7 @@ cursor:pointer;
 display:none;
 }
 
-/* FIX PHONE INPUT DARK */
+/* DARK FIX FOR PHONE */
 
 .iti input{
 background:#020617 !important;
@@ -136,31 +166,89 @@ color:white;
 
 <div class="logo">V</div>
 
-<h2 style="text-align:center;margin-bottom:20px;">
-Log in or sign up
-</h2>
+<h2>Log in or sign up</h2>
 
 
 <!-- MAIN OPTIONS -->
 
 <div id="main">
 
+<button class="auth-btn" onclick="openSection('google')">
+<span class="icon">🔵</span>
+Continue with Google
+</button>
+
+<button class="auth-btn" onclick="openSection('apple')">
+<span class="icon">🍎</span>
+Continue with Apple
+</button>
+
+<button class="auth-btn" onclick="openSection('microsoft')">
+<span class="icon">🪟</span>
+Continue with Microsoft
+</button>
+
 <button class="auth-btn" onclick="openSection('phone')">
-Continue with Phone
+📞 Continue with Phone
 </button>
 
 <button class="auth-btn" onclick="openSection('email')">
-Continue with Email
-</button>
-
-<button class="auth-btn" onclick="openSection('signup')">
-Create Account
+✉️ Continue with Email
 </button>
 
 </div>
 
 
-<!-- PHONE LOGIN -->
+<!-- GOOGLE -->
+
+<div id="google" class="hidden">
+
+<h2>Google Login</h2>
+
+<button class="primary">Authenticate Google</button>
+
+<div class="links">
+<span onclick="back()">← Back</span>
+<span onclick="openSection('signup')">Sign up</span>
+</div>
+
+</div>
+
+
+<!-- APPLE -->
+
+<div id="apple" class="hidden">
+
+<h2>Apple Login</h2>
+
+<button class="primary">Authenticate Apple</button>
+
+<div class="links">
+<span onclick="back()">← Back</span>
+<span onclick="openSection('signup')">Sign up</span>
+</div>
+
+</div>
+
+
+<!-- MICROSOFT -->
+
+<div id="microsoft" class="hidden">
+
+<h2>Microsoft Login</h2>
+
+<button class="primary">Authenticate Microsoft</button>
+
+<div class="links">
+<span onclick="back()">← Back</span>
+<span onclick="openSection('signup')">Sign up</span>
+</div>
+
+</div>
+
+
+
+<!-- PHONE -->
 
 <div id="phone" class="hidden">
 
@@ -176,7 +264,8 @@ Create Account
 </div>
 
 
-<!-- EMAIL LOGIN (NOW WITH BACK BUTTON) -->
+
+<!-- EMAIL -->
 
 <div id="email" class="hidden">
 
@@ -191,6 +280,7 @@ Create Account
 </div>
 
 </div>
+
 
 
 <!-- SIGNUP -->
@@ -218,7 +308,7 @@ Create Account
 
 <script>
 
-// 200+ COUNTRIES + AUTO DETECT
+// 🔥 AUTO COUNTRY DETECT (200+)
 
 const phoneInput = document.querySelector("#phoneInput");
 
@@ -240,14 +330,14 @@ separateDialCode:true,
 });
 
 
-
 // NAVIGATION
 
 function openSection(id){
 
 document.getElementById("main").style.display="none";
 
-["phone","email","signup"].forEach(sec=>{
+["google","apple","microsoft","phone","email","signup"]
+.forEach(sec=>{
 document.getElementById(sec).style.display="none";
 });
 
@@ -259,7 +349,8 @@ function back(){
 
 document.getElementById("main").style.display="block";
 
-["phone","email","signup"].forEach(sec=>{
+["google","apple","microsoft","phone","email","signup"]
+.forEach(sec=>{
 document.getElementById(sec).style.display="none";
 });
 
