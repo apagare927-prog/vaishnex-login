@@ -4,68 +4,288 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vaishnex Login</title>
+<title>Vaishnex</title>
 
-<link rel="stylesheet" href="css/style.css">
-
-<!-- Country Selector -->
+<!-- COUNTRY SELECTOR FIX -->
 <link rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
 
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+
+<style>
+
+/* BACKGROUND */
+
+body{
+margin:0;
+font-family: 'Segoe UI', sans-serif;
+background: radial-gradient(circle at top,#0a1f44,#020617);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+/* CARD */
+
+.card{
+width:380px;
+max-width:92%;
+padding:40px 30px;
+border-radius:28px;
+background:linear-gradient(145deg,#0f172a,#020617);
+box-shadow:0 0 60px rgba(59,130,246,.25);
+text-align:center;
+}
+
+/* LOGO */
+
+.logo{
+width:140px;
+height:140px;
+margin:auto;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:60px;
+font-weight:bold;
+background:linear-gradient(135deg,#3b82f6,#60a5fa);
+animation:float 4s ease-in-out infinite,
+glow 2.5s infinite alternate;
+}
+
+@keyframes float{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-12px)}
+}
+
+@keyframes glow{
+from{box-shadow:0 0 20px #3b82f6}
+to{box-shadow:0 0 60px #60a5fa}
+}
+
+/* DYNAMIC TITLE */
+
+.title{
+font-size:28px;
+font-weight:600;
+margin:25px 0;
+min-height:70px;
+}
+
+/* TOGGLE */
+
+.toggle{
+display:flex;
+background:#020617;
+border-radius:14px;
+overflow:hidden;
+margin-bottom:20px;
+}
+
+.toggle button{
+flex:1;
+padding:12px;
+border:none;
+background:none;
+color:#94a3b8;
+font-size:15px;
+cursor:pointer;
+}
+
+.toggle .active{
+background:#3b82f6;
+color:white;
+}
+
+/* INPUTS */
+
+input{
+width:100%;
+padding:15px;
+margin:10px 0;
+border-radius:12px;
+border:2px solid transparent;
+background:#020617;
+color:white;
+font-size:15px;
+outline:none;
+transition:.25s;
+}
+
+input:focus{
+border-color:#3b82f6;
+}
+
+/* RED ERROR LINE */
+
+.error{
+border-color:#ef4444 !important;
+animation:shake .25s;
+}
+
+@keyframes shake{
+25%{transform:translateX(4px)}
+75%{transform:translateX(-4px)}
+}
+
+/* BUTTON */
+
+.btn{
+width:100%;
+padding:15px;
+margin-top:10px;
+border:none;
+border-radius:14px;
+background:linear-gradient(135deg,#3b82f6,#60a5fa);
+color:white;
+font-size:17px;
+cursor:pointer;
+}
+
+.link{
+margin-top:16px;
+color:#60a5fa;
+cursor:pointer;
+display:inline-block;
+}
+
+/* HIDE SECTIONS */
+
+.hidden{
+display:none;
+}
+
+</style>
 </head>
+
 
 <body>
 
-<div class="container">
-
 <div class="card">
 
-<!-- Animated Logo -->
-<div class="logo"></div>
+<div class="logo">V</div>
 
-<h1 id="dynamicText">Welcome to Vaishnex</h1>
+<div id="title" class="title"></div>
 
-<!-- Toggle -->
+<!-- TOGGLE -->
+
 <div class="toggle">
 <button id="emailBtn" class="active">Email</button>
 <button id="mobileBtn">Mobile</button>
 </div>
 
-<!-- EMAIL -->
-<input id="email"
-class="input"
-placeholder="Email address">
+<input id="email" placeholder="Email address">
 
-<!-- MOBILE -->
-<input id="phone"
-class="input hidden"
-placeholder="Mobile number">
+<input id="phone" placeholder="Mobile number">
 
-<!-- PASSWORD -->
-<input id="password"
-type="password"
-class="input"
-placeholder="Password">
+<input id="password" type="password" placeholder="Password">
 
-<button class="login-btn">
-Login
-</button>
+<button class="btn" onclick="login()">Login</button>
 
-<button class="otp-btn">
-Login with OTP
-</button>
+<button class="btn" style="background:#020617;border:1px solid #3b82f6"
+onclick="otp()">Login with OTP</button>
 
-<div class="links">
-<a href="signup.html">Create account</a>
-<a href="signup.html#recover">Forgot password?</a>
-</div>
+<div class="link" onclick="openSignup()">Create account</div>
+<div class="link" onclick="openForgot()">Forgot password?</div>
 
 </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script>
 
-<script src="js/app.js"></script>
+/* UNLIMITED DYNAMIC LINES */
+
+const lines=[];
+
+for(let i=1;i<=5000;i++){
+lines.push(`Welcome to Vaishnex ${i}`);
+lines.push(`Secure access to Vaishnex ${i}`);
+lines.push(`Enter Vaishnex ${i}`);
+lines.push(`Your network awaits — Vaishnex ${i}`);
+}
+
+function randomTitle(){
+document.getElementById("title").innerText=
+lines[Math.floor(Math.random()*lines.length)];
+}
+
+randomTitle();
+setInterval(randomTitle,3000);
+
+/* TOGGLE */
+
+const email=document.getElementById("email");
+const phone=document.getElementById("phone");
+
+phone.style.display="none";
+
+emailBtn.onclick=()=>{
+email.style.display="block";
+phone.style.display="none";
+emailBtn.classList.add("active");
+mobileBtn.classList.remove("active");
+}
+
+mobileBtn.onclick=()=>{
+email.style.display="none";
+phone.style.display="block";
+mobileBtn.classList.add("active");
+emailBtn.classList.remove("active");
+}
+
+/* COUNTRY SELECTOR */
+
+const iti=window.intlTelInput(phone,{
+initialCountry:"auto",
+geoIpLookup:(cb)=>{
+fetch("https://ipapi.co/json")
+.then(res=>res.json())
+.then(data=>cb(data.country_code))
+.catch(()=>cb("IN"));
+},
+utilsScript:
+"https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+});
+
+/* LOGIN VALIDATION */
+
+function login(){
+
+let valid=true;
+
+[email,phone,password].forEach(el=>{
+if(el.style.display!=="none" && el.value===""){
+el.classList.add("error");
+valid=false;
+setTimeout(()=>el.classList.remove("error"),800);
+}
+});
+
+if(valid){
+alert("Vaishnex Login Success (Demo)");
+}
+
+}
+
+/* OTP */
+
+function otp(){
+alert("OTP system ready — connect backend later.");
+}
+
+/* PAGES */
+
+function openSignup(){
+alert("Create Account page — backend connect karna hoga.");
+}
+
+function openForgot(){
+alert("Password recovery — backend required.");
+}
+
+</script>
 
 </body>
 </html>
