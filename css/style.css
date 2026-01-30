@@ -1,240 +1,67 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-}
-
-
-body{
-
-height:100vh;
+.logo{
+width:130px;
+height:130px;
+border-radius:50%;
+margin:auto;
 
 display:flex;
 align-items:center;
 justify-content:center;
 
-background:linear-gradient(180deg,#020617,#031525);
-
+font-size:52px;
+font-weight:700;
 color:white;
 
+/* Premium gradient */
+background:linear-gradient(145deg,#4f8cff,#2563eb);
+
+/* 3D depth */
+box-shadow:
+0 10px 40px rgba(37,99,235,.6),
+inset 0 4px 18px rgba(255,255,255,.25);
+
+/* SUPER animation */
+animation:logoPulse 2.8s infinite ease-in-out;
 }
 
-
-/* CARD */
-
-.container{
-
-width:92%;
-max-width:380px;
-
-padding:35px 25px;
-
-border-radius:24px;
-
-background:rgba(10,18,35,.75);
-
-box-shadow:0 0 60px rgba(0,0,0,.6);
-
-backdrop-filter:blur(20px);
-
-text-align:center;
-
-}
-
-
-
-/* LOGO */
-
-.logo{
-display:flex;
-justify-content:center;
-margin-bottom:15px;
-}
-
-
-.logo-v{
-
-width:95px;
-height:95px;
-
+/* Glow wave */
+.logo::before{
+content:'';
+position:absolute;
+width:130px;
+height:130px;
 border-radius:50%;
 
-background:linear-gradient(145deg,#3b82f6,#1e40af);
+background:rgba(59,130,246,.35);
 
-display:flex;
-align-items:center;
-justify-content:center;
+animation:ring 2.8s infinite;
+z-index:-1;
+}
 
-font-size:44px;
-font-weight:800;
+/* Animations */
 
-box-shadow:0 0 45px rgba(59,130,246,.6);
+@keyframes logoPulse{
 
-animation:float 3s ease-in-out infinite;
+0%,100%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.18);
+}
 
 }
 
+@keyframes ring{
 
-@keyframes float{
-
-0%{transform:translateY(0)}
-50%{transform:translateY(-12px)}
-100%{transform:translateY(0)}
-
+0%{
+transform:scale(1);
+opacity:.6;
 }
 
-
-h1{
-font-size:30px;
-margin-bottom:6px;
+100%{
+transform:scale(1.8);
+opacity:0;
 }
 
-.subtitle{
-color:#94a3b8;
-margin-bottom:22px;
-}
-
-
-
-/* TOGGLE */
-
-.toggle{
-
-display:flex;
-background:#020617;
-border-radius:14px;
-padding:4px;
-
-margin-bottom:18px;
-
-}
-
-.toggle button{
-
-flex:1;
-padding:12px;
-
-border:none;
-border-radius:10px;
-
-background:transparent;
-color:#94a3b8;
-
-font-size:15px;
-cursor:pointer;
-transition:.25s;
-
-}
-
-.toggle .active{
-
-background:linear-gradient(135deg,#3b82f6,#2563eb);
-color:white;
-font-weight:600;
-
-}
-
-
-
-/* INPUT */
-
-.input{
-
-width:100%;
-padding:14px;
-
-margin-bottom:14px;
-
-border-radius:12px;
-border:none;
-
-background:#020617;
-color:white;
-
-font-size:15px;
-
-outline:none;
-
-}
-
-.input:focus{
-border:2px solid #3b82f6;
-}
-
-
-
-/* BUTTON */
-
-.main-btn{
-
-width:100%;
-padding:14px;
-
-border:none;
-border-radius:14px;
-
-background:linear-gradient(135deg,#3b82f6,#2563eb);
-
-color:white;
-font-size:17px;
-font-weight:600;
-
-cursor:pointer;
-
-transition:.25s;
-
-}
-
-
-.main-btn:hover{
-transform:scale(1.03);
-}
-
-
-
-/* TEXT */
-
-.bottom-text{
-
-margin-top:18px;
-color:#94a3b8;
-font-size:14px;
-
-}
-
-
-
-/* PHONE LIB FIX */
-
-.iti{
-width:100%;
-margin-bottom:14px;
-}
-
-.iti input{
-background:#020617 !important;
-color:white;
-border:none;
-border-radius:12px;
-padding:14px;
-}/* COUNTRY DROPDOWN FIX */
-
-.iti__country-list{
-background:#020617 !important;
-color:white !important;
-font-size:14px;
-}
-
-.iti__country{
-color:white !important;
-padding:10px !important;
-}
-
-.iti__dial-code{
-color:#94a3b8 !important;
-}
-
-.iti__country-name{
-color:white !important;
 }
