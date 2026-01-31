@@ -1,44 +1,105 @@
-let generatedOTP = null;
+let otp = null;
+let timerInterval;
+let timeLeft = 30;
 
-function isEmail(value) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
+const userInput = document.getElementById("userInput");
+const countrySelect = document.getElementById("country");
 
-function isMobile(value) {
-  return /^[0-9]{8,15}$/.test(value);
-}
+/* LOAD 230+ COUNTRIES */
+fetch("https://restcountries.com/v3.1/all")
+  .then(r => r.json())
+  .then(data => {
+    data.forEach(c => {
+      if (c.idd?.root) {
+        const code = c.idd.root + (c.idd.suffixes?.[0] || "");
+        const opt = document.createElement("option");
+        opt.value = code;
+        opt.textContent = `${c.flag || ""} ${code}`;
+        countrySelect.appendChild(opt);
+      }
+    });
+  });
+
+/* DETECT EMAIL / MOBILE */
+userInput.addEventListener("input", () => {
+  const val = userInput.value.trim();
+  if (/^\d{5,}$/.test(val)) {
+    countrySelect.classList.remove("hidden");
+  } else {
+    countrySelect.classList.add("hidden");
+  }
+});
 
 function sendOTP() {
-  const input = document.getElementById("userInput").value.trim();
-  const error = document.getElementById("error");
+  const val = userInput.value.trim();
+  const err = document.getElementById("inputError");
 
-  error.textContent = "";
+  err.classList.remove("error-active");
 
-  if (!isEmail(input) && !isMobile(input)) {
-    error.textContent = "Please enter valid email or mobile";
+  if (!val) {
+    err.classList.add("error-active");
     return;
   }
 
-  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-  console.log("OTP:", generatedOTP); // demo
+  otp = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log("OTP:", otp);
 
   document.getElementById("otpBox").classList.remove("hidden");
+  startTimer();
+  autoReadOTP();
 }
 
-function verifyOTP() {
-  const otp = document.getElementById("otpInput").value.trim();
-  const error = document.getElementById("otpError");
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 30;
+  const timer = document.getElementById("timer");
 
-  error.textContent = "";
+  timer.textContent = `Resend OTP in ${timeLeft}s`;
 
-  if (otp !== generatedOTP) {
-    error.textContent = "Invalid OTP";
-    return;
-  }
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timer.textContent = `Resend OTP in ${timeLeft}s`;
 
-  alert("OTP Verified ✅ (Go to Dashboard)");
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timer.textContent = "";
+    }
+  }, 1000);
 }
 
 function resendOTP() {
+  if (timeLeft > 0) return;
   sendOTP();
+}
+
+function verifyOTP() {
+  const entered = document.getElementById("otpInput").value.trim();
+  const err = document.getElementById("otpError");
+
+  err.classList.remove("error-active");
+
+  if (entered !== otp) {
+    err.classList.add("error-active");
+    return;
+  }
+
+  document.getElementById("loginCard").classList.add("hidden");
+  document.getElementById("successCard").classList.remove("hidden");
+}
+
+/* AUTO OTP READ (ANDROID CHROME) */
+async function autoReadOTP() {
+  if (!("OTPCredential" in window)) return;
+
+  try {
+    const content = await navigator.credentials.get({
+      otp: { transport: ["sms"] },
+      signal: new AbortController().signal
+    });
+
+    document.getElementById("otpInput").value = content.code;
+    verifyOTP();
+  } catch (e) {
+    console.log("Auto OTP not available");
+  }
 }
