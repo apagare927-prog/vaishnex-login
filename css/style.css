@@ -23,71 +23,88 @@ body {
   margin: auto;
   background: rgba(15,25,45,.95);
   border-radius: 18px;
-  padding: 30px 22px;
+  padding: 32px 22px;
   text-align: center;
-  box-shadow: 0 25px 70px rgba(0,0,0,.7);
+  box-shadow: 0 25px 70px rgba(0,0,0,.75);
   overflow: hidden;
 }
 
-/* LOGO */
+/* ================= LOGO ================= */
+
 .logo-wrapper {
   position: relative;
-  width: 130px;
-  height: 130px;
-  margin: 0 auto 12px;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 14px;
 }
 
 .logo-circle {
   width: 100%;
   height: 100%;
-  background: #0c162a;
+  background: radial-gradient(circle at top, #0f1f3d, #070e1d);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
   position: relative;
+  z-index: 2;
 }
 
 .logo-circle span {
   color: #fff;
   font-weight: 700;
   letter-spacing: 2px;
+  font-size: 15px;
 }
+
+/* ===== STRONGER PREMIUM GLOW ===== */
 
 .logo-glow {
   position: absolute;
-  inset: -30px;
+  inset: -38px;
   border-radius: 50%;
-  border: 4px solid #3a86ff;
-  filter: blur(14px);
-  box-shadow:
-    0 0 40px rgba(58,134,255,.6),
-    0 0 90px rgba(58,134,255,.9),
-    0 0 160px rgba(58,134,255,1);
-  animation: glowPulse 3.2s infinite ease-in-out;
+  background: radial-gradient(
+    circle,
+    rgba(58,134,255,.55),
+    rgba(58,134,255,.35),
+    rgba(58,134,255,.15),
+    transparent 70%
+  );
+  filter: blur(18px);
+  animation: glowPulse 3.4s ease-in-out infinite;
 }
 
 @keyframes glowPulse {
-  0% { opacity:.35; transform:scale(.92); }
-  50% { opacity:1; transform:scale(1.12); }
-  100% { opacity:.35; transform:scale(.92); }
+  0% {
+    opacity: .55;
+    transform: scale(.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18);
+  }
+  100% {
+    opacity: .55;
+    transform: scale(.95);
+  }
 }
 
-/* TEXT */
+/* ================= TEXT ================= */
+
 .welcome {
   color: #cfd8ff;
   margin: 12px 0 22px;
   font-size: 15px;
 }
 
-/* INPUT */
+/* ================= INPUT ================= */
+
 input {
   width: 100%;
   padding: 14px;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #000;
-  border: 1px solid #222;
+  border: 1px solid #1f2a44;
   color: #fff;
   font-size: 14px;
   margin-bottom: 10px;
@@ -96,14 +113,16 @@ input {
 input:focus {
   outline: none;
   border-color: #3a86ff;
+  box-shadow: 0 0 0 1px rgba(58,134,255,.4);
 }
 
-/* BUTTON */
+/* ================= BUTTON ================= */
+
 button {
   width: 100%;
   padding: 14px;
-  border-radius: 12px;
-  background: #3a86ff;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #4b90ff, #2563eb);
   border: none;
   color: #fff;
   font-size: 16px;
@@ -115,7 +134,8 @@ button:active {
   transform: scale(.98);
 }
 
-/* ERROR */
+/* ================= ERROR ================= */
+
 .error {
   display: none;
   color: #ff4d4d;
@@ -123,7 +143,8 @@ button:active {
   margin-bottom: 8px;
 }
 
-/* RESEND */
+/* ================= RESEND ================= */
+
 .resend {
   margin-top: 14px;
   font-size: 13px;
@@ -136,7 +157,8 @@ button:active {
   font-weight: 600;
 }
 
-/* UTIL */
+/* ================= UTIL ================= */
+
 .hidden {
   display: none;
 }
