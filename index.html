@@ -1,55 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Vaishnex Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.3.1/build/css/intlTelInput.css">
 </head>
 <body>
 
-<div class="page-bg"></div>
+<canvas id="redLines"></canvas>
 
-<div class="card">
+<div class="container">
+  <div class="card">
 
-  <!-- LOGO -->
-  <div class="logo-wrap">
-    <div class="logo-glow"></div>
-    <div class="logo-circle">VAISHNEX</div>
+    <div class="logo-wrap">
+      <div class="logo-glow"></div>
+      <div class="logo">VAISHNEX</div>
+    </div>
+
+    <p id="welcomeText" class="welcome"></p>
+
+    <input id="identityInput" type="text" placeholder="Email or mobile number">
+
+    <button id="sendOtpBtn">Send OTP</button>
+
+    <div id="otpSection" class="hidden">
+      <input id="otpInput" type="text" placeholder="Enter OTP" autocomplete="one-time-code">
+      <button id="verifyOtpBtn">Verify OTP</button>
+
+      <p id="timerText"></p>
+      <p id="resendText" class="hidden">
+        Didn’t receive OTP? <span id="resendBtn">Resend OTP</span>
+      </p>
+    </div>
+
   </div>
-
-  <!-- WELCOME -->
-  <p id="welcomeText" class="welcome">Welcome to Vaishnex</p>
-
-  <!-- INPUT -->
-  <div class="input-row">
-    <select id="countrySelect" class="country hidden"></select>
-    <input id="userInput" type="text" placeholder="Email or mobile number" />
-  </div>
-
-  <div id="errorMsg" class="error hidden"></div>
-
-  <button id="sendOtpBtn">Send OTP</button>
-
-  <!-- OTP SECTION -->
-  <div id="otpSection" class="hidden">
-    <input id="otpInput" type="text" placeholder="Enter OTP" maxlength="6" />
-    <button id="verifyOtpBtn">Verify OTP</button>
-
-    <p id="timerText" class="timer"></p>
-    <p id="resendWrap" class="hidden">
-      Didn’t receive OTP? <span id="resendOtp">Resend OTP</span>
-    </p>
-  </div>
-
-  <!-- SUCCESS -->
-  <div id="successPage" class="hidden">
-    <h2>Login Successful ✅</h2>
-    <p>Welcome to Vaishnex Dashboard</p>
-  </div>
-
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.3.1/build/js/intlTelInput.min.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
