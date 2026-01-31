@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vaishnex Secure Login</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Vaishnex Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
-
 <body>
-<div class="login-card">
 
-  <!-- LOGO -->
-  <div class="logo-ring">
-    <div class="logo-core">VAISHNEX</div>
+<div class="container">
+  <div class="card">
+
+    <!-- LOGO -->
+    <div class="logo-ring">
+      <div class="logo-text">VAISHNEX</div>
+    </div>
+
+    <h2 id="welcomeLine">Welcome to Vaishnex</h2>
+
+    <!-- INPUT -->
+    <div class="input-group">
+      <select id="countrySelect"></select>
+      <input id="userInput" placeholder="Email or mobile number" />
+    </div>
+    <div class="error" id="inputError"></div>
+
+    <button id="sendOtpBtn">Send OTP</button>
+
+    <!-- OTP -->
+    <input id="otpInput" placeholder="Enter OTP" style="display:none" />
+    <div class="error" id="otpError"></div>
+
+    <button id="verifyOtpBtn" style="display:none">Verify OTP</button>
+
+    <div class="timer" id="resendTimer"></div>
+    <button id="resendBtn" style="display:none">Resend OTP</button>
+
   </div>
-
-  <!-- WELCOME -->
-  <h2 id="welcomeLine"></h2>
-
-  <!-- IDENTITY -->
-  <div class="identity-row">
-    <select id="countrySelect"></select>
-    <input id="identityInput" placeholder="Email or mobile number">
-  </div>
-  <div class="error" id="identityError"></div>
-
-  <!-- SEND OTP -->
-  <button id="sendOtpBtn">Send OTP</button>
-
-  <!-- OTP -->
-  <input id="otpInput" placeholder="Enter OTP">
-  <div class="error" id="otpError"></div>
-
-  <button id="verifyOtpBtn">Verify OTP</button>
-
-  <!-- TIMER -->
-  <div class="timer" id="otpTimer"></div>
-  <div class="resend" id="resendOtp">Resend OTP</div>
-
 </div>
 
-<script src="app.js"></script>
+<script src="/app.js"></script>
 </body>
 </html>
