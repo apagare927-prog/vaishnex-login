@@ -1,67 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" href="css/style.css">
-
-<title>Create Vaishnex Account</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vaishnex Login</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div class="container">
+  <div class="card">
 
-<div class="card">
+    <div class="logo-wrap">
+      <div class="logo-circle">
+        <span class="logo-v">V</span>
+      </div>
+      <h1 class="brand">Vaishnex</h1>
+      <p class="welcome">Welcome back! Please login to continue</p>
+    </div>
 
-<div class="logo"></div>
+    <div class="toggle">
+      <button id="emailBtn" class="active">Email</button>
+      <button id="mobileBtn">Mobile</button>
+    </div>
 
-<h1>Create Vaishnex Account</h1>
+    <form id="loginForm">
 
-<input class="input" placeholder="Full Name">
-<input class="input" placeholder="Email">
+      <!-- EMAIL -->
+      <input type="email" id="email" placeholder="Enter your email">
 
-<input id="phone2"
-class="input"
-placeholder="Mobile number">
+      <!-- MOBILE -->
+      <div class="mobileBox hidden">
+        <select id="country">
+          <option value="+91">🇮🇳 India +91</option>
+          <option value="+1">🇺🇸 USA +1</option>
+          <option value="+44">🇬🇧 UK +44</option>
+          <option value="+971">🇦🇪 UAE +971</option>
+          <!-- later JS se 230+ load hoga -->
+        </select>
+        <input type="tel" id="mobile" placeholder="Enter mobile number">
+      </div>
 
-<input type="password"
-class="input"
-placeholder="Password">
+      <input type="password" id="password" placeholder="Enter password">
 
-<button class="login-btn">
-Create Account
-</button>
+      <button type="submit" class="primary">Login</button>
+      <button type="button" class="secondary" id="otpLogin">Login with OTP</button>
 
-<div class="links">
-<a href="index.html">← Back to Login</a>
+      <div class="links">
+        <a href="create.html">Create account</a>
+        <a href="forgot.html">Forgot password?</a>
+      </div>
+
+    </form>
+  </div>
 </div>
 
-</div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
-
-<script>
-
-const phone2 =
-window.intlTelInput(document.querySelector("#phone2"), {
-
-initialCountry:"auto",
-
-geoIpLookup:(callback)=>{
-fetch("https://ipapi.co/json")
-.then(res=>res.json())
-.then(data=>callback(data.country_code))
-.catch(()=>callback("IN"));
-}
-
-});
-
-</script>
-
+<script src="app.js"></script>
 </body>
 </html>
