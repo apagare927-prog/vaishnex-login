@@ -1,99 +1,108 @@
-/* ---------------- WELCOME LINES (5000+) ---------------- */
-const welcomeLines = [];
-for (let i = 1; i <= 6000; i++) {
-  welcomeLines.push(`Welcome to Vaishnex • Experience #${i}`);
+/* ---------- RED LINES BACKGROUND ---------- */
+const canvas = document.getElementById("redLines");
+const ctx = canvas.getContext("2d");
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
 }
-document.getElementById("welcomeText").innerText =
-  welcomeLines[Math.floor(Math.random() * welcomeLines.length)];
+resize();
+window.addEventListener("resize", resize);
 
-/* ---------------- COUNTRIES (230+) ---------------- */
-const countries = [
-  ["India","+91"],["United States","+1"],["United Kingdom","+44"],
-  ["Canada","+1"],["Australia","+61"],["Germany","+49"],
-  ["France","+33"],["Japan","+81"],["China","+86"],
-  ["Brazil","+55"],["Russia","+7"],["South Africa","+27"],
-  // (list continues — real project me full ISO list rahegi)
-];
+const lines = Array.from({length:150},()=>({
+  x: Math.random()*w,
+  y: Math.random()*h,
+  speed: .3 + Math.random(),
+  len: 80 + Math.random()*200,
+  o: .2 + Math.random()*.6
+}));
 
-const countrySelect = document.getElementById("countrySelect");
-countries.forEach(c => {
-  const opt = document.createElement("option");
-  opt.textContent = `${c[0]} ${c[1]}`;
-  opt.value = c[1];
-  countrySelect.appendChild(opt);
-});
+function drawLines() {
+  ctx.clearRect(0,0,w,h);
+  lines.forEach(l=>{
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(255,0,0,${l.o})`;
+    ctx.moveTo(l.x,l.y);
+    ctx.lineTo(l.x,l.y+l.len);
+    ctx.stroke();
+    l.y -= l.speed;
+    if(l.y + l.len < 0){
+      l.y = h + 50;
+      l.x = Math.random()*w;
+    }
+  });
+  requestAnimationFrame(drawLines);
+}
+drawLines();
 
-/* ---------------- ELEMENTS ---------------- */
-const input = document.getElementById("userInput");
+/* ---------- WELCOME LINE ---------- */
+const welcomeText = document.getElementById("welcomeText");
+const a = ["Secure","Smart","Premium","Next-Gen","Trusted","Fast"];
+const b = ["Platform","Experience","Network","System","Ecosystem"];
+welcomeText.innerText =
+  `Welcome to Vaishnex ${a[Math.floor(Math.random()*a.length)]} ${b[Math.floor(Math.random()*b.length)]}`;
+
+/* ---------- OTP FLOW ---------- */
+const identityInput = document.getElementById("identityInput");
 const sendBtn = document.getElementById("sendOtpBtn");
 const otpSection = document.getElementById("otpSection");
-const otpInput = document.getElementById("otpInput");
-const verifyBtn = document.getElementById("verifyOtpBtn");
-const resendWrap = document.getElementById("resendWrap");
 const timerText = document.getElementById("timerText");
-const errorMsg = document.getElementById("errorMsg");
-const successPage = document.getElementById("successPage");
+const resendText = document.getElementById("resendText");
+const resendBtn = document.getElementById("resendBtn");
 
-let timer;
+let timer, t = 30;
 
-/* ---------------- INPUT DETECT ---------------- */
-input.addEventListener("input", () => {
-  const val = input.value.trim();
-  if (/^\d{6,}$/.test(val)) {
-    countrySelect.classList.remove("hidden");
-  } else {
-    countrySelect.classList.add("hidden");
-  }
+let iti = null;
+function enableCountrySelector(){
+  if(iti) return;
+  iti = intlTelInput(identityInput,{
+    initialCountry:"auto",
+    geoIpLookup: cb=>{
+      fetch("https://ipapi.co/json")
+        .then(r=>r.json())
+        .then(d=>cb(d.country_code.toLowerCase()))
+        .catch(()=>cb("in"));
+    },
+    utilsScript:"https://cdn.jsdelivr.net/npm/intl-tel-input@18.3.1/build/js/utils.js"
+  });
+}
+
+identityInput.addEventListener("input",()=>{
+  if(/^\d{6,}$/.test(identityInput.value)) enableCountrySelector();
 });
 
-/* ---------------- SEND OTP ---------------- */
-sendBtn.onclick = () => {
-  if (!input.value.trim()) {
-    input.classList.add("error-line");
-    setTimeout(()=>input.classList.remove("error-line"),300);
-    return;
-  }
-
+sendBtn.onclick=()=>{
   otpSection.classList.remove("hidden");
-  sendBtn.disabled = true;
-  startTimer(30);
+  startTimer();
   autoReadOTP();
 };
 
-/* ---------------- TIMER ---------------- */
-function startTimer(sec) {
-  resendWrap.classList.add("hidden");
-  timerText.innerText = `Resend OTP in ${sec}s`;
-  timer = setInterval(() => {
-    sec--;
-    timerText.innerText = `Resend OTP in ${sec}s`;
-    if (sec <= 0) {
+function startTimer(){
+  clearInterval(timer);
+  t=30;
+  resendText.classList.add("hidden");
+  timerText.innerText=`Resend OTP in ${t}s`;
+  timer=setInterval(()=>{
+    t--;
+    timerText.innerText=`Resend OTP in ${t}s`;
+    if(t<=0){
       clearInterval(timer);
-      timerText.innerText = "";
-      resendWrap.classList.remove("hidden");
+      timerText.innerText="";
+      resendText.classList.remove("hidden");
     }
-  }, 1000);
+  },1000);
 }
 
-/* ---------------- VERIFY OTP ---------------- */
-verifyBtn.onclick = () => {
-  if (otpInput.value === "1234") {
-    document.querySelector(".card").style.display = "none";
-    successPage.classList.remove("hidden");
-  } else {
-    otpInput.classList.add("error-line");
-    setTimeout(()=>otpInput.classList.remove("error-line"),300);
-  }
-};
+resendBtn.onclick=()=>startTimer();
 
-/* ---------------- AUTO OTP READ (ANDROID) ---------------- */
-async function autoReadOTP() {
-  if ('OTPCredential' in window) {
-    try {
-      const otp = await navigator.credentials.get({
-        otp: { transport: ['sms'] }
-      });
-      otpInput.value = otp.code;
-    } catch {}
-  }
+/* ---------- AUTO OTP READ (ANDROID CHROME) ---------- */
+async function autoReadOTP(){
+  if(!("OTPCredential" in window)) return;
+  try{
+    const cred = await navigator.credentials.get({
+      otp:{transport:["sms"]}
+    });
+    document.getElementById("otpInput").value = cred.code;
+  }catch{}
 }
