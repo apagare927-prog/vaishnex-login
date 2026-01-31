@@ -1,55 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vaishnex Login</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <div class="page">
-  <div class="card">
 
-    <!-- LOGO -->
+  <!-- LOGIN CARD -->
+  <div class="card" id="loginCard">
+
     <div class="logo-wrap">
       <div class="logo-glow"></div>
       <div class="logo">VAISHNEX</div>
     </div>
 
-    <h2 class="welcome">Welcome to Vaishnex</h2>
+    <p class="welcome">Welcome to Vaishnex</p>
 
-    <!-- INPUT -->
-    <input
-      id="userInput"
-      type="text"
-      placeholder="Email or mobile number"
-    />
+    <div class="input-row">
+      <select id="country" class="hidden"></select>
+      <input id="userInput" placeholder="Email or mobile number">
+    </div>
 
-    <p id="error" class="error"></p>
+    <div id="inputError" class="error-line"></div>
 
-    <!-- SEND OTP -->
-    <button id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+    <button onclick="sendOTP()">Send OTP</button>
 
-    <!-- OTP SECTION -->
-    <div id="otpBox" class="hidden">
-      <input
-        id="otpInput"
-        type="text"
-        placeholder="Enter OTP"
-      />
+    <!-- OTP BOX -->
+    <div id="otpBox" class="otp-box hidden">
+      <input id="otpInput" placeholder="Enter OTP" autocomplete="one-time-code">
 
-      <p id="otpError" class="error"></p>
+      <div id="otpError" class="error-line"></div>
 
       <button onclick="verifyOTP()">Verify OTP</button>
 
+      <p class="timer" id="timer"></p>
+
       <p class="resend">
         Didn’t receive OTP?
-        <span onclick="resendOTP()">Resend OTP</span>
+        <span id="resendBtn" onclick="resendOTP()">Resend OTP</span>
       </p>
     </div>
 
   </div>
+
+  <!-- SUCCESS PAGE -->
+  <div class="card hidden" id="successCard">
+    <h2>✅ Login Successful</h2>
+    <p>Welcome to Vaishnex Dashboard</p>
+  </div>
+
 </div>
 
 <script src="js/app.js"></script>
