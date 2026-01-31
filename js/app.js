@@ -4,8 +4,10 @@ let timeLeft = 30;
 
 const userInput = document.getElementById("userInput");
 const countrySelect = document.getElementById("country");
+const resendBtn = document.getElementById("resendBtn");
+const timerText = document.getElementById("timer");
 
-/* LOAD 230+ COUNTRIES */
+/* LOAD COUNTRIES (230+) */
 fetch("https://restcountries.com/v3.1/all")
   .then(r => r.json())
   .then(data => {
@@ -20,7 +22,7 @@ fetch("https://restcountries.com/v3.1/all")
     });
   });
 
-/* DETECT EMAIL / MOBILE */
+/* EMAIL / MOBILE DETECT */
 userInput.addEventListener("input", () => {
   const val = userInput.value.trim();
   if (/^\d{5,}$/.test(val)) {
@@ -33,7 +35,6 @@ userInput.addEventListener("input", () => {
 function sendOTP() {
   const val = userInput.value.trim();
   const err = document.getElementById("inputError");
-
   err.classList.remove("error-active");
 
   if (!val) {
@@ -45,6 +46,8 @@ function sendOTP() {
   console.log("OTP:", otp);
 
   document.getElementById("otpBox").classList.remove("hidden");
+
+  resendBtn.style.display = "none"; // 🔴 HIDE resend
   startTimer();
   autoReadOTP();
 }
@@ -52,17 +55,17 @@ function sendOTP() {
 function startTimer() {
   clearInterval(timerInterval);
   timeLeft = 30;
-  const timer = document.getElementById("timer");
 
-  timer.textContent = `Resend OTP in ${timeLeft}s`;
+  timerText.textContent = `Resend OTP in ${timeLeft}s`;
 
   timerInterval = setInterval(() => {
     timeLeft--;
-    timer.textContent = `Resend OTP in ${timeLeft}s`;
+    timerText.textContent = `Resend OTP in ${timeLeft}s`;
 
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
-      timer.textContent = "";
+      timerText.textContent = "";
+      resendBtn.style.display = "inline"; // ✅ SHOW resend
     }
   }, 1000);
 }
@@ -75,7 +78,6 @@ function resendOTP() {
 function verifyOTP() {
   const entered = document.getElementById("otpInput").value.trim();
   const err = document.getElementById("otpError");
-
   err.classList.remove("error-active");
 
   if (entered !== otp) {
@@ -96,10 +98,7 @@ async function autoReadOTP() {
       otp: { transport: ["sms"] },
       signal: new AbortController().signal
     });
-
     document.getElementById("otpInput").value = content.code;
     verifyOTP();
-  } catch (e) {
-    console.log("Auto OTP not available");
-  }
+  } catch (e) {}
 }
