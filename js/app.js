@@ -1,39 +1,26 @@
-const input = document.getElementById("userInput");
-const country = document.getElementById("countrySelect");
-const btn = document.getElementById("sendOtp");
-const welcome = document.getElementById("welcomeText");
-
-const welcomeLines = [
-  "Welcome to Vaishnex",
-  "Secure access to Vaishnex",
-  "Vaishnex welcomes you",
-  "Continue with Vaishnex",
-  "Login to Vaishnex"
-];
-
-welcome.innerText =
-  welcomeLines[Math.floor(Math.random() * welcomeLines.length)];
-
-input.addEventListener("input", () => {
-  const val = input.value.trim();
-
-  if (/^\d+$/.test(val)) {
-    country.classList.remove("hidden");
-  } else {
-    country.classList.add("hidden");
-  }
-});
+const input = document.getElementById("identity");
+const errorMsg = document.getElementById("errorMsg");
+const btn = document.getElementById("sendOtpBtn");
 
 btn.addEventListener("click", () => {
-  if (input.value.trim() === "") {
-    input.classList.add("error");
-    setTimeout(() => input.classList.remove("error"), 500);
+  const value = input.value.trim();
+
+  if (!value) {
+    errorMsg.style.display = "block";
     return;
   }
 
-  alert("OTP sent successfully");
+  errorMsg.style.display = "none";
 
-  setTimeout(() => {
-    window.location.href = "dashboard.html";
-  }, 900);
+  const isEmail = value.includes("@");
+  const isMobile = /^[0-9]{6,15}$/.test(value);
+
+  if (!isEmail && !isMobile) {
+    errorMsg.textContent = "Enter valid email or mobile number";
+    errorMsg.style.display = "block";
+    return;
+  }
+
+  // DEMO FLOW
+  alert("OTP sent to " + value);
 });
