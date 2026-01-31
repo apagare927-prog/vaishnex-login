@@ -1,105 +1,160 @@
-/* ---------- RED LINES ---------- */
-const canvas = document.getElementById("redLines");
-const ctx = canvas.getContext("2d");
-let w,h;
+"use strict";
 
-function resize(){
-  w = canvas.width = innerWidth;
-  h = canvas.height = innerHeight;
-}
-resize();
-addEventListener("resize",resize);
-
-const lines = Array.from({length:160},()=>({
-  x:Math.random()*w,
-  y:Math.random()*h,
-  s:.4+Math.random(),
-  l:100+Math.random()*200,
-  o:.15+Math.random()*.5
-}));
-
-function draw(){
-  ctx.clearRect(0,0,w,h);
-  lines.forEach(l=>{
-    ctx.strokeStyle=`rgba(255,0,0,${l.o})`;
-    ctx.beginPath();
-    ctx.moveTo(l.x,l.y);
-    ctx.lineTo(l.x,l.y+l.l);
-    ctx.stroke();
-    l.y-=l.s;
-    if(l.y+l.l<0){l.y=h;l.x=Math.random()*w;}
-  });
-  requestAnimationFrame(draw);
-}
-draw();
-
-/* ---------- WELCOME ---------- */
-const welcomeText = document.getElementById("welcomeText");
-const w1=["Secure","Smart","Premium","Trusted","Next-Gen"];
-const w2=["Platform","Experience","Network","System"];
-welcomeText.innerText =
-`Welcome to Vaishnex ${w1[Math.floor(Math.random()*w1.length)]} ${w2[Math.floor(Math.random()*w2.length)]}`;
-
-/* ---------- INPUT + COUNTRY ---------- */
-const input = document.getElementById("identityInput");
-
-const iti = intlTelInput(input,{
-  initialCountry:"auto",
-  separateDialCode:true,
-  autoPlaceholder:"off",
-  geoIpLookup:cb=>{
-    fetch("https://ipapi.co/json")
-      .then(r=>r.json())
-      .then(d=>cb(d.country_code.toLowerCase()))
-      .catch(()=>cb("in"));
-  },
-  utilsScript:"https://cdn.jsdelivr.net/npm/intl-tel-input@18.3.1/build/js/utils.js"
-});
-
-/* show / hide selector */
-input.addEventListener("input",()=>{
-  const isEmail = input.value.includes("@");
-  document.querySelector(".iti").style.display = isEmail ? "none" : "block";
-});
-
-/* ---------- OTP ---------- */
+/* ================= ELEMENTS ================= */
+const countrySelect = document.getElementById("countrySelect");
+const identityInput = document.getElementById("identityInput");
+const identityError = document.getElementById("identityError");
+const otpInput = document.getElementById("otpInput");
+const otpError = document.getElementById("otpError");
 const sendBtn = document.getElementById("sendOtpBtn");
-const otpSection = document.getElementById("otpSection");
-const timerText = document.getElementById("timerText");
-const resendText = document.getElementById("resendText");
-const resendBtn = document.getElementById("resendBtn");
+const verifyBtn = document.getElementById("verifyOtpBtn");
+const resendBtn = document.getElementById("resendOtp");
+const timerBox = document.getElementById("otpTimer");
+const welcomeLine = document.getElementById("welcomeLine");
 
-let t=30, timer;
+/* ================= WELCOME ================= */
+const WELCOMES = [
+  "Welcome to Vaishnex",
+  "Secure access to Vaishnex",
+  "Vaishnex Premium Network",
+  "Your gateway to Vaishnex",
+  "Trusted by Vaishnex users"
+];
+welcomeLine.textContent =
+  WELCOMES[Math.floor(Math.random()*WELCOMES.length)];
 
-sendBtn.onclick=()=>{
-  otpSection.classList.remove("hidden");
+/* ================= COUNTRY SELECTOR (SAFE CDN) ================= */
+
+function flagFromISO(iso){
+  return iso.toUpperCase().replace(/./g,c =>
+    String.fromCodePoint(127397 + c.charCodeAt())
+  );
+}
+
+const FALLBACK = [
+ {name:"India", dial:"+91", iso:"IN", min:10, max:10},
+ {name:"United States", dial:"+1", iso:"US", min:10, max:10},
+ {name:"United Kingdom", dial:"+44", iso:"GB", min:10, max:10},
+ {name:"Australia", dial:"+61", iso:"AU", min:9, max:9},
+ {name:"UAE", dial:"+971", iso:"AE", min:8, max:9},
+];
+
+let COUNTRY_DATA = [];
+
+function fillCountries(list){
+  countrySelect.innerHTML="";
+  list.forEach(c=>{
+    const opt=document.createElement("option");
+    opt.value=c.dial;
+    opt.dataset.min=c.min || 6;
+    opt.dataset.max=c.max || 15;
+    opt.textContent=`${flagFromISO(c.iso)} ${c.name} (${c.dial})`;
+    countrySelect.appendChild(opt);
+  });
+  countrySelect.value="+91";
+}
+
+fetch("https://cdn.jsdelivr.net/npm/country-codes-list@1.0.0/dist/country-codes.json")
+.then(r=>r.json())
+.then(data=>{
+  COUNTRY_DATA = Object.values(data)
+    .filter(c=>c.dial_code)
+    .map(c=>({
+      name:c.country_name_en,
+      dial:"+"+c.dial_code,
+      iso:c.country_code,
+      min:6,
+      max:15
+    }))
+    .sort((a,b)=>a.name.localeCompare(b.name));
+  fillCountries(COUNTRY_DATA);
+})
+.catch(()=>{
+  fillCountries(FALLBACK);
+});
+
+/* ================= HELPERS ================= */
+function isEmail(v){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+function repeatedDigits(v){
+  return /^(\d)\1+$/.test(v);
+}
+function sequential(v){
+  return "0123456789".includes(v) || "9876543210".includes(v);
+}
+
+/* ================= OTP FLOW ================= */
+let OTP = "";
+let timer = null;
+
+sendBtn.onclick = ()=>{
+  identityError.textContent="";
+  otpError.textContent="";
+
+  const v = identityInput.value.trim();
+  if(!v){
+    identityError.textContent="This field is required";
+    return;
+  }
+
+  if(isEmail(v)){
+    // ok
+  }else{
+    if(!/^\d+$/.test(v)){
+      identityError.textContent="Only digits allowed";
+      return;
+    }
+    if(repeatedDigits(v) || sequential(v)){
+      identityError.textContent="Invalid mobile number";
+      return;
+    }
+    const opt = countrySelect.selectedOptions[0];
+    const min = +opt.dataset.min;
+    const max = +opt.dataset.max;
+    if(v.length < min || v.length > max){
+      identityError.textContent="Invalid length for selected country";
+      return;
+    }
+    if(opt.value==="+91" && !/^[6-9]/.test(v)){
+      identityError.textContent="Invalid Indian mobile number";
+      return;
+    }
+  }
+
+  OTP = "1234"; // demo
+  otpInput.style.display="block";
+  verifyBtn.style.display="block";
   startTimer();
-  autoOTP();
+};
+
+verifyBtn.onclick = ()=>{
+  otpError.textContent="";
+  if(!otpInput.value){
+    otpError.textContent="OTP required";
+    return;
+  }
+  if(otpInput.value !== OTP){
+    otpError.textContent="Invalid OTP";
+    return;
+  }
+  alert("Login successful (demo)");
 };
 
 function startTimer(){
+  let t=30;
+  resendBtn.style.display="none";
+  timerBox.textContent=`Resend OTP in ${t}s`;
   clearInterval(timer);
-  t=30;
-  resendText.classList.add("hidden");
-  timerText.innerText=`Resend OTP in ${t}s`;
   timer=setInterval(()=>{
     t--;
-    timerText.innerText=`Resend OTP in ${t}s`;
+    timerBox.textContent=`Resend OTP in ${t}s`;
     if(t<=0){
       clearInterval(timer);
-      timerText.innerText="";
-      resendText.classList.remove("hidden");
+      timerBox.textContent="";
+      resendBtn.style.display="block";
     }
   },1000);
 }
 
-resendBtn.onclick=startTimer;
-
-/* ---------- AUTO OTP READ ---------- */
-async function autoOTP(){
-  if(!("OTPCredential" in window)) return;
-  try{
-    const c = await navigator.credentials.get({otp:{transport:["sms"]}});
-    document.getElementById("otpInput").value = c.code;
-  }catch{}
-}
+resendBtn.onclick = startTimer;
