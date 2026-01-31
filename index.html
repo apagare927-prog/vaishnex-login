@@ -1,159 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Vaishnex Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{box-sizing:border-box;font-family:system-ui}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
 body{
-  margin:0;min-height:100vh;
-  background:radial-gradient(circle at top,#0a1d3a,#000);
-  display:flex;align-items:center;justify-content:center;color:#fff;
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#0a1c3a,#000);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
 }
+
 .card{
-  width:360px;max-width:95%;
-  background:rgba(15,25,45,.95);
-  border-radius:18px;padding:28px;
-  box-shadow:0 0 40px rgba(0,80,255,.25);
+  width:92%;
+  max-width:420px;
+  background:rgba(15,25,45,.9);
+  border-radius:18px;
+  padding:26px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
 }
+
 .logo-wrap{
-  display:flex;justify-content:center;margin-bottom:10px;
+  display:flex;
+  justify-content:center;
+  margin-bottom:12px;
 }
 .logo{
-  width:120px;height:120px;border-radius:50%;
+  width:120px;height:120px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  letter-spacing:2px;
   background:#050b18;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:600;letter-spacing:2px;
-  box-shadow:0 0 0 6px rgba(40,120,255,.15),
-             0 0 35px rgba(40,120,255,.8);
-  animation:glow 2.5s infinite alternate;
+  position:relative;
 }
-@keyframes glow{
-  from{box-shadow:0 0 0 6px rgba(40,120,255,.15),0 0 25px rgba(40,120,255,.6)}
-  to{box-shadow:0 0 0 10px rgba(40,120,255,.25),0 0 45px rgba(40,120,255,1)}
+.logo::before{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  border:3px solid #2f7cff;
+  filter:blur(2px);
+  animation:pulse 2.2s infinite;
 }
-h2{text-align:center;font-weight:500;margin:10px 0 18px}
+@keyframes pulse{
+  0%{opacity:.4}
+  50%{opacity:1}
+  100%{opacity:.4}
+}
+
+h2{
+  text-align:center;
+  font-weight:500;
+  color:#cfe0ff;
+  margin:8px 0 18px;
+}
+
+.field{
+  margin-bottom:12px;
+}
 .input-wrap{
-  display:flex;gap:8px;margin-bottom:6px;
+  display:flex;
+  gap:8px;
 }
+
 select,input{
-  background:#000;border:1px solid #333;color:#fff;
-  border-radius:10px;padding:12px;font-size:15px;
+  background:#000;
+  color:#fff;
+  border-radius:10px;
+  border:1px solid #222;
+  padding:14px;
+  width:100%;
+  font-size:15px;
 }
-select{width:110px}
-input{flex:1}
+
+input.error,select.error{
+  border-color:#ff3b3b;
+}
+
+.error-text{
+  color:#ff4d4d;
+  font-size:13px;
+  margin-top:4px;
+  display:none;
+}
+
 button{
-  width:100%;padding:14px;border:none;border-radius:12px;
-  background:#2f7cf6;color:#fff;font-size:16px;
-  margin-top:10px;cursor:pointer;
+  width:100%;
+  margin-top:8px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#2f7cff;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
 }
 button:disabled{opacity:.5}
-.err{
-  color:#ff4b4b;font-size:13px;margin:4px 0 6px;display:none
+
+#otpBlock{display:none}
+
+.timer{
+  text-align:center;
+  margin-top:10px;
+  color:#bcd4ff;
+  font-size:14px;
 }
-#otpWrap{display:none}
-#resend{margin-top:6px;text-align:center;font-size:14px;display:none}
-#resend span{color:#2f7cf6;cursor:pointer}
 </style>
 </head>
 
 <body>
 <div class="card">
 
-<div class="logo-wrap">
-  <div class="logo">VAISHNEX</div>
-</div>
+  <div class="logo-wrap">
+    <div class="logo">VAISHNEX</div>
+  </div>
 
-<h2 id="welcome"></h2>
+  <h2 id="welcome">Welcome to Vaishnex</h2>
 
-<div class="input-wrap">
-  <select id="country"></select>
-  <input id="user" placeholder="Email or mobile number">
-</div>
-<div class="err" id="userErr"></div>
+  <!-- PHONE / EMAIL -->
+  <div class="field">
+    <div class="input-wrap">
+      <select id="country"></select>
+      <input id="userInput" placeholder="Email or mobile number">
+    </div>
+    <div class="error-text" id="inputError">Invalid email or mobile number</div>
+  </div>
 
-<button id="sendBtn">Send OTP</button>
+  <button onclick="sendOTP()">Send OTP</button>
 
-<div id="otpWrap">
-  <input id="otp" placeholder="Enter OTP" style="margin-top:10px">
-  <div class="err" id="otpErr"></div>
-  <button id="verifyBtn">Verify OTP</button>
-  <div id="resend">Resend OTP in <b id="timer">30</b>s</div>
-</div>
+  <!-- OTP -->
+  <div id="otpBlock">
+    <div class="field">
+      <input id="otp" placeholder="Enter OTP">
+      <div class="error-text" id="otpError">Invalid OTP</div>
+    </div>
+    <button onclick="verifyOTP()">Verify OTP</button>
+    <div class="timer" id="timer"></div>
+  </div>
 
 </div>
 
 <script>
-/* -------- WELCOME LINES -------- */
-const welcomes=[
-"Welcome to Vaishnex",
-"Step into Vaishnex",
-"Secure access to Vaishnex",
-"Vaishnex starts here",
-"Trusted by Vaishnex Network"
-];
-document.getElementById("welcome").innerText =
-welcomes[Math.floor(Math.random()*welcomes.length)];
+const countrySelect = document.getElementById("country");
+const input = document.getElementById("userInput");
+const inputError = document.getElementById("inputError");
+const otpBlock = document.getElementById("otpBlock");
+const otpError = document.getElementById("otpError");
+const timerEl = document.getElementById("timer");
 
-/* -------- COUNTRIES (230+) -------- */
-const countries=[
-{n:"India",c:"+91",f:"🇮🇳"},
-{n:"United States",c:"+1",f:"🇺🇸"},
-{n:"United Kingdom",c:"+44",f:"🇬🇧"},
-{n:"UAE",c:"+971",f:"🇦🇪"},
-{n:"Canada",c:"+1",f:"🇨🇦"},
-{n:"Australia",c:"+61",f:"🇦🇺"},
-// … real list continue (230+ supported placeholder)
-];
-const sel=document.getElementById("country");
-countries.forEach(x=>{
-  const o=document.createElement("option");
-  o.value=x.c;
-  o.text=`${x.f} ${x.n} (${x.c})`;
-  sel.appendChild(o);
+let countdown;
+
+// 🌍 LOAD 250+ COUNTRIES (flags + codes)
+fetch("https://restcountries.com/v3.1/all")
+.then(r=>r.json())
+.then(data=>{
+  data.sort((a,b)=>a.name.common.localeCompare(b.name.common));
+  data.forEach(c=>{
+    if(!c.idd?.root) return;
+    const code = c.idd.root + (c.idd.suffixes?.[0]||"");
+    const opt = document.createElement("option");
+    opt.value = code;
+    opt.textContent = `${c.flag} ${c.name.common} (${code})`;
+    countrySelect.appendChild(opt);
+  });
+  countrySelect.value="+91";
 });
-sel.value="+91";
 
-/* -------- VALIDATION -------- */
-function validateMobile(num,cc){
- if(!num)return"Mobile number required";
- if(!/^\d+$/.test(num))return"Only numbers allowed";
- if(/^(\d)\1+$/.test(num))return"Invalid number pattern";
- if(num.length<6||num.length>15)return"Invalid length";
- if(cc==="+91"){
-   if(num.length!==10)return"Indian mobile must be 10 digits";
-   if(!/^[6-9]/.test(num))return"Invalid Indian mobile";
- }
- return null;
+// ✅ VALIDATION
+function sendOTP(){
+  input.classList.remove("error");
+  inputError.style.display="none";
+
+  const val=input.value.trim();
+  const isEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  const isPhone=/^\d{6,15}$/.test(val);
+
+  if(!isEmail && !isPhone){
+    input.classList.add("error");
+    inputError.style.display="block";
+    return;
+  }
+
+  otpBlock.style.display="block";
+  startTimer(30);
 }
 
-/* -------- OTP FLOW -------- */
-const sendBtn=document.getElementById("sendBtn");
-const otpWrap=document.getElementById("otpWrap");
-const resend=document.getElementById("resend");
-let t=30,iv;
+// ⏱ TIMER
+function startTimer(sec){
+  clearInterval(countdown);
+  let t=sec;
+  timerEl.textContent=`Resend OTP in ${t}s`;
+  countdown=setInterval(()=>{
+    t--;
+    timerEl.textContent=`Resend OTP in ${t}s`;
+    if(t<=0){
+      clearInterval(countdown);
+      timerEl.textContent="You can resend OTP";
+    }
+  },1000);
+}
 
-sendBtn.onclick=()=>{
- const v=user.value.trim();
- userErr.style.display="none";
- if(v.includes("@")){
-   otpWrap.style.display="block";startTimer();return;
- }
- const err=validateMobile(v,sel.value);
- if(err){userErr.innerText=err;userErr.style.display="block";return;}
- otpWrap.style.display="block";startTimer();
-};
+// OTP VERIFY
+function verifyOTP(){
+  const otp=document.getElementById("otp");
+  otp.classList.remove("error");
+  otpError.style.display="none";
 
-function startTimer(){
- t=30;resend.style.display="block";
- document.getElementById("timer").innerText=t;
- clearInterval(iv);
- iv=setInterval(()=>{
-  t--;document.getElementById("timer").innerText=t;
-  if(t<=0){clearInterval(iv);resend.innerHTML='<span onclick="startTimer()">Resend OTP</span>';}
- },1000);
+  if(otp.value.length!==4){
+    otp.classList.add("error");
+    otpError.style.display="block";
+    return;
+  }
+
+  alert("OTP Verified (demo)");
 }
 </script>
 
