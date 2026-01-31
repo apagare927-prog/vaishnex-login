@@ -1,26 +1,44 @@
-const input = document.getElementById("identity");
-const errorMsg = document.getElementById("errorMsg");
-const btn = document.getElementById("sendOtpBtn");
+const identity = document.getElementById("identity");
+const otp = document.getElementById("otp");
 
-btn.addEventListener("click", () => {
-  const value = input.value.trim();
+const stepIdentity = document.getElementById("step-identity");
+const stepOtp = document.getElementById("step-otp");
 
-  if (!value) {
-    errorMsg.style.display = "block";
-    return;
-  }
+const sendOtpBtn = document.getElementById("sendOtpBtn");
+const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+const resendOtp = document.getElementById("resendOtp");
 
-  errorMsg.style.display = "none";
+const errorIdentity = document.getElementById("errorIdentity");
+const errorOtp = document.getElementById("errorOtp");
+
+sendOtpBtn.onclick = () => {
+  const value = identity.value.trim();
 
   const isEmail = value.includes("@");
   const isMobile = /^[0-9]{6,15}$/.test(value);
 
-  if (!isEmail && !isMobile) {
-    errorMsg.textContent = "Enter valid email or mobile number";
-    errorMsg.style.display = "block";
+  if (!value || (!isEmail && !isMobile)) {
+    errorIdentity.style.display = "block";
     return;
   }
 
-  // DEMO FLOW
-  alert("OTP sent to " + value);
-});
+  errorIdentity.style.display = "none";
+
+  // DEMO OTP SEND
+  stepIdentity.classList.add("hidden");
+  stepOtp.classList.remove("hidden");
+};
+
+verifyOtpBtn.onclick = () => {
+  if (otp.value.length !== 6) {
+    errorOtp.style.display = "block";
+    return;
+  }
+
+  errorOtp.style.display = "none";
+  alert("OTP verified → Dashboard (demo)");
+};
+
+resendOtp.onclick = () => {
+  alert("OTP resent (demo)");
+};
