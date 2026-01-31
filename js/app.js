@@ -1,44 +1,44 @@
-const identity = document.getElementById("identity");
-const otp = document.getElementById("otp");
+let generatedOTP = null;
 
-const stepIdentity = document.getElementById("step-identity");
-const stepOtp = document.getElementById("step-otp");
+function isEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
 
-const sendOtpBtn = document.getElementById("sendOtpBtn");
-const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-const resendOtp = document.getElementById("resendOtp");
+function isMobile(value) {
+  return /^[0-9]{8,15}$/.test(value);
+}
 
-const errorIdentity = document.getElementById("errorIdentity");
-const errorOtp = document.getElementById("errorOtp");
+function sendOTP() {
+  const input = document.getElementById("userInput").value.trim();
+  const error = document.getElementById("error");
 
-sendOtpBtn.onclick = () => {
-  const value = identity.value.trim();
+  error.textContent = "";
 
-  const isEmail = value.includes("@");
-  const isMobile = /^[0-9]{6,15}$/.test(value);
-
-  if (!value || (!isEmail && !isMobile)) {
-    errorIdentity.style.display = "block";
+  if (!isEmail(input) && !isMobile(input)) {
+    error.textContent = "Please enter valid email or mobile";
     return;
   }
 
-  errorIdentity.style.display = "none";
+  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log("OTP:", generatedOTP); // demo
 
-  // DEMO OTP SEND
-  stepIdentity.classList.add("hidden");
-  stepOtp.classList.remove("hidden");
-};
+  document.getElementById("otpBox").classList.remove("hidden");
+}
 
-verifyOtpBtn.onclick = () => {
-  if (otp.value.length !== 6) {
-    errorOtp.style.display = "block";
+function verifyOTP() {
+  const otp = document.getElementById("otpInput").value.trim();
+  const error = document.getElementById("otpError");
+
+  error.textContent = "";
+
+  if (otp !== generatedOTP) {
+    error.textContent = "Invalid OTP";
     return;
   }
 
-  errorOtp.style.display = "none";
-  alert("OTP verified → Dashboard (demo)");
-};
+  alert("OTP Verified ✅ (Go to Dashboard)");
+}
 
-resendOtp.onclick = () => {
-  alert("OTP resent (demo)");
-};
+function resendOTP() {
+  sendOTP();
+}
