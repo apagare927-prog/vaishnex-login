@@ -6,117 +6,124 @@
 <title>Vaishnex Login</title>
 
 <style>
-*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-
+*{box-sizing:border-box;font-family:system-ui,-apple-system,BlinkMacSystemFont}
 body{
   margin:0;
   min-height:100vh;
+  background:linear-gradient(180deg,#050b17,#000);
   display:flex;
   align-items:center;
   justify-content:center;
-  background:linear-gradient(160deg,#061428,#02060d);
   color:#fff;
 }
 
-/* card */
+/* Card */
 .card{
   width:92%;
   max-width:380px;
-  background:rgba(20,30,45,.9);
-  border-radius:20px;
-  padding:28px 22px;
-  box-shadow:0 0 40px rgba(0,0,0,.6);
+  background:rgba(10,18,40,.9);
+  border-radius:22px;
+  padding:28px 22px 30px;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
 }
 
-/* logo */
+/* Logo */
 .logo-wrap{
-  display:flex;
-  justify-content:center;
-  margin-bottom:10px;
+  position:relative;
+  width:140px;
+  height:140px;
+  margin:0 auto 12px;
+}
+.logo-ring{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:3px solid #3a8bff;
+  box-shadow:
+    0 0 18px rgba(58,139,255,.6),
+    0 0 40px rgba(58,139,255,.4);
+  animation:pulse 3s ease-in-out infinite;
 }
 .logo{
-  width:120px;
-  height:120px;
+  position:absolute;
+  inset:14px;
   border-radius:50%;
+  background:#050b17;
   display:flex;
   align-items:center;
   justify-content:center;
   font-weight:700;
   letter-spacing:2px;
-  background:#020814;
-  box-shadow:
-    0 0 25px rgba(50,120,255,.7),
-    inset 0 0 20px rgba(0,0,0,.9);
-  border:3px solid #2f6cff;
-  animation:glow 2.5s infinite alternate;
 }
-@keyframes glow{
-  from{box-shadow:0 0 20px rgba(60,130,255,.5)}
-  to{box-shadow:0 0 35px rgba(60,130,255,.9)}
+
+@keyframes pulse{
+  0%{opacity:.5;transform:scale(.96)}
+  50%{opacity:1;transform:scale(1.04)}
+  100%{opacity:.5;transform:scale(.96)}
 }
 
 h2{
   text-align:center;
-  font-size:18px;
-  color:#9db8ff;
-  margin:8px 0 18px;
+  font-weight:500;
+  margin:12px 0 18px;
+  color:#cfe0ff;
 }
 
-/* inputs */
-.input-box{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:2px solid transparent;
-  background:#000;
-  color:#fff;
-  margin-bottom:12px;
-}
-.input-box.error{
-  border-color:#ff3b3b;
-}
-
-/* row */
-.row{
+/* Inputs */
+.input-row{
   display:flex;
   gap:8px;
+  margin-bottom:14px;
 }
-
-/* select */
-select{
+select,input{
   background:#000;
+  border:1px solid #222;
   color:#fff;
+  padding:14px;
   border-radius:12px;
-  padding:14px;
-  border:2px solid transparent;
+  font-size:15px;
+}
+select{
+  max-width:120px;
+}
+input{flex:1}
+input.error,select.error{
+  border-color:#ff4d4d;
 }
 
-/* buttons */
-.btn{
+/* Buttons */
+button{
   width:100%;
-  padding:14px;
-  border-radius:14px;
   border:none;
-  background:#2f6cff;
-  color:#fff;
+  border-radius:14px;
+  padding:14px;
   font-size:16px;
-  margin-top:8px;
-}
-.btn:disabled{
-  opacity:.5;
-}
-
-.small{
-  text-align:center;
-  font-size:14px;
-  margin-top:10px;
-  color:#b8c7ff;
-}
-.link{
-  color:#4f8bff;
+  font-weight:600;
+  background:#3a8bff;
+  color:#fff;
   cursor:pointer;
 }
+button:disabled{opacity:.5}
+
 .hidden{display:none}
+
+.error-text{
+  color:#ff4d4d;
+  font-size:13px;
+  margin:6px 0 10px;
+  display:none;
+}
+
+.timer{
+  text-align:center;
+  margin-top:10px;
+  color:#9bb7ff;
+  font-size:14px;
+}
+.link{
+  color:#5fa3ff;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -125,129 +132,112 @@ select{
 <div class="card">
 
   <div class="logo-wrap">
+    <div class="logo-ring"></div>
     <div class="logo">VAISHNEX</div>
   </div>
 
   <h2 id="welcome">Welcome to Vaishnex</h2>
 
-  <!-- email / mobile -->
-  <div class="row">
-    <select id="country" class="hidden"></select>
-    <input id="userInput" class="input-box" placeholder="Email or mobile number">
+  <!-- PHONE / EMAIL -->
+  <div class="input-row">
+    <select id="country"></select>
+    <input id="user" placeholder="Email or mobile number">
   </div>
 
-  <button class="btn" id="sendOtp">Send OTP</button>
+  <div class="error-text" id="userErr">Enter valid email or mobile</div>
 
-  <!-- otp -->
-  <input id="otp" class="input-box hidden" placeholder="Enter OTP">
-  <button class="btn hidden" id="verifyOtp">Verify OTP</button>
+  <button id="sendBtn">Send OTP</button>
 
-  <div class="small hidden" id="timer"></div>
-  <div class="small hidden" id="resend">
-    Didn’t receive OTP? <span class="link" onclick="resendOtp()">Resend OTP</span>
+  <!-- OTP -->
+  <div id="otpBox" class="hidden">
+    <input id="otp" placeholder="Enter OTP" style="margin-top:14px">
+    <div class="error-text" id="otpErr">Invalid OTP</div>
+    <button id="verifyBtn" style="margin-top:12px">Verify OTP</button>
+    <div class="timer" id="timer"></div>
   </div>
 
 </div>
 
 <script>
-/* ================= WELCOME LINES ================= */
-const welcomes=[];
-for(let i=1;i<=5000;i++){
-  welcomes.push("Welcome to Vaishnex");
-}
-document.getElementById("welcome").innerText =
-  welcomes[Math.floor(Math.random()*welcomes.length)];
+const countrySel = document.getElementById("country");
+const userInp = document.getElementById("user");
+const sendBtn = document.getElementById("sendBtn");
+const otpBox = document.getElementById("otpBox");
+const otpInp = document.getElementById("otp");
+const verifyBtn = document.getElementById("verifyBtn");
+const timerEl = document.getElementById("timer");
+const userErr = document.getElementById("userErr");
+const otpErr = document.getElementById("otpErr");
 
-/* ================= 230+ COUNTRIES ================= */
-const countries = [
-{n:"India",c:"+91",f:"🇮🇳"},{n:"United States",c:"+1",f:"🇺🇸"},
-{n:"United Kingdom",c:"+44",f:"🇬🇧"},{n:"Canada",c:"+1",f:"🇨🇦"},
-{n:"Australia",c:"+61",f:"🇦🇺"},{n:"Germany",c:"+49",f:"🇩🇪"},
-{n:"France",c:"+33",f:"🇫🇷"},{n:"Japan",c:"+81",f:"🇯🇵"},
-{n:"China",c:"+86",f:"🇨🇳"},{n:"Brazil",c:"+55",f:"🇧🇷"},
-{n:"UAE",c:"+971",f:"🇦🇪"},{n:"Saudi Arabia",c:"+966",f:"🇸🇦"},
-{n:"Russia",c:"+7",f:"🇷🇺"},{n:"Italy",c:"+39",f:"🇮🇹"},
-{n:"Spain",c:"+34",f:"🇪🇸"},{n:"Mexico",c:"+52",f:"🇲🇽"},
-{n:"South Africa",c:"+27",f:"🇿🇦"},{n:"Nigeria",c:"+234",f:"🇳🇬"},
-{n:"Kenya",c:"+254",f:"🇰🇪"},{n:"Egypt",c:"+20",f:"🇪🇬"},
-{n:"Turkey",c:"+90",f:"🇹🇷"},{n:"Indonesia",c:"+62",f:"🇮🇩"},
-{n:"Philippines",c:"+63",f:"🇵🇭"},{n:"Thailand",c:"+66",f:"🇹🇭"},
-{n:"Vietnam",c:"+84",f:"🇻🇳"},{n:"Malaysia",c:"+60",f:"🇲🇾"},
-{n:"Singapore",c:"+65",f:"🇸🇬"},{n:"New Zealand",c:"+64",f:"🇳🇿"},
-{n:"Pakistan",c:"+92",f:"🇵🇰"},{n:"Bangladesh",c:"+880",f:"🇧🇩"},
-{n:"Sri Lanka",c:"+94",f:"🇱🇰"},
-];
+let timer;
 
-/* dummy countries to cross 230+ */
-for(let i=1;i<=210;i++){
-  countries.push({n:`Country ${i}`,c:`+${300+i}`,f:"🏳️"});
-}
-
-const sel=document.getElementById("country");
-countries.forEach(x=>{
-  const o=document.createElement("option");
-  o.value=x.c;
-  o.textContent=`${x.f} ${x.n} (${x.c})`;
-  sel.appendChild(o);
+/* LOAD REAL COUNTRIES */
+fetch("https://restcountries.com/v3.1/all")
+.then(r=>r.json())
+.then(data=>{
+  const list=[];
+  data.forEach(c=>{
+    if(c.idd && c.idd.root){
+      const code=c.idd.root+(c.idd.suffixes?c.idd.suffixes[0]:"");
+      list.push({name:c.name.common,code,flag:c.flag});
+    }
+  });
+  list.sort((a,b)=>a.name.localeCompare(b.name));
+  list.forEach(c=>{
+    const o=document.createElement("option");
+    o.value=c.code;
+    o.textContent=`${c.flag} ${c.name} (${c.code})`;
+    countrySel.appendChild(o);
+  });
 });
 
-/* ================= LOGIC ================= */
-const input=document.getElementById("userInput");
-const otp=document.getElementById("otp");
-const sendBtn=document.getElementById("sendOtp");
-const verifyBtn=document.getElementById("verifyOtp");
-const timer=document.getElementById("timer");
-const resend=document.getElementById("resend");
-
-let count=30,interval;
-
-input.addEventListener("input",()=>{
-  input.classList.remove("error");
-  if(/^\d+$/.test(input.value)){
-    sel.classList.remove("hidden");
-  }else{
-    sel.classList.add("hidden");
-  }
+/* AUTO DETECT COUNTRY */
+fetch("https://ipapi.co/json/")
+.then(r=>r.json())
+.then(d=>{
+  [...countrySel.options].forEach((o,i)=>{
+    if(o.text.includes(d.country_calling_code)){
+      countrySel.selectedIndex=i;
+    }
+  });
 });
 
+/* SEND OTP */
 sendBtn.onclick=()=>{
-  if(input.value.trim()===""){
-    input.classList.add("error");
+  userErr.style.display="none";
+  if(!userInp.value){
+    userInp.classList.add("error");
+    userErr.style.display="block";
     return;
   }
-  otp.classList.remove("hidden");
-  verifyBtn.classList.remove("hidden");
-  resend.classList.add("hidden");
+  userInp.classList.remove("error");
+  otpBox.classList.remove("hidden");
   startTimer();
 };
 
+/* VERIFY OTP (demo) */
+verifyBtn.onclick=()=>{
+  otpErr.style.display="none";
+  if(otpInp.value!=="1234"){
+    otpErr.style.display="block";
+  }else{
+    alert("OTP Verified ✅");
+  }
+};
+
+/* TIMER */
 function startTimer(){
-  count=30;
-  timer.classList.remove("hidden");
-  timer.innerText=`Resend OTP in ${count}s`;
-  interval=setInterval(()=>{
-    count--;
-    timer.innerText=`Resend OTP in ${count}s`;
-    if(count<=0){
-      clearInterval(interval);
-      timer.classList.add("hidden");
-      resend.classList.remove("hidden");
+  let t=30;
+  timerEl.innerHTML=`Resend OTP in ${t}s`;
+  timer=setInterval(()=>{
+    t--;
+    timerEl.innerHTML=`Resend OTP in ${t}s`;
+    if(t<=0){
+      clearInterval(timer);
+      timerEl.innerHTML=`<span class="link" onclick="startTimer()">Resend OTP</span>`;
     }
   },1000);
 }
-
-function resendOtp(){
-  resend.classList.add("hidden");
-  startTimer();
-}
-
-verifyBtn.onclick=()=>{
-  if(otp.value.trim()===""){
-    otp.classList.add("error");
-    return;
-  }
-  alert("OTP Verified → Dashboard");
-};
 </script>
 
 </body>
