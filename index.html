@@ -8,35 +8,51 @@
 </head>
 <body>
 
-  <div class="page">
-    <div class="card">
+<div class="page">
+  <div class="card">
 
-      <!-- LOGO -->
-      <div class="logo-wrapper">
-        <div class="logo-glow"></div>
-        <div class="logo-circle">
-          <span>VAISHNEX</span>
-        </div>
+    <!-- LOGO -->
+    <div class="logo-wrapper">
+      <div class="logo-glow"></div>
+      <div class="logo-circle">
+        <span>VAISHNEX</span>
       </div>
+    </div>
 
-      <p class="welcome">Welcome to Vaishnex</p>
+    <p class="welcome">Welcome to Vaishnex</p>
 
-      <!-- INPUT -->
+    <!-- STEP 1 -->
+    <div id="step-identity">
       <input
         type="text"
         id="identity"
         placeholder="Email or mobile number"
       />
-
-      <!-- ERROR -->
-      <div class="error" id="errorMsg">Please enter email or mobile number</div>
-
-      <!-- BUTTON -->
+      <div class="error" id="errorIdentity">Please enter valid email or mobile</div>
       <button id="sendOtpBtn">Send OTP</button>
-
     </div>
-  </div>
 
-  <script src="js/app.js"></script>
+    <!-- STEP 2 -->
+    <div id="step-otp" class="hidden">
+      <input
+        type="text"
+        id="otp"
+        placeholder="Enter OTP"
+        maxlength="6"
+      />
+      <div class="error" id="errorOtp">Invalid OTP</div>
+
+      <button id="verifyOtpBtn">Verify OTP</button>
+
+      <p class="resend">
+        Didn’t receive OTP?
+        <span id="resendOtp">Resend OTP</span>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/app.js"></script>
 </body>
 </html>
