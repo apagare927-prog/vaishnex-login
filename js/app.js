@@ -1,157 +1,92 @@
-"use strict";
+// -------- WELCOME LINES --------
+const welcomeLines = [
+  "Welcome to Vaishnex",
+  "Securely enter Vaishnex",
+  "Experience Vaishnex Network",
+  "Vaishnex Premium Access",
+  "Powering your Vaishnex login"
+];
 
-/* ================= ELEMENTS ================= */
+document.getElementById("welcomeLine").innerText =
+  welcomeLines[Math.floor(Math.random() * welcomeLines.length)];
+
+// -------- ELEMENTS --------
 const countrySelect = document.getElementById("countrySelect");
-const identityInput = document.getElementById("identityInput");
-const identityError = document.getElementById("identityError");
+const userInput = document.getElementById("userInput");
+const inputError = document.getElementById("inputError");
+const sendOtpBtn = document.getElementById("sendOtpBtn");
 const otpInput = document.getElementById("otpInput");
 const otpError = document.getElementById("otpError");
-const sendBtn = document.getElementById("sendOtpBtn");
-const verifyBtn = document.getElementById("verifyOtpBtn");
-const resendBtn = document.getElementById("resendOtp");
-const timerBox = document.getElementById("otpTimer");
-const welcomeLine = document.getElementById("welcomeLine");
+const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+const resendBtn = document.getElementById("resendBtn");
+const resendTimer = document.getElementById("resendTimer");
 
-/* ================= WELCOME ================= */
-const WELCOMES = [
-  "Welcome to Vaishnex",
-  "Secure access to Vaishnex",
-  "Vaishnex Premium Network",
-  "Your gateway to Vaishnex",
-  "Trusted by Vaishnex users"
-];
-welcomeLine.textContent =
-  WELCOMES[Math.floor(Math.random()*WELCOMES.length)];
-
-/* ================= COUNTRY SELECTOR (SAFE CDN) ================= */
-
-function flagFromISO(iso){
-  return iso.toUpperCase().replace(/./g,c =>
-    String.fromCodePoint(127397 + c.charCodeAt())
-  );
-}
-
-const FALLBACK = [
- {name:"India", dial:"+91", iso:"IN", min:10, max:10},
- {name:"United States", dial:"+1", iso:"US", min:10, max:10},
- {name:"United Kingdom", dial:"+44", iso:"GB", min:10, max:10},
- {name:"Australia", dial:"+61", iso:"AU", min:9, max:9},
- {name:"UAE", dial:"+971", iso:"AE", min:8, max:9},
-];
-
-let COUNTRY_DATA = [];
-
-function fillCountries(list){
-  countrySelect.innerHTML="";
-  list.forEach(c=>{
-    const opt=document.createElement("option");
-    opt.value=c.dial;
-    opt.dataset.min=c.min || 6;
-    opt.dataset.max=c.max || 15;
-    opt.textContent=`${flagFromISO(c.iso)} ${c.name} (${c.dial})`;
-    countrySelect.appendChild(opt);
+// -------- LOAD COUNTRIES (SAFE API) --------
+fetch("https://restcountries.com/v3.1/all")
+  .then(res => res.json())
+  .then(data => {
+    data.sort((a,b)=>a.name.common.localeCompare(b.name.common));
+    data.forEach(c => {
+      if (!c.idd || !c.idd.root) return;
+      const code = c.idd.root + (c.idd.suffixes ? c.idd.suffixes[0] : "");
+      const opt = document.createElement("option");
+      opt.value = code;
+      opt.text = `${c.flag} ${c.name.common} (${code})`;
+      countrySelect.appendChild(opt);
+    });
   });
-  countrySelect.value="+91";
-}
 
-fetch("https://cdn.jsdelivr.net/npm/country-codes-list@1.0.0/dist/country-codes.json")
-.then(r=>r.json())
-.then(data=>{
-  COUNTRY_DATA = Object.values(data)
-    .filter(c=>c.dial_code)
-    .map(c=>({
-      name:c.country_name_en,
-      dial:"+"+c.dial_code,
-      iso:c.country_code,
-      min:6,
-      max:15
-    }))
-    .sort((a,b)=>a.name.localeCompare(b.name));
-  fillCountries(COUNTRY_DATA);
-})
-.catch(()=>{
-  fillCountries(FALLBACK);
-});
+// -------- AUTO COUNTRY DETECT --------
+fetch("https://ipapi.co/json/")
+  .then(r=>r.json())
+  .then(d=>{
+    [...countrySelect.options].forEach(o=>{
+      if(o.text.includes(d.country_name)) countrySelect.value=o.value;
+    });
+  });
 
-/* ================= HELPERS ================= */
-function isEmail(v){
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-}
-function repeatedDigits(v){
-  return /^(\d)\1+$/.test(v);
-}
-function sequential(v){
-  return "0123456789".includes(v) || "9876543210".includes(v);
-}
+// -------- SEND OTP --------
+sendOtpBtn.onclick = () => {
+  inputError.innerText = "";
+  const val = userInput.value.trim();
 
-/* ================= OTP FLOW ================= */
-let OTP = "";
-let timer = null;
-
-sendBtn.onclick = ()=>{
-  identityError.textContent="";
-  otpError.textContent="";
-
-  const v = identityInput.value.trim();
-  if(!v){
-    identityError.textContent="This field is required";
+  if (!val) {
+    inputError.innerText = "Input required";
     return;
   }
 
-  if(isEmail(v)){
-    // ok
-  }else{
-    if(!/^\d+$/.test(v)){
-      identityError.textContent="Only digits allowed";
-      return;
-    }
-    if(repeatedDigits(v) || sequential(v)){
-      identityError.textContent="Invalid mobile number";
-      return;
-    }
-    const opt = countrySelect.selectedOptions[0];
-    const min = +opt.dataset.min;
-    const max = +opt.dataset.max;
-    if(v.length < min || v.length > max){
-      identityError.textContent="Invalid length for selected country";
-      return;
-    }
-    if(opt.value==="+91" && !/^[6-9]/.test(v)){
-      identityError.textContent="Invalid Indian mobile number";
-      return;
-    }
+  if (!val.includes("@") && !/^\d+$/.test(val)) {
+    inputError.innerText = "Invalid email or mobile";
+    return;
   }
 
-  OTP = "1234"; // demo
-  otpInput.style.display="block";
-  verifyBtn.style.display="block";
+  otpInput.style.display = "block";
+  verifyOtpBtn.style.display = "block";
+  sendOtpBtn.disabled = true;
   startTimer();
 };
 
-verifyBtn.onclick = ()=>{
-  otpError.textContent="";
-  if(!otpInput.value){
-    otpError.textContent="OTP required";
+// -------- VERIFY OTP --------
+verifyOtpBtn.onclick = () => {
+  otpError.innerText = "";
+  if (otpInput.value.length < 4) {
+    otpError.innerText = "Invalid OTP";
     return;
   }
-  if(otpInput.value !== OTP){
-    otpError.textContent="Invalid OTP";
-    return;
-  }
-  alert("Login successful (demo)");
+  alert("Login success (demo)");
 };
 
-function startTimer(){
-  let t=30;
-  resendBtn.style.display="none";
-  timerBox.textContent=`Resend OTP in ${t}s`;
-  clearInterval(timer);
-  timer=setInterval(()=>{
+// -------- TIMER --------
+function startTimer() {
+  let t = 30;
+  resendBtn.style.display = "none";
+  resendTimer.innerText = `Resend OTP in ${t}s`;
+  const i = setInterval(()=>{
     t--;
-    timerBox.textContent=`Resend OTP in ${t}s`;
+    resendTimer.innerText = `Resend OTP in ${t}s`;
     if(t<=0){
-      clearInterval(timer);
-      timerBox.textContent="";
+      clearInterval(i);
+      resendTimer.innerText="";
       resendBtn.style.display="block";
     }
   },1000);
