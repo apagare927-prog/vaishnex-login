@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vaishnex OTP Login</title>
-  <link rel="stylesheet" href="css/style.css"/>
+  <title>Vaishnex Login</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
@@ -12,41 +12,40 @@
   <div class="card">
 
     <!-- LOGO -->
-    <div class="logo-wrapper">
+    <div class="logo-wrap">
       <div class="logo-glow"></div>
-      <div class="logo-circle">
-        <span>VAISHNEX</span>
-      </div>
+      <div class="logo">VAISHNEX</div>
     </div>
 
-    <p class="welcome">Welcome to Vaishnex</p>
+    <h2 class="welcome">Welcome to Vaishnex</h2>
 
-    <!-- STEP 1 -->
-    <div id="step-identity">
-      <input
-        type="text"
-        id="identity"
-        placeholder="Email or mobile number"
-      />
-      <div class="error" id="errorIdentity">Please enter valid email or mobile</div>
-      <button id="sendOtpBtn">Send OTP</button>
-    </div>
+    <!-- INPUT -->
+    <input
+      id="userInput"
+      type="text"
+      placeholder="Email or mobile number"
+    />
 
-    <!-- STEP 2 -->
-    <div id="step-otp" class="hidden">
+    <p id="error" class="error"></p>
+
+    <!-- SEND OTP -->
+    <button id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+
+    <!-- OTP SECTION -->
+    <div id="otpBox" class="hidden">
       <input
+        id="otpInput"
         type="text"
-        id="otp"
         placeholder="Enter OTP"
-        maxlength="6"
       />
-      <div class="error" id="errorOtp">Invalid OTP</div>
 
-      <button id="verifyOtpBtn">Verify OTP</button>
+      <p id="otpError" class="error"></p>
+
+      <button onclick="verifyOTP()">Verify OTP</button>
 
       <p class="resend">
         Didn’t receive OTP?
-        <span id="resendOtp">Resend OTP</span>
+        <span onclick="resendOTP()">Resend OTP</span>
       </p>
     </div>
 
