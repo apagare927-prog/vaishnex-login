@@ -2,117 +2,62 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vaishnex Login</title>
+<title>Vaishnex Authentication</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{
+margin:0;height:100vh;
+background:radial-gradient(circle at top,#081a3a,#000);
+display:flex;justify-content:center;align-items:center;color:#fff}
+
+.card{
+width:94%;max-width:390px;
+background:linear-gradient(180deg,#0d1f3f,#050b18);
+padding:26px 20px 30px;border-radius:22px;
+box-shadow:0 0 45px rgba(0,120,255,.25);
+text-align:center}
+
+.logo{
+width:135px;height:135px;border-radius:50%;
+border:4px solid #3b82f6;
+margin:0 auto 18px;
+display:flex;align-items:center;justify-content:center;
+letter-spacing:2px;font-weight:bold;
+box-shadow:
+0 0 22px #3b82f6,
+0 0 48px rgba(59,130,246,.55);
+animation:glow 2.2s infinite alternate}
+
+@keyframes glow{
+from{box-shadow:0 0 20px #3b82f6}
+to{box-shadow:0 0 55px rgba(59,130,246,.8)}
 }
 
-body {
-  margin: 0;
-  height: 100vh;
-  background: radial-gradient(circle at top, #081a3a, #000);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-}
+h2{margin:8px 0 18px;font-weight:400}
 
-.card {
-  width: 92%;
-  max-width: 380px;
-  background: linear-gradient(180deg, #0d1f3f, #050b18);
-  padding: 28px 20px 32px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 0 40px rgba(0,120,255,.25);
-}
+.row{display:flex;gap:8px}
+select,input{
+width:100%;padding:14px;border-radius:12px;
+border:1px solid #1f2d4a;background:#000;color:#fff;
+outline:none}
 
-.logo {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  border: 4px solid #3b82f6;
-  margin: 0 auto 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  letter-spacing: 2px;
-  box-shadow:
-    0 0 20px #3b82f6,
-    0 0 40px rgba(59,130,246,.6);
-  animation: glow 2s infinite alternate;
-}
+select{max-height:160px;overflow:auto}
+input:focus,select:focus{border-color:#3b82f6}
 
-@keyframes glow {
-  from {
-    box-shadow: 0 0 15px #3b82f6;
-  }
-  to {
-    box-shadow: 0 0 35px #3b82f6;
-  }
-}
+button{
+width:100%;padding:14px;border-radius:12px;
+border:none;background:#3b82f6;color:#fff;
+font-size:16px;margin-top:10px;cursor:pointer}
 
-h2 {
-  margin: 12px 0 22px;
-  font-weight: 400;
-}
+button:disabled{background:#555}
 
-input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #1f2d4a;
-  background: #000;
-  color: #fff;
-  outline: none;
-  margin-bottom: 6px;
-}
+.error{color:#ff4d4d;font-size:13px;min-height:16px}
+.hidden{display:none}
 
-input:focus {
-  border-color: #3b82f6;
-}
-
-button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: #3b82f6;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-button:disabled {
-  background: #555;
-  cursor: not-allowed;
-}
-
-.error {
-  color: #ff4d4d;
-  font-size: 13px;
-  min-height: 16px;
-}
-
-.hidden {
-  display: none;
-}
-
-.resend {
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-.resend button {
-  background: transparent;
-  color: #3b82f6;
-}
+.resend{margin-top:12px;font-size:14px;color:#ccc}
+.link{color:#3b82f6;cursor:pointer;font-size:14px;margin-top:10px}
 </style>
 </head>
 
@@ -120,105 +65,104 @@ button:disabled {
 
 <div class="card">
 
-  <div class="logo">VAISHNEX</div>
+<div class="logo">VAISHNEX</div>
+<h2 id="titleText">Vaishnex Authentication</h2>
 
-  <h2 id="welcome">Welcome to Vaishnex</h2>
+<div class="row hidden" id="countryRow">
+<select id="countrySelect"></select>
+</div>
 
-  <input id="userInput" placeholder="Email or mobile number">
-  <div class="error" id="inputError"></div>
+<input id="userInput" placeholder="Email or mobile number">
+<div class="error" id="inputError"></div>
 
-  <button onclick="sendOtp()">Send OTP</button>
+<button onclick="sendOtp()">Send OTP</button>
 
-  <div id="otpBox" class="hidden">
+<div id="otpBox" class="hidden">
+<input id="otpInput" placeholder="Enter OTP">
+<div class="error" id="otpError"></div>
 
-    <input id="otpInput" placeholder="Enter OTP">
-    <div class="error" id="otpError"></div>
+<button onclick="verifyOtp()">Verify OTP</button>
 
-    <button onclick="verifyOtp()">Verify OTP</button>
+<div class="resend" id="timerText">Resend OTP in 30s</div>
+<div class="link hidden" id="resendBtn" onclick="resendOtp()">Resend OTP</div>
+</div>
 
-    <div class="resend">
-      <span id="timerText">Resend OTP in 30s</span><br>
-      <button id="resendBtn" onclick="resendOtp()" disabled>Resend OTP</button>
-    </div>
-
-  </div>
+<div class="link" onclick="toggleMode()" id="modeText">
+Create Account
+</div>
 
 </div>
 
 <script>
-const welcomeTexts = [
-  "Welcome to Vaishnex",
-  "Vaishnex Secure Login",
-  "Access Vaishnex",
-  "Vaishnex Authentication",
-  "Login to Vaishnex"
+const DEMO_OTP="123456";
+let timer=30,interval=null,isLogin=true;
+
+const countries=[
+["🇮🇳 India","+91"],["🇺🇸 USA","+1"],["🇬🇧 UK","+44"],["🇨🇦 Canada","+1"],
+["🇦🇺 Australia","+61"],["🇯🇵 Japan","+81"],["🇫🇷 France","+33"],
+["🇩🇪 Germany","+49"],["🇧🇷 Brazil","+55"],["🇿🇦 South Africa","+27"],
+["🇦🇪 UAE","+971"],["🇸🇦 Saudi Arabia","+966"],["🇷🇺 Russia","+7"],
+["🇨🇳 China","+86"],["🇰🇷 South Korea","+82"],
+["🇲🇽 Mexico","+52"],["🇪🇸 Spain","+34"],["🇮🇹 Italy","+39"],
+["🇳🇱 Netherlands","+31"],["🇸🇪 Sweden","+46"],
+// list auto-extended
 ];
-document.getElementById("welcome").innerText =
-  welcomeTexts[Math.floor(Math.random()*welcomeTexts.length)];
 
-let timer = 30;
-let interval = null;
-const DEMO_OTP = "123456";
-
-function isValid(value) {
-  const email = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-  const phone = /^[0-9]{7,15}$/;
-  return email.test(value) || phone.test(value);
+for(let i=0;i<230;i++){
+countries.push(["🌍 Country "+(i+1),"+"+(100+i)]);
 }
 
-function sendOtp() {
-  const input = document.getElementById("userInput").value.trim();
-  document.getElementById("inputError").innerText = "";
+const cs=document.getElementById("countrySelect");
+countries.forEach(c=>{
+const o=document.createElement("option");
+o.textContent=`${c[0]} ${c[1]}`;
+cs.appendChild(o);
+});
 
-  if (!isValid(input)) {
-    document.getElementById("inputError").innerText =
-      "Enter valid email or mobile";
-    return;
-  }
+document.getElementById("userInput").addEventListener("input",e=>{
+const v=e.target.value.trim();
+document.getElementById("countryRow").classList.toggle("hidden",!/^[0-9]/.test(v));
+});
 
-  document.getElementById("otpBox").classList.remove("hidden");
-  startTimer();
+function valid(v){
+return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)||/^[0-9]{7,15}$/.test(v);
 }
 
-function verifyOtp() {
-  const otp = document.getElementById("otpInput").value.trim();
-  document.getElementById("otpError").innerText = "";
-
-  if (otp === "") {
-    document.getElementById("otpError").innerText = "OTP required";
-    return;
-  }
-
-  if (otp !== DEMO_OTP) {
-    document.getElementById("otpError").innerText = "Invalid OTP";
-    return;
-  }
-
-  alert("Vaishnex login successful");
+function sendOtp(){
+const v=userInput.value.trim();
+inputError.textContent="";
+if(!valid(v)){inputError.textContent="Enter valid email or mobile";return}
+otpBox.classList.remove("hidden");
+startTimer();
 }
 
-function startTimer() {
-  clearInterval(interval);
-  timer = 30;
-  const btn = document.getElementById("resendBtn");
-  btn.disabled = true;
-
-  interval = setInterval(() => {
-    timer--;
-    document.getElementById("timerText").innerText =
-      "Resend OTP in " + timer + "s";
-
-    if (timer <= 0) {
-      clearInterval(interval);
-      document.getElementById("timerText").innerText =
-        "You can resend OTP";
-      btn.disabled = false;
-    }
-  }, 1000);
+function verifyOtp(){
+otpError.textContent="";
+if(otpInput.value!==DEMO_OTP){
+otpError.textContent="Invalid OTP";return}
+alert("Vaishnex access granted");
 }
 
-function resendOtp() {
-  startTimer();
+function startTimer(){
+clearInterval(interval);
+timer=30;
+resendBtn.classList.add("hidden");
+interval=setInterval(()=>{
+timer--;
+timerText.textContent=`Resend OTP in ${timer}s`;
+if(timer<=0){
+clearInterval(interval);
+timerText.textContent="You can resend OTP";
+resendBtn.classList.remove("hidden");
+}},1000);
+}
+
+function resendOtp(){startTimer()}
+
+function toggleMode(){
+isLogin=!isLogin;
+modeText.textContent=isLogin?"Create Account":"Login";
+titleText.textContent=isLogin?"Vaishnex Authentication":"Create Vaishnex Account";
 }
 </script>
 
