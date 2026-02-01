@@ -1,88 +1,82 @@
 const userInput = document.getElementById("userInput");
-const otpInput = document.getElementById("otpInput");
 const sendOtpBtn = document.getElementById("sendOtpBtn");
+const otpSection = document.getElementById("otpSection");
+const otpInput = document.getElementById("otpInput");
 const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-const resendBtn = document.getElementById("resendBtn");
-const timerText = document.getElementById("timerText");
 
-const userError = document.getElementById("userError");
+const inputError = document.getElementById("inputError");
 const otpError = document.getElementById("otpError");
 
-const otpField = document.querySelector(".otp-field");
-const resendBox = document.querySelector(".resend");
+const timerText = document.getElementById("timerText");
+const resendOtpBtn = document.getElementById("resendOtpBtn");
 
 let generatedOtp = "";
-let timer;
-let timeLeft = 30;
+let timer = 30;
+let timerInterval = null;
 
-const welcomes = [
-  "Welcome to Vaishnex",
-  "Welcome back to Vaishnex",
-  "Secure login to Vaishnex",
-  "Vaishnex welcomes you",
-  "Enter Vaishnex Network"
-];
-
-document.getElementById("welcomeText").innerText =
-  welcomes[Math.floor(Math.random() * welcomes.length)];
-
+// VALIDATION
 function isValidInput(value) {
-  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const phone = /^[0-9]{6,15}$/;
-  return email.test(value) || phone.test(value);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRegex = /^[0-9]{10,15}$/;
+  return emailRegex.test(value) || phoneRegex.test(value);
 }
 
-sendOtpBtn.onclick = () => {
-  userError.innerText = "";
-  otpError.innerText = "";
+// SEND OTP
+sendOtpBtn.addEventListener("click", () => {
+  const value = userInput.value.trim();
 
-  if (!isValidInput(userInput.value)) {
-    userError.innerText = "Enter valid email or mobile number";
+  inputError.textContent = "";
+  userInput.classList.remove("error-border");
+
+  if (!isValidInput(value)) {
+    inputError.textContent = "Enter valid email or mobile";
+    userInput.classList.add("error-border");
     return;
   }
 
   generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-  console.log("OTP:", generatedOtp); // demo
+  console.log("OTP (demo):", generatedOtp);
 
-  otpField.classList.remove("hidden");
-  verifyOtpBtn.classList.remove("hidden");
-  resendBox.classList.remove("hidden");
-
+  otpSection.classList.remove("hidden");
   startTimer();
-};
+});
 
-verifyOtpBtn.onclick = () => {
-  otpError.innerText = "";
+// VERIFY OTP
+verifyOtpBtn.addEventListener("click", () => {
+  otpError.textContent = "";
+  otpInput.classList.remove("error-border");
 
   if (otpInput.value !== generatedOtp) {
-    otpError.innerText = "Invalid OTP";
+    otpError.textContent = "Invalid OTP";
+    otpInput.classList.add("error-border");
     return;
   }
 
-  alert("Login successful – Vaishnex");
-};
+  alert("Vaishnex login successful ✅");
+});
 
+// TIMER
 function startTimer() {
-  clearInterval(timer);
-  timeLeft = 30;
-  resendBtn.disabled = true;
+  clearInterval(timerInterval);
+  timer = 30;
+  resendOtpBtn.classList.add("disabled");
+  timerText.textContent = `Resend OTP in ${timer}s`;
 
-  timerText.innerText = `Resend OTP in ${timeLeft}s`;
+  timerInterval = setInterval(() => {
+    timer--;
+    timerText.textContent = `Resend OTP in ${timer}s`;
 
-  timer = setInterval(() => {
-    timeLeft--;
-    timerText.innerText = `Resend OTP in ${timeLeft}s`;
-
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      timerText.innerText = "You can resend OTP";
-      resendBtn.disabled = false;
+    if (timer <= 0) {
+      clearInterval(timerInterval);
+      timerText.textContent = "";
+      resendOtpBtn.classList.remove("disabled");
     }
   }, 1000);
 }
 
-resendBtn.onclick = () => {
+// RESEND OTP
+resendOtpBtn.addEventListener("click", () => {
   generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-  console.log("Resent OTP:", generatedOtp);
+  console.log("Resent OTP (demo):", generatedOtp);
   startTimer();
-};
+});
