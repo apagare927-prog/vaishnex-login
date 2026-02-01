@@ -1,232 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vaishnex Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaishnex Login</title>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: radial-gradient(circle at top, #0a1a2f, #000);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      color: #fff;
-    }
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:radial-gradient(circle at top,#0a1a2f,#000);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial,sans-serif;
+  color:#fff;
+}
+.card{
+  width:92%;
+  max-width:380px;
+  background:#0f172a;
+  padding:28px;
+  border-radius:22px;
+  box-shadow:0 25px 70px rgba(0,0,0,.7);
+  text-align:center;
+}
 
-    .card {
-      width: 90%;
-      max-width: 380px;
-      background: rgba(15, 25, 40, 0.96);
-      border-radius: 22px;
-      padding: 30px 25px;
-      box-shadow: 0 25px 70px rgba(0,0,0,0.7);
-      text-align: center;
-    }
+/* LOGO SAME */
+.logo-ring{
+  width:120px;height:120px;
+  margin:0 auto 16px;
+  border-radius:50%;
+  border:3px solid #3b82f6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:glowPulse 1.6s ease-in-out infinite;
+}
+@keyframes glowPulse{
+  0%,100%{box-shadow:0 0 25px #3b82f6}
+  50%{box-shadow:0 0 65px #3b82f6}
+}
 
-    /* 🔵 LOGO RING – NO ROTATION */
-    .logo-ring {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      margin: 0 auto 18px;
-      border: 3px solid rgba(59,130,246,0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+input,button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+}
+input{background:#020617;color:#fff}
+button{
+  background:#3b82f6;
+  color:#fff;
+  cursor:pointer;
+}
+button:disabled{opacity:.5}
 
-      /* Glow only */
-      animation: glowPulse 1.4s ease-in-out infinite;
+/* Country */
+.country-btn{
+  background:#020617;
+  text-align:left;
+}
+.country-list{
+  display:none;
+  max-height:200px;
+  overflow:auto;
+  background:#020617;
+  border-radius:12px;
+}
+.country-item{
+  padding:12px;
+  cursor:pointer;
+}
+.country-item:hover{background:#020617;color:#3b82f6}
 
-      box-shadow:
-        0 0 25px rgba(59,130,246,1),
-        0 0 55px rgba(59,130,246,0.9),
-        0 0 110px rgba(59,130,246,0.7);
-    }
-
-    .logo-ring span {
-      font-weight: bold;
-      letter-spacing: 2px;
-      font-size: 14px;
-    }
-
-    @keyframes glowPulse {
-      0% {
-        box-shadow:
-          0 0 18px rgba(59,130,246,0.7),
-          0 0 40px rgba(59,130,246,0.6),
-          0 0 75px rgba(59,130,246,0.5);
-      }
-      50% {
-        box-shadow:
-          0 0 35px rgba(59,130,246,1),
-          0 0 75px rgba(59,130,246,0.9),
-          0 0 150px rgba(59,130,246,0.85);
-      }
-      100% {
-        box-shadow:
-          0 0 18px rgba(59,130,246,0.7),
-          0 0 40px rgba(59,130,246,0.6),
-          0 0 75px rgba(59,130,246,0.5);
-      }
-    }
-
-    h3 {
-      margin: 10px 0 22px;
-      font-weight: normal;
-      color: #cbd5e1;
-    }
-
-    .input-box {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
-      border-radius: 12px;
-      border: none;
-      outline: none;
-      background: #020617;
-      color: #fff;
-      font-size: 15px;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      border: none;
-      background: #3b82f6;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    .btn:active {
-      transform: scale(0.98);
-    }
-
-    .country-btn {
-      background: #020617;
-      text-align: left;
-      margin-bottom: 10px;
-    }
-
-    .country-list {
-      display: none;
-      max-height: 220px;
-      overflow-y: auto;
-      background: #020617;
-      border-radius: 12px;
-      margin-bottom: 10px;
-    }
-
-    .country-item {
-      padding: 12px;
-      cursor: pointer;
-      border-bottom: 1px solid #111827;
-    }
-
-    .country-item:hover {
-      background: #020617;
-      color: #3b82f6;
-    }
-
-    #recaptcha-container {
-      margin-top: 12px;
-    }
-  </style>
+.hidden{display:none}
+.timer{margin-top:8px;color:#94a3b8;font-size:14px}
+</style>
 </head>
 
 <body>
-
 <div class="card">
-  <div class="logo-ring">
-    <span>VAISHNEX</span>
+
+  <div class="logo-ring"><b>VAISHNEX</b></div>
+  <h3>Login with Mobile</h3>
+
+  <!-- PHONE STEP -->
+  <div id="step-phone">
+    <button class="country-btn" onclick="toggleCountry()">
+      🌍 <span id="countryText">India (+91)</span>
+    </button>
+
+    <div class="country-list" id="countryList">
+      <div class="country-item" onclick="selectCountry('+91','India')">🇮🇳 India (+91)</div>
+      <div class="country-item" onclick="selectCountry('+1','USA')">🇺🇸 USA (+1)</div>
+      <div class="country-item" onclick="selectCountry('+44','UK')">🇬🇧 UK (+44)</div>
+      <div class="country-item" onclick="selectCountry('+971','UAE')">🇦🇪 UAE (+971)</div>
+    </div>
+
+    <input id="phone" placeholder="Mobile number">
+    <button onclick="sendOTP()">Send OTP</button>
   </div>
 
-  <h3>Welcome to Vaishnex</h3>
-
-  <!-- Country selector -->
-  <button class="btn country-btn" onclick="toggleCountries()">
-    🌍 <span id="selectedCountry">India (+91)</span>
-  </button>
-
-  <div class="country-list" id="countryList">
-    <div class="country-item" onclick="selectCountry('+91','India')">🇮🇳 India (+91)</div>
-    <div class="country-item" onclick="selectCountry('+1','United States')">🇺🇸 United States (+1)</div>
-    <div class="country-item" onclick="selectCountry('+44','United Kingdom')">🇬🇧 United Kingdom (+44)</div>
-    <div class="country-item" onclick="selectCountry('+971','UAE')">🇦🇪 UAE (+971)</div>
+  <!-- OTP STEP -->
+  <div id="step-otp" class="hidden">
+    <input id="otp" placeholder="Enter OTP">
+    <button onclick="verifyOTP()">Verify OTP</button>
+    <div class="timer" id="timer">Resend OTP in 60s</div>
+    <button id="resendBtn" onclick="resendOTP()" disabled>Resend OTP</button>
   </div>
-
-  <input id="phone" class="input-box" placeholder="Mobile number"/>
-
-  <button class="btn" onclick="sendOTP()">Send OTP</button>
 
   <div id="recaptcha-container"></div>
 </div>
 
 <script>
-  /* 🔥 FIREBASE CONFIG – YAHI CHANGE KARNA */
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    appId: "YOUR_APP_ID"
-  };
+/* FIREBASE CONFIG */
+const firebaseConfig={
+  apiKey:"YOUR_API_KEY",
+  authDomain:"YOUR_PROJECT.firebaseapp.com",
+  projectId:"YOUR_PROJECT_ID",
+  appId:"YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+let countryCode="+91";
+let confirmationResult;
+let resendTimer;
+let timeLeft=60;
 
-  let countryCode = "+91";
-  let confirmationResult;
+/* Country */
+function toggleCountry(){
+  const l=document.getElementById("countryList");
+  l.style.display=l.style.display==="block"?"none":"block";
+}
+function selectCountry(code,name){
+  countryCode=code;
+  document.getElementById("countryText").innerText=`${name} (${code})`;
+  document.getElementById("countryList").style.display="none";
+}
 
-  function toggleCountries() {
-    const list = document.getElementById("countryList");
-    list.style.display = list.style.display === "block" ? "none" : "block";
-  }
+/* Recaptcha */
+window.recaptchaVerifier=new firebase.auth.RecaptchaVerifier(
+  "recaptcha-container",{size:"invisible"}
+);
 
-  function selectCountry(code, name) {
-    countryCode = code;
-    document.getElementById("selectedCountry").innerText =
-      name + " (" + code + ")";
-    document.getElementById("countryList").style.display = "none";
-  }
+/* OTP SEND */
+function sendOTP(){
+  const phone=document.getElementById("phone").value.trim();
+  if(phone.length<6){alert("Valid number daalo");return;}
 
-  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-    "recaptcha-container",
-    { size: "invisible" }
-  );
+  firebase.auth()
+    .signInWithPhoneNumber(countryCode+phone,window.recaptchaVerifier)
+    .then(res=>{
+      confirmationResult=res;
+      document.getElementById("step-phone").classList.add("hidden");
+      document.getElementById("step-otp").classList.remove("hidden");
+      startTimer();
+    })
+    .catch(e=>alert(e.message));
+}
 
-  function sendOTP() {
-    const phone = document.getElementById("phone").value.trim();
-    if (!phone) {
-      alert("Mobile number daalo");
-      return;
+/* VERIFY */
+function verifyOTP(){
+  const code=document.getElementById("otp").value.trim();
+  if(!code)return;
+  confirmationResult.confirm(code)
+    .then(()=>alert("Login Successful 🎉"))
+    .catch(()=>alert("Wrong OTP"));
+}
+
+/* TIMER */
+function startTimer(){
+  timeLeft=60;
+  document.getElementById("resendBtn").disabled=true;
+  resendTimer=setInterval(()=>{
+    timeLeft--;
+    document.getElementById("timer").innerText=`Resend OTP in ${timeLeft}s`;
+    if(timeLeft<=0){
+      clearInterval(resendTimer);
+      document.getElementById("timer").innerText="Didn't receive OTP?";
+      document.getElementById("resendBtn").disabled=false;
     }
-
-    const fullNumber = countryCode + phone;
-
-    firebase.auth()
-      .signInWithPhoneNumber(fullNumber, window.recaptchaVerifier)
-      .then(result => {
-        confirmationResult = result;
-        const code = prompt("OTP daalo:");
-        return result.confirm(code);
-      })
-      .then(() => {
-        alert("Login successful 🎉");
-      })
-      .catch(err => {
-        alert(err.message);
-      });
-  }
+  },1000);
+}
+function resendOTP(){
+  sendOTP();
+}
 </script>
 
 </body>
