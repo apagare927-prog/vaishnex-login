@@ -1,203 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vaishnex Login</title>
-
-<!-- intl-tel-input (200+ REAL countries) -->
-<link rel="stylesheet"
- href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
-
-<style>
-body{
-  margin:0;height:100vh;
-  background:radial-gradient(circle at top,#0a1a2f,#000);
-  display:flex;align-items:center;justify-content:center;
-  font-family:Arial;color:#fff;
-}
-.card{
-  width:92%;max-width:380px;
-  background:#0f172a;
-  padding:28px;border-radius:22px;
-  text-align:center;
-  box-shadow:0 25px 70px rgba(0,0,0,.7);
-}
-
-/* Logo */
-.logo-ring{
-  width:120px;height:120px;margin:0 auto 14px;
-  border-radius:50%;border:3px solid #3b82f6;
-  display:flex;align-items:center;justify-content:center;
-  animation:glow 1.6s ease-in-out infinite;
-}
-@keyframes glow{
-  0%,100%{box-shadow:0 0 25px #3b82f6}
-  50%{box-shadow:0 0 70px #3b82f6}
-}
-
-h3{margin-bottom:6px}
-.dynamic{font-size:14px;color:#94a3b8;min-height:18px}
-
-input,button{
-  width:100%;padding:14px;
-  margin-top:12px;border-radius:12px;
-  border:none;font-size:15px;
-}
-input{
-  background:#020617;color:#fff;
-  border:2px solid transparent;
-}
-input:focus{border-color:#3b82f6}
-input.error{border-color:#ef4444}
-
-button{background:#3b82f6;color:#fff;cursor:pointer}
-.hidden{display:none}
-.error-text{color:#ef4444;font-size:14px;margin-top:6px}
-.timer{color:#94a3b8;margin-top:8px}
-
-/* Country dropdown FIX */
-.iti{width:100%}
-.iti__country-list{
-  background:#0f172a !important;
-  color:#fff !important;
-  border-radius:12px;
-}
-.iti__country:hover{background:#020617 !important}
-.iti__dial-code{color:#cbd5e1 !important}
-</style>
-</head>
-
-<body>
-<div class="card">
-
-  <div class="logo-ring"><b>VAISHNEX</b></div>
-  <h3>Welcome</h3>
-  <div id="dynamic" class="dynamic"></div>
-
-  <!-- MAIN INPUT -->
-  <input id="loginInput" placeholder="Email or mobile number">
-  <div id="error" class="error-text"></div>
-
-  <!-- PHONE SELECTOR -->
-  <div id="phoneWrap" class="hidden">
-    <input id="phoneInput">
-  </div>
-
-  <!-- OTP -->
-  <div id="otpBox" class="hidden">
-    <input id="otpInput" placeholder="Enter OTP">
-    <div id="otpError" class="error-text"></div>
-  </div>
-
-  <button id="sendBtn">Send OTP</button>
-  <div id="timer" class="timer hidden"></div>
-  <button id="resendBtn" class="hidden">Resend OTP</button>
-
-</div>
-
 <script>
-/* 🔁 Dynamic welcome (no repeat) */
-const lines=[
- "Secure login powered by Vaishnex",
- "Fast • Secure • Reliable",
- "Your identity, protected",
- "Smart access starts here",
- "One account. Many possibilities."
+/* ===============================
+   Dynamic welcome (no repeat)
+================================ */
+const lines = [
+  "Secure login powered by Vaishnex",
+  "Fast • Secure • Reliable",
+  "Your identity, protected",
+  "Smart access starts here",
+  "One account. Many possibilities."
 ];
-let last=localStorage.getItem("vx_line");
-let i;
-do{i=Math.floor(Math.random()*lines.length)}while(i==last);
-localStorage.setItem("vx_line",i);
-document.getElementById("dynamic").innerText=lines[i];
 
-/* Elements */
-const loginInput=document.getElementById("loginInput");
-const phoneWrap=document.getElementById("phoneWrap");
-const phoneInput=document.getElementById("phoneInput");
-const error=document.getElementById("error");
-const otpBox=document.getElementById("otpBox");
-const otpInput=document.getElementById("otpInput");
-const otpError=document.getElementById("otpError");
-const sendBtn=document.getElementById("sendBtn");
-const resendBtn=document.getElementById("resendBtn");
-const timerBox=document.getElementById("timer");
+let last = localStorage.getItem("vx_line");
+let idx;
+do {
+  idx = Math.floor(Math.random() * lines.length);
+} while (idx == last);
 
-let iti=null;
+localStorage.setItem("vx_line", idx);
+document.getElementById("dynamic").innerText = lines[idx];
 
-/* Detect email vs number */
-loginInput.addEventListener("input",()=>{
+/* ===============================
+   Elements
+================================ */
+const loginInput = document.getElementById("loginInput");
+const phoneWrap  = document.getElementById("phoneWrap");
+const phoneInput = document.getElementById("phoneInput");
+const error      = document.getElementById("error");
+
+const otpBox   = document.getElementById("otpBox");
+const otpInput = document.getElementById("otpInput");
+const otpError = document.getElementById("otpError");
+
+const sendBtn   = document.getElementById("sendBtn");
+const resendBtn = document.getElementById("resendBtn");
+const timerBox  = document.getElementById("timer");
+
+let iti = null;
+let timer = null;
+
+/* ===============================
+   Input detect (email / number)
+================================ */
+loginInput.addEventListener("input", () => {
   clearError();
-  const v=loginInput.value.trim();
+  const v = loginInput.value.trim();
 
-  if(v===""){
+  if (v === "") {
     hidePhone();
     return;
   }
 
   // EMAIL
-  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
     hidePhone();
-    error.innerText="Email detected";
+    error.innerText = "Email detected";
     return;
   }
 
   // NUMBER
-  if(/^[0-9+ ]+$/.test(v)){
+  if (/^[0-9+ ]+$/.test(v)) {
     showPhone(v);
-  }else{
+  } else {
     hidePhone();
   }
 });
 
-/* SHOW phone selector with IP-based auto country */
-function showPhone(value){
+/* ===============================
+   Show phone selector
+   (IP-based auto country)
+================================ */
+function showPhone(value) {
   phoneWrap.classList.remove("hidden");
 
-  if(!iti){
-    iti=intlTelInput(phoneInput,{
-      separateDialCode:true,
-      nationalMode:true,
+  if (!iti) {
+    iti = intlTelInput(phoneInput, {
+      separateDialCode: true,
+      nationalMode: true,
+      initialCountry: "auto",
 
-      /* 🌍 AUTO COUNTRY BY IP */
-      initialCountry:"auto",
-      geoIpLookup:function(cb){
-        fetch("https://ipapi.co/json/")
-          .then(r=>r.json())
-          .then(d=>cb(d.country_code))
-          .catch(()=>cb("in")); // fallback India
+      geoIpLookup: function (cb) {
+        fetch("https://ipwho.is/?fields=country_code")
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.country_code) {
+              cb(data.country_code.toLowerCase());
+            } else {
+              cb("in"); // fallback
+            }
+          })
+          .catch(() => cb("in"));
       },
 
       utilsScript:
-       "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+        "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
     });
   }
-  phoneInput.value=value;
+
+  phoneInput.value = value;
 }
 
-/* HIDE selector completely */
-function hidePhone(){
+function hidePhone() {
   phoneWrap.classList.add("hidden");
 }
 
-/* SEND OTP (UI logic) */
-sendBtn.onclick=()=>{
+/* ===============================
+   Send OTP (UI logic)
+================================ */
+sendBtn.onclick = () => {
   clearError();
   clearOtpError();
 
-  if(loginInput.value.trim()===""){
+  const v = loginInput.value.trim();
+
+  if (v === "") {
     showError("Field cannot be empty");
     return;
   }
 
-  if(loginInput.value.includes("@")){
+  if (v.includes("@")) {
     showError("OTP not required for email");
     return;
   }
 
-  if(!iti || !iti.isValidNumber()){
+  if (!iti || !iti.isValidNumber()) {
     showError("Invalid mobile number");
     return;
   }
@@ -206,53 +131,61 @@ sendBtn.onclick=()=>{
   startTimer();
 };
 
-/* OTP validation (UI) */
-otpInput.addEventListener("input",()=>{
+/* ===============================
+   OTP validation (UI)
+================================ */
+otpInput.addEventListener("input", () => {
   clearOtpError();
-  if(otpInput.value.length < 4){
+
+  if (otpInput.value.length > 0 && otpInput.value.length < 4) {
     showOtpError("OTP too short");
   }
 });
 
-/* ⏱️ TIMER 30s */
-let timer;
-function startTimer(){
-  let t=30;
+/* ===============================
+   30s Timer + Resend
+================================ */
+function startTimer() {
+  let t = 30;
   resendBtn.classList.add("hidden");
   timerBox.classList.remove("hidden");
-  timerBox.innerText=`Resend OTP in ${t}s`;
-  clearInterval(timer);
+  timerBox.innerText = `Resend OTP in ${t}s`;
 
-  timer=setInterval(()=>{
+  clearInterval(timer);
+  timer = setInterval(() => {
     t--;
-    timerBox.innerText=`Resend OTP in ${t}s`;
-    if(t<=0){
+    timerBox.innerText = `Resend OTP in ${t}s`;
+
+    if (t <= 0) {
       clearInterval(timer);
       timerBox.classList.add("hidden");
       resendBtn.classList.remove("hidden");
     }
-  },1000);
+  }, 1000);
 }
-resendBtn.onclick=()=>sendBtn.click();
 
-/* Error helpers */
-function showError(msg){
+resendBtn.onclick = () => sendBtn.click();
+
+/* ===============================
+   Error helpers
+================================ */
+function showError(msg) {
   loginInput.classList.add("error");
-  error.innerText=msg;
+  error.innerText = msg;
 }
-function clearError(){
+
+function clearError() {
   loginInput.classList.remove("error");
-  error.innerText="";
+  error.innerText = "";
 }
-function showOtpError(msg){
+
+function showOtpError(msg) {
   otpInput.classList.add("error");
-  otpError.innerText=msg;
+  otpError.innerText = msg;
 }
-function clearOtpError(){
+
+function clearOtpError() {
   otpInput.classList.remove("error");
-  otpError.innerText="";
+  otpError.innerText = "";
 }
 </script>
-
-</body>
-</html>
