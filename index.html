@@ -24,42 +24,62 @@
     .card {
       width: 90%;
       max-width: 380px;
-      background: rgba(15, 25, 40, 0.95);
-      border-radius: 20px;
+      background: rgba(15, 25, 40, 0.96);
+      border-radius: 22px;
       padding: 30px 25px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.7);
       text-align: center;
     }
 
-    /* Logo ring */
+    /* 🔵 LOGO RING – NO ROTATION */
     .logo-ring {
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      margin: 0 auto 15px;
+      margin: 0 auto 18px;
       border: 3px solid rgba(59,130,246,0.9);
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: spinGlow 1s linear infinite;
+
+      /* Glow only */
+      animation: glowPulse 1.4s ease-in-out infinite;
+
       box-shadow:
-        0 0 20px rgba(59,130,246,1),
-        0 0 45px rgba(59,130,246,0.9),
-        0 0 90px rgba(59,130,246,0.7);
+        0 0 25px rgba(59,130,246,1),
+        0 0 55px rgba(59,130,246,0.9),
+        0 0 110px rgba(59,130,246,0.7);
     }
 
     .logo-ring span {
       font-weight: bold;
       letter-spacing: 2px;
+      font-size: 14px;
     }
 
-    @keyframes spinGlow {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @keyframes glowPulse {
+      0% {
+        box-shadow:
+          0 0 18px rgba(59,130,246,0.7),
+          0 0 40px rgba(59,130,246,0.6),
+          0 0 75px rgba(59,130,246,0.5);
+      }
+      50% {
+        box-shadow:
+          0 0 35px rgba(59,130,246,1),
+          0 0 75px rgba(59,130,246,0.9),
+          0 0 150px rgba(59,130,246,0.85);
+      }
+      100% {
+        box-shadow:
+          0 0 18px rgba(59,130,246,0.7),
+          0 0 40px rgba(59,130,246,0.6),
+          0 0 75px rgba(59,130,246,0.5);
+      }
     }
 
     h3 {
-      margin: 10px 0 20px;
+      margin: 10px 0 22px;
       font-weight: normal;
       color: #cbd5e1;
     }
@@ -68,7 +88,7 @@
       width: 100%;
       padding: 14px;
       margin-bottom: 12px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: none;
       outline: none;
       background: #020617;
@@ -79,7 +99,7 @@
     .btn {
       width: 100%;
       padding: 14px;
-      border-radius: 12px;
+      border-radius: 14px;
       border: none;
       background: #3b82f6;
       color: #fff;
@@ -103,12 +123,12 @@
       max-height: 220px;
       overflow-y: auto;
       background: #020617;
-      border-radius: 10px;
+      border-radius: 12px;
       margin-bottom: 10px;
     }
 
     .country-item {
-      padding: 10px;
+      padding: 12px;
       cursor: pointer;
       border-bottom: 1px solid #111827;
     }
@@ -153,7 +173,7 @@
 </div>
 
 <script>
-  /* 🔥 Firebase CONFIG – YAHI REPLACE KARNA HAI */
+  /* 🔥 FIREBASE CONFIG – YAHI CHANGE KARNA */
   const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -192,21 +212,20 @@
     }
 
     const fullNumber = countryCode + phone;
-    firebase.auth().signInWithPhoneNumber(
-      fullNumber,
-      window.recaptchaVerifier
-    )
-    .then(result => {
-      confirmationResult = result;
-      const code = prompt("OTP daalo:");
-      return result.confirm(code);
-    })
-    .then(() => {
-      alert("Login successful 🎉");
-    })
-    .catch(err => {
-      alert(err.message);
-    });
+
+    firebase.auth()
+      .signInWithPhoneNumber(fullNumber, window.recaptchaVerifier)
+      .then(result => {
+        confirmationResult = result;
+        const code = prompt("OTP daalo:");
+        return result.confirm(code);
+      })
+      .then(() => {
+        alert("Login successful 🎉");
+      })
+      .catch(err => {
+        alert(err.message);
+      });
   }
 </script>
 
