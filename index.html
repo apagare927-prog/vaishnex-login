@@ -1,52 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Vaishnex Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div class="page">
+  <div class="bg"></div>
+
   <div class="card">
 
-    <div class="logo-ring">
+    <!-- LOGO -->
+    <div class="logo-wrapper">
+      <div class="logo-ring"></div>
       <div class="logo-text">VAISHNEX</div>
     </div>
 
-    <h2 id="welcomeText">Welcome to Vaishnex</h2>
+    <!-- WELCOME -->
+    <div id="welcomeText" class="welcome">
+      Welcome to Vaishnex
+    </div>
 
-    <!-- INPUT ROW -->
+    <!-- INPUT SECTION -->
     <div class="input-row">
       <select id="countrySelect"></select>
+
       <input
         type="text"
         id="userInput"
         placeholder="Email or mobile number"
-      >
+      />
     </div>
-    <div class="error" id="inputError"></div>
 
-    <button id="sendOtpBtn">Send OTP</button>
+    <div id="inputError" class="error-text"></div>
 
-    <!-- OTP -->
-    <div id="otpBox" class="hidden">
-      <input type="text" id="otpInput" placeholder="Enter OTP">
-      <div class="error" id="otpError"></div>
+    <button id="sendOtpBtn" class="btn">
+      Send OTP
+    </button>
 
-      <button id="verifyOtpBtn">Verify OTP</button>
+    <!-- OTP SECTION -->
+    <div id="otpSection" class="otp-section hidden">
+      <input
+        type="text"
+        id="otpInput"
+        placeholder="Enter OTP"
+        maxlength="6"
+      />
 
-      <div class="resend">
-        <span id="timerText"></span>
-        <button id="resendBtn" disabled>Resend OTP</button>
+      <div id="otpError" class="error-text"></div>
+
+      <button id="verifyOtpBtn" class="btn">
+        Verify OTP
+      </button>
+
+      <div id="resendBox" class="resend">
+        Resend OTP in <span id="timer">30</span>s
       </div>
     </div>
 
   </div>
-</div>
 
-<script src="js/script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
