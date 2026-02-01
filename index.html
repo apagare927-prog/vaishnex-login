@@ -1,44 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Vaishnex Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-<div class="container">
-  <div class="card">
+  <div class="container">
+    <div class="card">
 
-    <!-- LOGO -->
-    <div class="logo-ring">
-      <div class="logo-text">VAISHNEX</div>
+      <!-- LOGO -->
+      <div class="logo-wrapper">
+        <div class="logo-ring"></div>
+        <div class="logo-text">VAISHNEX</div>
+      </div>
+
+      <h2 id="welcomeText">Welcome to Vaishnex</h2>
+
+      <!-- INPUT ROW -->
+      <div class="input-row">
+        <select id="countrySelect"></select>
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Email or mobile number"
+        >
+      </div>
+
+      <p class="error" id="inputError"></p>
+
+      <button id="sendOtpBtn">Send OTP</button>
+
+      <!-- OTP -->
+      <div id="otpSection" class="hidden">
+        <input
+          type="text"
+          id="otpInput"
+          placeholder="Enter OTP"
+        >
+        <p class="error" id="otpError"></p>
+
+        <button id="verifyOtpBtn">Verify OTP</button>
+
+        <p class="timer" id="timerText"></p>
+        <p class="resend hidden" id="resendBtn">Resend OTP</p>
+      </div>
+
     </div>
-
-    <h2 id="welcomeLine">Welcome to Vaishnex</h2>
-
-    <!-- INPUT -->
-    <div class="input-group">
-      <select id="countrySelect"></select>
-      <input id="userInput" placeholder="Email or mobile number" />
-    </div>
-    <div class="error" id="inputError"></div>
-
-    <button id="sendOtpBtn">Send OTP</button>
-
-    <!-- OTP -->
-    <input id="otpInput" placeholder="Enter OTP" style="display:none" />
-    <div class="error" id="otpError"></div>
-
-    <button id="verifyOtpBtn" style="display:none">Verify OTP</button>
-
-    <div class="timer" id="resendTimer"></div>
-    <button id="resendBtn" style="display:none">Resend OTP</button>
-
   </div>
-</div>
 
-<script src="/app.js"></script>
+  <!-- JS -->
+  <script src="./script.js"></script>
 </body>
 </html>
