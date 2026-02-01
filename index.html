@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vaishnex Login</title>
 
-<!-- intl-tel-input -->
+<!-- intl-tel-input (200+ REAL countries) -->
 <link rel="stylesheet"
  href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
@@ -25,6 +25,8 @@ body{
   text-align:center;
   box-shadow:0 25px 70px rgba(0,0,0,.7);
 }
+
+/* Logo */
 .logo-ring{
   width:120px;height:120px;margin:0 auto 14px;
   border-radius:50%;border:3px solid #3b82f6;
@@ -35,6 +37,7 @@ body{
   0%,100%{box-shadow:0 0 25px #3b82f6}
   50%{box-shadow:0 0 70px #3b82f6}
 }
+
 h3{margin-bottom:6px}
 .dynamic{font-size:14px;color:#94a3b8;min-height:18px}
 
@@ -51,10 +54,19 @@ input:focus{border-color:#3b82f6}
 input.error{border-color:#ef4444}
 
 button{background:#3b82f6;color:#fff;cursor:pointer}
-
 .hidden{display:none}
 .error-text{color:#ef4444;font-size:14px;margin-top:6px}
 .timer{color:#94a3b8;margin-top:8px}
+
+/* Country dropdown FIX */
+.iti{width:100%}
+.iti__country-list{
+  background:#0f172a !important;
+  color:#fff !important;
+  border-radius:12px;
+}
+.iti__country:hover{background:#020617 !important}
+.iti__dial-code{color:#cbd5e1 !important}
 </style>
 </head>
 
@@ -65,18 +77,19 @@ button{background:#3b82f6;color:#fff;cursor:pointer}
   <h3>Welcome</h3>
   <div id="dynamic" class="dynamic"></div>
 
-  <!-- EMAIL / PHONE INPUT -->
+  <!-- MAIN INPUT -->
   <input id="loginInput" placeholder="Email or mobile number">
   <div id="error" class="error-text"></div>
 
-  <!-- PHONE INPUT (REAL SELECTOR, HIDDEN INITIALLY) -->
-  <div id="phoneWrapper" class="hidden">
+  <!-- PHONE SELECTOR -->
+  <div id="phoneWrap" class="hidden">
     <input id="phoneInput">
   </div>
 
   <!-- OTP -->
   <div id="otpBox" class="hidden">
-    <input placeholder="Enter OTP">
+    <input id="otpInput" placeholder="Enter OTP">
+    <div id="otpError" class="error-text"></div>
   </div>
 
   <button id="sendBtn">Send OTP</button>
@@ -86,12 +99,13 @@ button{background:#3b82f6;color:#fff;cursor:pointer}
 </div>
 
 <script>
-/* Dynamic welcome (no repeat) */
+/* 🔁 Dynamic welcome (no repeat) */
 const lines=[
  "Secure login powered by Vaishnex",
  "Fast • Secure • Reliable",
  "Your identity, protected",
- "Smart access starts here"
+ "Smart access starts here",
+ "One account. Many possibilities."
 ];
 let last=localStorage.getItem("vx_line");
 let i;
@@ -101,10 +115,12 @@ document.getElementById("dynamic").innerText=lines[i];
 
 /* Elements */
 const loginInput=document.getElementById("loginInput");
-const phoneWrapper=document.getElementById("phoneWrapper");
+const phoneWrap=document.getElementById("phoneWrap");
 const phoneInput=document.getElementById("phoneInput");
 const error=document.getElementById("error");
 const otpBox=document.getElementById("otpBox");
+const otpInput=document.getElementById("otpInput");
+const otpError=document.getElementById("otpError");
 const sendBtn=document.getElementById("sendBtn");
 const resendBtn=document.getElementById("resendBtn");
 const timerBox=document.getElementById("timer");
@@ -136,13 +152,24 @@ loginInput.addEventListener("input",()=>{
   }
 });
 
-/* Show phone selector properly */
+/* SHOW phone selector with IP-based auto country */
 function showPhone(value){
-  phoneWrapper.classList.remove("hidden");
+  phoneWrap.classList.remove("hidden");
+
   if(!iti){
     iti=intlTelInput(phoneInput,{
-      initialCountry:"in",
       separateDialCode:true,
+      nationalMode:true,
+
+      /* 🌍 AUTO COUNTRY BY IP */
+      initialCountry:"auto",
+      geoIpLookup:function(cb){
+        fetch("https://ipapi.co/json/")
+          .then(r=>r.json())
+          .then(d=>cb(d.country_code))
+          .catch(()=>cb("in")); // fallback India
+      },
+
       utilsScript:
        "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
     });
@@ -150,14 +177,16 @@ function showPhone(value){
   phoneInput.value=value;
 }
 
-/* Hide selector completely */
+/* HIDE selector completely */
 function hidePhone(){
-  phoneWrapper.classList.add("hidden");
+  phoneWrap.classList.add("hidden");
 }
 
-/* Send OTP (UI logic) */
+/* SEND OTP (UI logic) */
 sendBtn.onclick=()=>{
   clearError();
+  clearOtpError();
+
   if(loginInput.value.trim()===""){
     showError("Field cannot be empty");
     return;
@@ -177,7 +206,15 @@ sendBtn.onclick=()=>{
   startTimer();
 };
 
-/* Timer */
+/* OTP validation (UI) */
+otpInput.addEventListener("input",()=>{
+  clearOtpError();
+  if(otpInput.value.length < 4){
+    showOtpError("OTP too short");
+  }
+});
+
+/* ⏱️ TIMER 30s */
 let timer;
 function startTimer(){
   let t=30;
@@ -198,7 +235,7 @@ function startTimer(){
 }
 resendBtn.onclick=()=>sendBtn.click();
 
-/* Errors */
+/* Error helpers */
 function showError(msg){
   loginInput.classList.add("error");
   error.innerText=msg;
@@ -206,6 +243,14 @@ function showError(msg){
 function clearError(){
   loginInput.classList.remove("error");
   error.innerText="";
+}
+function showOtpError(msg){
+  otpInput.classList.add("error");
+  otpError.innerText=msg;
+}
+function clearOtpError(){
+  otpInput.classList.remove("error");
+  otpError.innerText="";
 }
 </script>
 
