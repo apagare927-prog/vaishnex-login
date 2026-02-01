@@ -1,93 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Vaishnex Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
-
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <div class="page">
-    <div class="card">
+<div class="page">
+  <div class="card">
 
-      <!-- LOGO -->
-      <div class="logo-wrap">
-        <div class="logo-ring">
-          <div class="logo-text">VAISHNEX</div>
-        </div>
-      </div>
-
-      <!-- WELCOME -->
-      <h2 id="welcomeText">Welcome to Vaishnex</h2>
-
-      <!-- INPUT ROW -->
-      <div class="input-row">
-
-        <!-- COUNTRY SELECTOR -->
-        <div class="country-box" id="countryBox">
-          <button id="countryBtn">🌍</button>
-        </div>
-
-        <!-- EMAIL / MOBILE -->
-        <input
-          type="text"
-          id="userInput"
-          placeholder="Email or mobile number"
-        />
-      </div>
-
-      <!-- ERROR -->
-      <div class="error" id="inputError"></div>
-
-      <!-- SEND OTP -->
-      <button class="primary-btn" id="sendOtpBtn">
-        Send OTP
-      </button>
-
-      <!-- OTP SECTION -->
-      <div id="otpSection" class="hidden">
-
-        <input
-          type="text"
-          id="otpInput"
-          placeholder="Enter OTP"
-        />
-
-        <div class="error" id="otpError"></div>
-
-        <button class="primary-btn" id="verifyOtpBtn">
-          Verify OTP
-        </button>
-
-        <div class="resend">
-          <span id="timerText">Resend OTP in 30s</span>
-          <button id="resendBtn" class="link-btn hidden">
-            Resend OTP
-          </button>
-        </div>
-
-      </div>
-
+    <div class="logo-ring">
+      <div class="logo-text">VAISHNEX</div>
     </div>
-  </div>
 
-  <!-- COUNTRY MODAL -->
-  <div id="countryModal" class="modal hidden">
-    <div class="modal-content">
+    <h2 id="welcomeText">Welcome to Vaishnex</h2>
+
+    <!-- INPUT ROW -->
+    <div class="input-row">
+      <select id="countrySelect"></select>
       <input
         type="text"
-        id="countrySearch"
-        placeholder="Search country"
-      />
-      <ul id="countryList"></ul>
+        id="userInput"
+        placeholder="Email or mobile number"
+      >
     </div>
-  </div>
+    <div class="error" id="inputError"></div>
 
-  <!-- JS -->
-  <script src="script.js"></script>
+    <button id="sendOtpBtn">Send OTP</button>
+
+    <!-- OTP -->
+    <div id="otpBox" class="hidden">
+      <input type="text" id="otpInput" placeholder="Enter OTP">
+      <div class="error" id="otpError"></div>
+
+      <button id="verifyOtpBtn">Verify OTP</button>
+
+      <div class="resend">
+        <span id="timerText"></span>
+        <button id="resendBtn" disabled>Resend OTP</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/script.js"></script>
 </body>
 </html>
