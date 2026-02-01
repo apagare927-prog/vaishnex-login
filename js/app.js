@@ -2,102 +2,99 @@ const countryBtn = document.getElementById("countryBtn");
 const countryModal = document.getElementById("countryModal");
 const countryList = document.getElementById("countryList");
 const searchCountry = document.getElementById("searchCountry");
+const countryFlag = document.getElementById("countryFlag");
+const countryCode = document.getElementById("countryCode");
 
-let allCountries = [];
-let selectedDial = "+91";
+const sendOtpBtn = document.getElementById("sendOtpBtn");
+const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+const resendBtn = document.getElementById("resendBtn");
+const otpInput = document.getElementById("otpInput");
+const timerText = document.getElementById("timerText");
+const error = document.getElementById("error");
 
-/* 1️⃣ FETCH REAL 250+ COUNTRIES */
-fetch("https://restcountries.com/v3.1/all")
-  .then(res => res.json())
-  .then(data => {
-    allCountries = data
-      .filter(c => c.idd?.root)
-      .map(c => ({
-        name: c.name.common,
-        dial: c.idd.root + (c.idd.suffixes ? c.idd.suffixes[0] : ""),
-        flag: c.flags.png
-      }))
-      .sort((a,b)=>a.name.localeCompare(b.name));
+let timer;
+let seconds = 30;
 
-    renderCountries(allCountries);
-    autoDetectCountry();
-  });
+/* REAL COUNTRY DATA */
+const countries = [
+  { name:"India", code:"+91", flag:"in" },
+  { name:"United States", code:"+1", flag:"us" },
+  { name:"United Kingdom", code:"+44", flag:"gb" },
+  { name:"Afghanistan", code:"+93", flag:"af" },
+  { name:"Albania", code:"+355", flag:"al" },
+  { name:"Algeria", code:"+213", flag:"dz" },
+  { name:"Australia", code:"+61", flag:"au" },
+  { name:"Canada", code:"+1", flag:"ca" },
+  { name:"France", code:"+33", flag:"fr" },
+  { name:"Germany", code:"+49", flag:"de" },
+  { name:"Japan", code:"+81", flag:"jp" },
+  { name:"UAE", code:"+971", flag:"ae" }
+];
 
+/* LOAD COUNTRIES */
 function renderCountries(list) {
   countryList.innerHTML = "";
   list.forEach(c => {
     const div = document.createElement("div");
-    div.className = "country-row";
+    div.className = "country-item";
     div.innerHTML = `
-      <img src="${c.flag}">
-      <span>${c.name}</span>
-      <span>${c.dial}</span>
+      <img src="https://flagcdn.com/w40/${c.flag}.png">
+      <span>${c.name} (${c.code})</span>
     `;
     div.onclick = () => {
-      selectedDial = c.dial;
-      countryBtn.innerText = c.flag + " " + c.dial;
+      countryFlag.src = `https://flagcdn.com/w20/${c.flag}.png`;
+      countryCode.textContent = c.code;
       countryModal.classList.add("hidden");
+      document.body.style.overflow = "auto";
     };
     countryList.appendChild(div);
   });
 }
 
-/* 2️⃣ SEARCH */
-searchCountry.oninput = e => {
-  const q = e.target.value.toLowerCase();
-  renderCountries(allCountries.filter(c => c.name.toLowerCase().includes(q)));
+renderCountries(countries);
+
+/* MODAL OPEN */
+countryBtn.onclick = () => {
+  countryModal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
 };
 
-/* 3️⃣ AUTO DETECT (IP BASED) */
-function autoDetectCountry() {
-  fetch("https://ipapi.co/json/")
-    .then(res => res.json())
-    .then(loc => {
-      const found = allCountries.find(c => c.name === loc.country_name);
-      if (found) {
-        selectedDial = found.dial;
-        countryBtn.innerText = found.dial;
-      }
-    });
-}
-
-/* Modal */
-countryBtn.onclick = () => countryModal.classList.remove("hidden");
+/* MODAL CLOSE */
 countryModal.onclick = e => {
-  if (e.target === countryModal) countryModal.classList.add("hidden");
+  if (e.target === countryModal) {
+    countryModal.classList.add("hidden");
+    document.body.style.overflow = "auto";
+  }
 };
 
-/* OTP FLOW (DEMO) */
-const sendOtpBtn = document.getElementById("sendOtpBtn");
-const otpInput = document.getElementById("otpInput");
-const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-const timerText = document.getElementById("timer");
-const resendBtn = document.getElementById("resendBtn");
-const error = document.getElementById("error");
+/* SEARCH */
+searchCountry.oninput = () => {
+  const v = searchCountry.value.toLowerCase();
+  renderCountries(countries.filter(c =>
+    c.name.toLowerCase().includes(v) || c.code.includes(v)
+  ));
+};
 
-let timer;
-
+/* OTP LOGIC (DEMO) */
 sendOtpBtn.onclick = () => {
+  error.textContent = "";
   otpInput.classList.remove("hidden");
   verifyOtpBtn.classList.remove("hidden");
-  startTimer();
-};
-
-function startTimer() {
-  let t = 30;
   timerText.classList.remove("hidden");
   resendBtn.classList.add("hidden");
-  timerText.innerText = `Resend OTP in ${t}s`;
+
+  seconds = 30;
+  timerText.textContent = `Resend OTP in ${seconds}s`;
 
   timer = setInterval(() => {
-    t--;
-    timerText.innerText = `Resend OTP in ${t}s`;
-    if (t === 0) {
+    seconds--;
+    timerText.textContent = `Resend OTP in ${seconds}s`;
+    if (seconds <= 0) {
       clearInterval(timer);
       timerText.classList.add("hidden");
       resendBtn.classList.remove("hidden");
     }
   }, 1000);
-}
+};
 
-resendBtn.onclick = startTimer;
+resendBtn.onclick = sendOtpBtn;
