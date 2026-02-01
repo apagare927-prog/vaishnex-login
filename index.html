@@ -1,58 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Vaishnex Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Vaishnex Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #081a3a, #000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.card {
+  width: 92%;
+  max-width: 380px;
+  background: linear-gradient(180deg, #0d1f3f, #050b18);
+  padding: 28px 20px 32px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0,120,255,.25);
+}
+
+.logo {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid #3b82f6;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  letter-spacing: 2px;
+  box-shadow:
+    0 0 20px #3b82f6,
+    0 0 40px rgba(59,130,246,.6);
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 15px #3b82f6;
+  }
+  to {
+    box-shadow: 0 0 35px #3b82f6;
+  }
+}
+
+h2 {
+  margin: 12px 0 22px;
+  font-weight: 400;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #1f2d4a;
+  background: #000;
+  color: #fff;
+  outline: none;
+  margin-bottom: 6px;
+}
+
+input:focus {
+  border-color: #3b82f6;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #ff4d4d;
+  font-size: 13px;
+  min-height: 16px;
+}
+
+.hidden {
+  display: none;
+}
+
+.resend {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.resend button {
+  background: transparent;
+  color: #3b82f6;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="page">
-    <div class="card">
+<div class="card">
 
-      <!-- LOGO -->
-      <div class="logo-ring">
-        <div class="logo-text">VAISHNEX</div>
-      </div>
+  <div class="logo">VAISHNEX</div>
 
-      <h2 class="welcome">Welcome to Vaishnex</h2>
+  <h2 id="welcome">Welcome to Vaishnex</h2>
 
-      <!-- INPUT -->
-      <input
-        type="text"
-        id="userInput"
-        placeholder="Email or mobile number"
-      />
-      <div id="inputError" class="error"></div>
+  <input id="userInput" placeholder="Email or mobile number">
+  <div class="error" id="inputError"></div>
 
-      <!-- SEND OTP -->
-      <button id="sendOtpBtn">Send OTP</button>
+  <button onclick="sendOtp()">Send OTP</button>
 
-      <!-- OTP SECTION -->
-      <div id="otpSection" class="hidden">
-        <input
-          type="text"
-          id="otpInput"
-          placeholder="Enter OTP"
-          maxlength="6"
-        />
-        <div id="otpError" class="error"></div>
+  <div id="otpBox" class="hidden">
 
-        <button id="verifyOtpBtn">Verify OTP</button>
+    <input id="otpInput" placeholder="Enter OTP">
+    <div class="error" id="otpError"></div>
 
-        <p class="resend">
-          <span id="timerText">Resend OTP in 30s</span>
-          <span id="resendOtpBtn" class="resend-btn disabled">Resend OTP</span>
-        </p>
-      </div>
+    <button onclick="verifyOtp()">Verify OTP</button>
 
+    <div class="resend">
+      <span id="timerText">Resend OTP in 30s</span><br>
+      <button id="resendBtn" onclick="resendOtp()" disabled>Resend OTP</button>
     </div>
+
   </div>
 
-  <!-- JS -->
-  <script src="app.js"></script>
+</div>
+
+<script>
+const welcomeTexts = [
+  "Welcome to Vaishnex",
+  "Vaishnex Secure Login",
+  "Access Vaishnex",
+  "Vaishnex Authentication",
+  "Login to Vaishnex"
+];
+document.getElementById("welcome").innerText =
+  welcomeTexts[Math.floor(Math.random()*welcomeTexts.length)];
+
+let timer = 30;
+let interval = null;
+const DEMO_OTP = "123456";
+
+function isValid(value) {
+  const email = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+  const phone = /^[0-9]{7,15}$/;
+  return email.test(value) || phone.test(value);
+}
+
+function sendOtp() {
+  const input = document.getElementById("userInput").value.trim();
+  document.getElementById("inputError").innerText = "";
+
+  if (!isValid(input)) {
+    document.getElementById("inputError").innerText =
+      "Enter valid email or mobile";
+    return;
+  }
+
+  document.getElementById("otpBox").classList.remove("hidden");
+  startTimer();
+}
+
+function verifyOtp() {
+  const otp = document.getElementById("otpInput").value.trim();
+  document.getElementById("otpError").innerText = "";
+
+  if (otp === "") {
+    document.getElementById("otpError").innerText = "OTP required";
+    return;
+  }
+
+  if (otp !== DEMO_OTP) {
+    document.getElementById("otpError").innerText = "Invalid OTP";
+    return;
+  }
+
+  alert("Vaishnex login successful");
+}
+
+function startTimer() {
+  clearInterval(interval);
+  timer = 30;
+  const btn = document.getElementById("resendBtn");
+  btn.disabled = true;
+
+  interval = setInterval(() => {
+    timer--;
+    document.getElementById("timerText").innerText =
+      "Resend OTP in " + timer + "s";
+
+    if (timer <= 0) {
+      clearInterval(interval);
+      document.getElementById("timerText").innerText =
+        "You can resend OTP";
+      btn.disabled = false;
+    }
+  }, 1000);
+}
+
+function resendOtp() {
+  startTimer();
+}
+</script>
+
 </body>
 </html>
