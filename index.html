@@ -25,6 +25,8 @@ body{
   text-align:center;
   box-shadow:0 25px 70px rgba(0,0,0,.7);
 }
+
+/* Logo */
 .logo-ring{
   width:120px;height:120px;margin:0 auto 14px;
   border-radius:50%;border:3px solid #3b82f6;
@@ -35,6 +37,7 @@ body{
   0%,100%{box-shadow:0 0 25px #3b82f6}
   50%{box-shadow:0 0 70px #3b82f6}
 }
+
 h3{margin-bottom:6px}
 .dynamic{font-size:14px;color:#94a3b8;min-height:18px}
 
@@ -49,13 +52,14 @@ input{
 }
 input:focus{border-color:#3b82f6}
 input.error{border-color:#ef4444}
+
 button{background:#3b82f6;color:#fff;cursor:pointer}
 
 .hidden{display:none}
 .error-text{color:#ef4444;font-size:14px;margin-top:6px}
 .timer{color:#94a3b8;margin-top:8px}
 
-/* selector fix */
+/* selector visibility */
 .iti{width:100%}
 .iti__country-list{
   background:#0f172a !important;
@@ -71,13 +75,16 @@ button{background:#3b82f6;color:#fff;cursor:pointer}
   <h3>Welcome</h3>
   <div id="dynamic" class="dynamic"></div>
 
+  <!-- MAIN INPUT -->
   <input id="loginInput" placeholder="Email or mobile number">
   <div id="error" class="error-text"></div>
 
+  <!-- PHONE SELECTOR -->
   <div id="phoneWrap" class="hidden">
     <input id="phoneInput">
   </div>
 
+  <!-- OTP -->
   <div id="otpBox" class="hidden">
     <input id="otpInput" placeholder="Enter OTP">
     <div id="otpError" class="error-text"></div>
@@ -90,7 +97,7 @@ button{background:#3b82f6;color:#fff;cursor:pointer}
 </div>
 
 <script>
-/* dynamic text */
+/* 🔁 Dynamic welcome */
 const lines=[
  "Secure login powered by Vaishnex",
  "Fast • Secure • Reliable",
@@ -100,38 +107,48 @@ const lines=[
 document.getElementById("dynamic").innerText =
  lines[Math.floor(Math.random()*lines.length)];
 
-/* elements */
+/* Elements */
 const loginInput=document.getElementById("loginInput");
 const phoneWrap=document.getElementById("phoneWrap");
 const phoneInput=document.getElementById("phoneInput");
 const error=document.getElementById("error");
+
 const otpBox=document.getElementById("otpBox");
 const otpInput=document.getElementById("otpInput");
 const otpError=document.getElementById("otpError");
+
 const sendBtn=document.getElementById("sendBtn");
 const resendBtn=document.getElementById("resendBtn");
 const timerBox=document.getElementById("timer");
 
 let iti=null;
+let timer=null;
+let loginMode=null; // email | phone
 
-/* detect input */
+/* Detect email / phone */
 loginInput.addEventListener("input",()=>{
   clearError();
   const v=loginInput.value.trim();
+  loginMode=null;
 
   if(v===""){
     phoneWrap.classList.add("hidden");
     return;
   }
 
+  // EMAIL
   if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
     phoneWrap.classList.add("hidden");
-    error.innerText="Email detected";
+    loginMode="email";
+    error.innerText="OTP will be sent to this email";
     return;
   }
 
+  // PHONE
   if(/^[0-9+ ]+$/.test(v)){
     phoneWrap.classList.remove("hidden");
+    loginMode="phone";
+
     if(!iti){
       iti=intlTelInput(phoneInput,{
         initialCountry:"in",
@@ -144,31 +161,46 @@ loginInput.addEventListener("input",()=>{
   }
 });
 
-/* send otp */
+/* Send OTP (REQUIRED FOR BOTH) */
 sendBtn.onclick=()=>{
   clearError(); clearOtpError();
 
-  if(loginInput.value.trim()===""){
+  const v=loginInput.value.trim();
+
+  if(v===""){
     showError("Field cannot be empty"); return;
   }
-  if(loginInput.value.includes("@")){
-    showError("OTP not required for email"); return;
+  if(!loginMode){
+    showError("Enter valid email or mobile"); return;
   }
-  if(!iti || !iti.isValidNumber()){
+  if(loginMode==="phone" && (!iti || !iti.isValidNumber())){
     showError("Invalid mobile number"); return;
   }
+
   otpBox.classList.remove("hidden");
   startTimer();
 };
 
-/* timer */
-let timer;
+/* OTP validation */
+otpInput.addEventListener("input",()=>{
+  clearOtpError();
+
+  if(otpInput.value.trim()===""){
+    showOtpError("OTP is required"); return;
+  }
+  if(otpInput.value.length<4){
+    showOtpError("OTP too short"); return;
+  }
+});
+
+/* Timer */
 function startTimer(){
   let t=30;
   resendBtn.classList.add("hidden");
   timerBox.classList.remove("hidden");
   timerBox.innerText=`Resend OTP in ${t}s`;
   clearInterval(timer);
+
   timer=setInterval(()=>{
     t--;
     timerBox.innerText=`Resend OTP in ${t}s`;
@@ -181,7 +213,7 @@ function startTimer(){
 }
 resendBtn.onclick=()=>sendBtn.click();
 
-/* errors */
+/* Errors */
 function showError(m){loginInput.classList.add("error");error.innerText=m;}
 function clearError(){loginInput.classList.remove("error");error.innerText="";}
 function showOtpError(m){otpInput.classList.add("error");otpError.innerText=m;}
