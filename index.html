@@ -34,7 +34,13 @@ body{
   0%,100%{box-shadow:0 0 25px #3b82f6}
   50%{box-shadow:0 0 70px #3b82f6}
 }
-.dynamic{font-size:14px;color:#94a3b8;margin-bottom:10px}
+
+.dynamic{
+  font-size:14px;
+  color:#94a3b8;
+  margin-bottom:12px;
+  min-height:18px;
+}
 
 input,button{
   width:100%;padding:14px;
@@ -58,18 +64,15 @@ button{background:#3b82f6;color:#fff;cursor:pointer}
 <div class="card">
 
   <div class="logo-ring"><b>VAISHNEX</b></div>
-  <div class="dynamic">Smart access starts here</div>
+  <div id="dynamicText" class="dynamic"></div>
 
-  <!-- LOGIN -->
   <input id="loginInput" placeholder="Email or mobile number">
   <div id="error" class="error-text"></div>
 
-  <!-- PHONE -->
   <div id="phoneWrap" class="hidden">
     <input id="phoneInput">
   </div>
 
-  <!-- OTP -->
   <div id="otpBox" class="hidden">
     <input id="otpInput" placeholder="Enter OTP" maxlength="6">
     <div id="otpError" class="error-text"></div>
@@ -82,6 +85,29 @@ button{background:#3b82f6;color:#fff;cursor:pointer}
 </div>
 
 <script>
+/* ===============================
+   Dynamic welcome (NO repeat)
+================================ */
+const welcomeLines = [
+  "Smart access starts here",
+  "Secure login powered by Vaishnex",
+  "Fast • Secure • Reliable",
+  "One account. Infinite possibilities",
+  "Your identity, protected"
+];
+
+let lastLine = localStorage.getItem("vx_last_line");
+let index;
+do {
+  index = Math.floor(Math.random() * welcomeLines.length);
+} while (index == lastLine);
+
+localStorage.setItem("vx_last_line", index);
+document.getElementById("dynamicText").innerText = welcomeLines[index];
+
+/* ===============================
+   Elements
+================================ */
 const loginInput=document.getElementById("loginInput");
 const phoneWrap=document.getElementById("phoneWrap");
 const phoneInput=document.getElementById("phoneInput");
@@ -124,7 +150,7 @@ loginInput.addEventListener("input",()=>{
   }
 });
 
-/* SEND OTP */
+/* Send OTP */
 sendBtn.onclick=()=>{
   clearError();clearOtpError();
 
@@ -134,26 +160,24 @@ sendBtn.onclick=()=>{
   }
 
   otpBox.classList.remove("hidden");
-  sendBtn.classList.add("hidden");     // hide send
-  resendBtn.classList.add("hidden");   // hide resend
+  sendBtn.classList.add("hidden");
+  resendBtn.classList.add("hidden");
   startTimer();
 };
 
-/* AUTO LOGIN on OTP */
+/* Auto login on OTP */
 otpInput.addEventListener("input",()=>{
   clearOtpError();
-
-  if(otpInput.value.length<4){
+  if(otpInput.value.length < 4){
     showOtpError("OTP too short");
     return;
   }
-
-  if(otpInput.value.length>=4){
+  if(otpInput.value.length >= 4){
     alert("OTP verified → User Logged In / Signed Up");
   }
 });
 
-/* TIMER */
+/* Timer */
 function startTimer(){
   let t=30;
   timerBox.classList.remove("hidden");
@@ -166,11 +190,10 @@ function startTimer(){
     if(t<=0){
       clearInterval(timer);
       timerBox.classList.add("hidden");
-      resendBtn.classList.remove("hidden"); // show resend AFTER timer
+      resendBtn.classList.remove("hidden");
     }
   },1000);
 }
-
 resendBtn.onclick=()=>sendBtn.onclick();
 
 /* Errors */
