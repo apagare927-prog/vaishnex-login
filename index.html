@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vaishnex Login</title>
 
-<!-- intl-tel-input -->
 <link rel="stylesheet"
  href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
@@ -25,8 +24,6 @@ body{
   text-align:center;
   box-shadow:0 25px 70px rgba(0,0,0,.7);
 }
-
-/* Logo */
 .logo-ring{
   width:120px;height:120px;margin:0 auto 14px;
   border-radius:50%;border:3px solid #3b82f6;
@@ -37,9 +34,7 @@ body{
   0%,100%{box-shadow:0 0 25px #3b82f6}
   50%{box-shadow:0 0 70px #3b82f6}
 }
-
-h3{margin-bottom:6px}
-.dynamic{font-size:14px;color:#94a3b8;min-height:18px}
+.dynamic{font-size:14px;color:#94a3b8;margin-bottom:10px}
 
 input,button{
   width:100%;padding:14px;
@@ -50,21 +45,15 @@ input{
   background:#020617;color:#fff;
   border:2px solid transparent;
 }
-input:focus{border-color:#3b82f6}
 input.error{border-color:#ef4444}
-
 button{background:#3b82f6;color:#fff;cursor:pointer}
 
 .hidden{display:none}
 .error-text{color:#ef4444;font-size:14px;margin-top:6px}
 .timer{color:#94a3b8;margin-top:8px}
 
-/* selector visibility */
 .iti{width:100%}
-.iti__country-list{
-  background:#0f172a !important;
-  color:#fff !important;
-}
+.iti__country-list{background:#0f172a!important;color:#fff!important}
 </style>
 </head>
 
@@ -72,42 +61,30 @@ button{background:#3b82f6;color:#fff;cursor:pointer}
 <div class="card">
 
   <div class="logo-ring"><b>VAISHNEX</b></div>
-  <h3>Welcome</h3>
-  <div id="dynamic" class="dynamic"></div>
+  <div class="dynamic">Smart access starts here</div>
 
-  <!-- MAIN INPUT -->
+  <!-- LOGIN INPUT -->
   <input id="loginInput" placeholder="Email or mobile number">
   <div id="error" class="error-text"></div>
 
-  <!-- PHONE SELECTOR -->
+  <!-- PHONE -->
   <div id="phoneWrap" class="hidden">
     <input id="phoneInput">
   </div>
 
   <!-- OTP -->
   <div id="otpBox" class="hidden">
-    <input id="otpInput" placeholder="Enter OTP">
+    <input id="otpInput" placeholder="Enter OTP" maxlength="6">
     <div id="otpError" class="error-text"></div>
   </div>
 
   <button id="sendBtn">Send OTP</button>
-  <div id="timer" class="timer hidden"></div>
   <button id="resendBtn" class="hidden">Resend OTP</button>
+  <div id="timer" class="timer hidden"></div>
 
 </div>
 
 <script>
-/* 🔁 Dynamic welcome */
-const lines=[
- "Secure login powered by Vaishnex",
- "Fast • Secure • Reliable",
- "Your identity, protected",
- "Smart access starts here"
-];
-document.getElementById("dynamic").innerText =
- lines[Math.floor(Math.random()*lines.length)];
-
-/* Elements */
 const loginInput=document.getElementById("loginInput");
 const phoneWrap=document.getElementById("phoneWrap");
 const phoneInput=document.getElementById("phoneInput");
@@ -123,37 +100,28 @@ const timerBox=document.getElementById("timer");
 
 let iti=null;
 let timer=null;
-let loginMode=null; // email | phone
+let mode=null;
 
 /* Detect email / phone */
 loginInput.addEventListener("input",()=>{
   clearError();
   const v=loginInput.value.trim();
-  loginMode=null;
+  mode=null;
 
-  if(v===""){
-    phoneWrap.classList.add("hidden");
-    return;
-  }
+  if(v===""){phoneWrap.classList.add("hidden");return;}
 
-  // EMAIL
   if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
     phoneWrap.classList.add("hidden");
-    loginMode="email";
-    error.innerText="OTP will be sent to this email";
+    mode="email";
+    error.innerText="OTP will be sent to email";
     return;
   }
 
-  // PHONE
   if(/^[0-9+ ]+$/.test(v)){
     phoneWrap.classList.remove("hidden");
-    loginMode="phone";
-
+    mode="phone";
     if(!iti){
-      iti=intlTelInput(phoneInput,{
-        initialCountry:"in",
-        separateDialCode:true
-      });
+      iti=intlTelInput(phoneInput,{initialCountry:"in",separateDialCode:true});
     }
     phoneInput.value=v;
   }else{
@@ -161,42 +129,40 @@ loginInput.addEventListener("input",()=>{
   }
 });
 
-/* Send OTP (REQUIRED FOR BOTH) */
+/* Send OTP */
 sendBtn.onclick=()=>{
-  clearError(); clearOtpError();
+  clearError();clearOtpError();
 
-  const v=loginInput.value.trim();
-
-  if(v===""){
-    showError("Field cannot be empty"); return;
-  }
-  if(!loginMode){
-    showError("Enter valid email or mobile"); return;
-  }
-  if(loginMode==="phone" && (!iti || !iti.isValidNumber())){
-    showError("Invalid mobile number"); return;
+  if(!mode){showError("Enter valid email or mobile");return;}
+  if(mode==="phone" && (!iti || !iti.isValidNumber())){
+    showError("Invalid mobile number");return;
   }
 
-  otpBox.classList.remove("hidden");
+  otpBox.classList.remove("hidden");     // ⬅️ OTP field open
+  sendBtn.classList.add("hidden");       // ⬅️ Send OTP hide
+  resendBtn.classList.remove("hidden");  // ⬅️ Resend show
+  resendBtn.disabled=true;
   startTimer();
 };
 
-/* OTP validation */
+/* Auto login on OTP complete */
 otpInput.addEventListener("input",()=>{
   clearOtpError();
 
-  if(otpInput.value.trim()===""){
-    showOtpError("OTP is required"); return;
-  }
   if(otpInput.value.length<4){
-    showOtpError("OTP too short"); return;
+    showOtpError("OTP too short");
+    return;
+  }
+
+  if(otpInput.value.length>=4){
+    // 🔥 AUTO LOGIN / SIGN UP (UI)
+    alert("OTP verified → Auto Login / Sign Up");
   }
 });
 
 /* Timer */
 function startTimer(){
   let t=30;
-  resendBtn.classList.add("hidden");
   timerBox.classList.remove("hidden");
   timerBox.innerText=`Resend OTP in ${t}s`;
   clearInterval(timer);
@@ -207,11 +173,11 @@ function startTimer(){
     if(t<=0){
       clearInterval(timer);
       timerBox.classList.add("hidden");
-      resendBtn.classList.remove("hidden");
+      resendBtn.disabled=false;
     }
   },1000);
 }
-resendBtn.onclick=()=>sendBtn.click();
+resendBtn.onclick=()=>sendBtn.onclick();
 
 /* Errors */
 function showError(m){loginInput.classList.add("error");error.innerText=m;}
