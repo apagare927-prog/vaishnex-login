@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Vaishnex Authentication</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
 
-<div class="card">
+  <div class="page">
 
-  <div class="logo-ring">
-    <span>VAISHNEX</span>
+    <div class="card">
+      <div class="logo-ring">
+        <div class="logo-text">VAISHNEX</div>
+      </div>
+
+      <h2>Vaishnex Authentication</h2>
+
+      <div class="input-row">
+        <button id="countryBtn" class="country-btn">
+          <img id="countryFlag" src="https://flagcdn.com/w20/in.png">
+          <span id="countryCode">+91</span>
+        </button>
+
+        <input id="userInput" type="text" placeholder="Email or mobile number"/>
+      </div>
+
+      <p id="error" class="error"></p>
+
+      <button id="sendOtpBtn" class="primary-btn">Send OTP</button>
+
+      <input id="otpInput" type="text" placeholder="Enter OTP" class="hidden"/>
+
+      <button id="verifyOtpBtn" class="primary-btn hidden">Verify OTP</button>
+
+      <p id="timerText" class="timer hidden"></p>
+      <button id="resendBtn" class="link-btn hidden">Resend OTP</button>
+    </div>
+
   </div>
 
-  <h2>Vaishnex Authentication</h2>
-
-  <!-- Input -->
-  <div class="input-wrap">
-    <button id="countryBtn">🇮🇳 +91</button>
-    <input id="loginInput" placeholder="Email or mobile number">
+  <!-- COUNTRY MODAL -->
+  <div id="countryModal" class="modal hidden">
+    <div class="modal-box">
+      <input id="searchCountry" placeholder="Search country"/>
+      <div id="countryList"></div>
+    </div>
   </div>
-
-  <p id="error" class="error"></p>
-
-  <button class="btn" id="sendOtpBtn">Send OTP</button>
-
-  <!-- OTP -->
-  <input id="otpInput" class="hidden" placeholder="Enter OTP">
-  <button class="btn hidden" id="verifyOtpBtn">Verify OTP</button>
-
-  <p id="timer" class="timer hidden"></p>
-  <button id="resendBtn" class="link hidden">Resend OTP</button>
-
-</div>
-
-<!-- Country Modal -->
-<div id="countryModal" class="modal hidden">
-  <div class="modal-box">
-    <input id="searchCountry" placeholder="Search country">
-    <div id="countryList"></div>
-  </div>
-</div>
 
 <script src="js/app.js"></script>
 </body>
