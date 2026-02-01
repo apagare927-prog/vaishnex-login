@@ -1,95 +1,120 @@
-// -------- WELCOME LINES --------
-const welcomeLines = [
-  "Welcome to Vaishnex",
-  "Securely enter Vaishnex",
-  "Experience Vaishnex Network",
-  "Vaishnex Premium Access",
-  "Powering your Vaishnex login"
-];
-
-document.getElementById("welcomeLine").innerText =
-  welcomeLines[Math.floor(Math.random() * welcomeLines.length)];
-
-// -------- ELEMENTS --------
 const countrySelect = document.getElementById("countrySelect");
 const userInput = document.getElementById("userInput");
 const inputError = document.getElementById("inputError");
 const sendOtpBtn = document.getElementById("sendOtpBtn");
+
+const otpSection = document.getElementById("otpSection");
 const otpInput = document.getElementById("otpInput");
 const otpError = document.getElementById("otpError");
 const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+const timerText = document.getElementById("timerText");
 const resendBtn = document.getElementById("resendBtn");
-const resendTimer = document.getElementById("resendTimer");
 
-// -------- LOAD COUNTRIES (SAFE API) --------
+/* ===============================
+   COUNTRIES (230+ SAFE API)
+================================ */
 fetch("https://restcountries.com/v3.1/all")
   .then(res => res.json())
   .then(data => {
-    data.sort((a,b)=>a.name.common.localeCompare(b.name.common));
-    data.forEach(c => {
-      if (!c.idd || !c.idd.root) return;
-      const code = c.idd.root + (c.idd.suffixes ? c.idd.suffixes[0] : "");
+    const countries = data
+      .filter(c => c.idd?.root)
+      .map(c => ({
+        name: c.name.common,
+        code: c.idd.root + (c.idd.suffixes ? c.idd.suffixes[0] : "")
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    countries.forEach(c => {
       const opt = document.createElement("option");
-      opt.value = code;
-      opt.text = `${c.flag} ${c.name.common} (${code})`;
+      opt.value = c.code;
+      opt.textContent = `${c.name} (${c.code})`;
       countrySelect.appendChild(opt);
     });
+
+    autoDetectCountry();
   });
 
-// -------- AUTO COUNTRY DETECT --------
-fetch("https://ipapi.co/json/")
-  .then(r=>r.json())
-  .then(d=>{
-    [...countrySelect.options].forEach(o=>{
-      if(o.text.includes(d.country_name)) countrySelect.value=o.value;
+/* AUTO COUNTRY */
+function autoDetectCountry() {
+  fetch("https://ipapi.co/json/")
+    .then(res => res.json())
+    .then(data => {
+      [...countrySelect.options].forEach(o => {
+        if (o.text.includes(data.country_name)) {
+          o.selected = true;
+        }
+      });
     });
-  });
+}
 
-// -------- SEND OTP --------
+/* ===============================
+   SEND OTP
+================================ */
 sendOtpBtn.onclick = () => {
-  inputError.innerText = "";
-  const val = userInput.value.trim();
+  inputError.textContent = "";
+  userInput.classList.remove("error-border");
 
-  if (!val) {
-    inputError.innerText = "Input required";
+  const value = userInput.value.trim();
+
+  if (!value) {
+    showError("Input required");
     return;
   }
 
-  if (!val.includes("@") && !/^\d+$/.test(val)) {
-    inputError.innerText = "Invalid email or mobile";
-    return;
+  if (value.includes("@")) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      showError("Invalid email");
+      return;
+    }
+  } else {
+    if (!/^\d{6,15}$/.test(value)) {
+      showError("Invalid mobile number");
+      return;
+    }
   }
 
-  otpInput.style.display = "block";
-  verifyOtpBtn.style.display = "block";
-  sendOtpBtn.disabled = true;
+  otpSection.classList.remove("hidden");
   startTimer();
 };
 
-// -------- VERIFY OTP --------
-verifyOtpBtn.onclick = () => {
-  otpError.innerText = "";
-  if (otpInput.value.length < 4) {
-    otpError.innerText = "Invalid OTP";
-    return;
-  }
-  alert("Login success (demo)");
-};
-
-// -------- TIMER --------
+/* ===============================
+   OTP TIMER
+================================ */
+let timer;
 function startTimer() {
-  let t = 30;
-  resendBtn.style.display = "none";
-  resendTimer.innerText = `Resend OTP in ${t}s`;
-  const i = setInterval(()=>{
-    t--;
-    resendTimer.innerText = `Resend OTP in ${t}s`;
-    if(t<=0){
-      clearInterval(i);
-      resendTimer.innerText="";
-      resendBtn.style.display="block";
+  let time = 30;
+  resendBtn.classList.add("hidden");
+
+  timerText.textContent = `Resend OTP in ${time}s`;
+
+  timer = setInterval(() => {
+    time--;
+    timerText.textContent = `Resend OTP in ${time}s`;
+    if (time === 0) {
+      clearInterval(timer);
+      timerText.textContent = "";
+      resendBtn.classList.remove("hidden");
     }
-  },1000);
+  }, 1000);
 }
 
-resendBtn.onclick = startTimer;
+/* RESEND */
+resendBtn.onclick = () => {
+  startTimer();
+};
+
+/* VERIFY */
+verifyOtpBtn.onclick = () => {
+  otpError.textContent = "";
+  if (otpInput.value.length < 4) {
+    otpError.textContent = "Invalid OTP";
+  } else {
+    alert("OTP Verified (demo)");
+  }
+};
+
+/* ERROR */
+function showError(msg) {
+  inputError.textContent = msg;
+  userInput.classList.add("error-border");
+}
