@@ -41,10 +41,7 @@ input,button{
   margin-top:12px;border-radius:12px;
   border:none;font-size:15px;
 }
-input{
-  background:#020617;color:#fff;
-  border:2px solid transparent;
-}
+input{background:#020617;color:#fff}
 input.error{border-color:#ef4444}
 button{background:#3b82f6;color:#fff;cursor:pointer}
 
@@ -63,7 +60,7 @@ button{background:#3b82f6;color:#fff;cursor:pointer}
   <div class="logo-ring"><b>VAISHNEX</b></div>
   <div class="dynamic">Smart access starts here</div>
 
-  <!-- LOGIN INPUT -->
+  <!-- LOGIN -->
   <input id="loginInput" placeholder="Email or mobile number">
   <div id="error" class="error-text"></div>
 
@@ -124,12 +121,10 @@ loginInput.addEventListener("input",()=>{
       iti=intlTelInput(phoneInput,{initialCountry:"in",separateDialCode:true});
     }
     phoneInput.value=v;
-  }else{
-    phoneWrap.classList.add("hidden");
   }
 });
 
-/* Send OTP */
+/* SEND OTP */
 sendBtn.onclick=()=>{
   clearError();clearOtpError();
 
@@ -138,14 +133,13 @@ sendBtn.onclick=()=>{
     showError("Invalid mobile number");return;
   }
 
-  otpBox.classList.remove("hidden");     // ⬅️ OTP field open
-  sendBtn.classList.add("hidden");       // ⬅️ Send OTP hide
-  resendBtn.classList.remove("hidden");  // ⬅️ Resend show
-  resendBtn.disabled=true;
+  otpBox.classList.remove("hidden");
+  sendBtn.classList.add("hidden");     // hide send
+  resendBtn.classList.add("hidden");   // hide resend
   startTimer();
 };
 
-/* Auto login on OTP complete */
+/* AUTO LOGIN on OTP */
 otpInput.addEventListener("input",()=>{
   clearOtpError();
 
@@ -155,12 +149,11 @@ otpInput.addEventListener("input",()=>{
   }
 
   if(otpInput.value.length>=4){
-    // 🔥 AUTO LOGIN / SIGN UP (UI)
-    alert("OTP verified → Auto Login / Sign Up");
+    alert("OTP verified → User Logged In / Signed Up");
   }
 });
 
-/* Timer */
+/* TIMER */
 function startTimer(){
   let t=30;
   timerBox.classList.remove("hidden");
@@ -173,10 +166,11 @@ function startTimer(){
     if(t<=0){
       clearInterval(timer);
       timerBox.classList.add("hidden");
-      resendBtn.disabled=false;
+      resendBtn.classList.remove("hidden"); // show resend AFTER timer
     }
   },1000);
 }
+
 resendBtn.onclick=()=>sendBtn.onclick();
 
 /* Errors */
