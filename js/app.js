@@ -1,98 +1,71 @@
-const welcomeLines = [
-  "Welcome to Vaishnex",
-  "Welcome back to Vaishnex",
-  "Experience Vaishnex",
-  "Secure login with Vaishnex",
-  "Vaishnex Premium Network"
-];
+let otp = "";
+let countdown = 30;
+let timerInterval = null;
 
-document.getElementById("welcomeText").innerText =
-  welcomeLines[Math.floor(Math.random() * welcomeLines.length)];
+const sendOtpBtn = document.getElementById("sendOtpBtn");
+const resendOtpBtn = document.getElementById("resendOtpBtn");
+const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 
-const countrySelect = document.getElementById("countrySelect");
-const input = document.getElementById("userInput");
-const inputError = document.getElementById("inputError");
-
-const otpBox = document.getElementById("otpBox");
+const userInput = document.getElementById("userInput");
 const otpInput = document.getElementById("otpInput");
-const otpError = document.getElementById("otpError");
 
-const sendBtn = document.getElementById("sendOtpBtn");
-const resendBtn = document.getElementById("resendBtn");
-const timerText = document.getElementById("timerText");
+const resendWrapper = document.getElementById("resendWrapper");
+const timerText = document.getElementById("timer");
 
-let timer;
-let seconds = 30;
+function generateOtp() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
-/* -------- COUNTRY LIST (230+) -------- */
-fetch("https://restcountries.com/v3.1/all")
-  .then(res => res.json())
-  .then(data => {
-    data
-      .filter(c => c.idd?.root)
-      .sort((a,b) => a.name.common.localeCompare(b.name.common))
-      .forEach(c => {
-        const code = c.idd.root + (c.idd.suffixes ? c.idd.suffixes[0] : "");
-        const opt = document.createElement("option");
-        opt.value = code;
-        opt.textContent = `${c.flag} ${c.name.common} ${code}`;
-        countrySelect.appendChild(opt);
-      });
-  });
-
-/* -------- AUTO COUNTRY DETECT -------- */
-fetch("https://ipapi.co/json/")
-  .then(res => res.json())
-  .then(d => {
-    [...countrySelect.options].forEach(o => {
-      if (o.text.includes(d.country_name)) {
-        countrySelect.value = o.value;
-      }
-    });
-  });
-
-/* -------- SEND OTP -------- */
-sendBtn.onclick = () => {
-  input.classList.remove("error-border");
-  inputError.innerText = "";
-
-  if (!input.value.trim()) {
-    input.classList.add("error-border");
-    inputError.innerText = "Enter email or mobile number";
-    return;
-  }
-
-  otpBox.classList.remove("hidden");
-  startTimer();
-};
-
-/* -------- TIMER -------- */
 function startTimer() {
-  seconds = 30;
-  resendBtn.disabled = true;
-  timerText.innerText = `Resend OTP in ${seconds}s`;
+  countdown = 30;
+  timerText.innerText = countdown;
+  resendOtpBtn.disabled = true;
 
-  timer = setInterval(() => {
-    seconds--;
-    timerText.innerText = `Resend OTP in ${seconds}s`;
+  timerInterval = setInterval(() => {
+    countdown--;
+    timerText.innerText = countdown;
 
-    if (seconds <= 0) {
-      clearInterval(timer);
-      timerText.innerText = "";
-      resendBtn.disabled = false;
+    if (countdown <= 0) {
+      clearInterval(timerInterval);
+      resendOtpBtn.disabled = false;
+      document.getElementById("resendText").innerText = "Didn't receive OTP?";
     }
   }, 1000);
 }
 
-resendBtn.onclick = startTimer;
-
-/* -------- VERIFY OTP -------- */
-document.getElementById("verifyOtpBtn").onclick = () => {
-  otpError.innerText = "";
-  otpInput.classList.remove("error-border");
-
-  if (!otpInput.value.trim()) {
-    otpInput.classList.add("error-border");
-    otpError.innerText = "OTP required";
+sendOtpBtn.addEventListener("click", () => {
+  if (!userInput.value.trim()) {
+    alert("Enter email or mobile number");
+    return;
   }
-};
+
+  otp = generateOtp();
+  console.log("OTP (demo):", otp); // demo only
+
+  otpInput.disabled = false;
+  verifyOtpBtn.disabled = false;
+
+  resendWrapper.style.display = "block";
+  document.getElementById("resendText").innerHTML =
+    'Resend OTP in <span id="timer">30</span>s';
+
+  startTimer();
+});
+
+resendOtpBtn.addEventListener("click", () => {
+  otp = generateOtp();
+  console.log("Resent OTP (demo):", otp);
+
+  document.getElementById("resendText").innerHTML =
+    'Resend OTP in <span id="timer">30</span>s';
+
+  startTimer();
+});
+
+verifyOtpBtn.addEventListener("click", () => {
+  if (otpInput.value === otp) {
+    alert("OTP Verified ✅");
+  } else {
+    alert("Invalid OTP ❌");
+  }
+});
