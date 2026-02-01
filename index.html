@@ -3,51 +3,212 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vaishnex Authentication</title>
-  <link rel="stylesheet" href="css/style.css"/>
+  <title>Vaishnex Login</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at top, #0a1a2f, #000);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+
+    .card {
+      width: 90%;
+      max-width: 380px;
+      background: rgba(15, 25, 40, 0.95);
+      border-radius: 20px;
+      padding: 30px 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+
+    /* Logo ring */
+    .logo-ring {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      border: 3px solid rgba(59,130,246,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spinGlow 1s linear infinite;
+      box-shadow:
+        0 0 20px rgba(59,130,246,1),
+        0 0 45px rgba(59,130,246,0.9),
+        0 0 90px rgba(59,130,246,0.7);
+    }
+
+    .logo-ring span {
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    @keyframes spinGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    h3 {
+      margin: 10px 0 20px;
+      font-weight: normal;
+      color: #cbd5e1;
+    }
+
+    .input-box {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: #020617;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: #3b82f6;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .country-btn {
+      background: #020617;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .country-list {
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      background: #020617;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .country-item {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #111827;
+    }
+
+    .country-item:hover {
+      background: #020617;
+      color: #3b82f6;
+    }
+
+    #recaptcha-container {
+      margin-top: 12px;
+    }
+  </style>
 </head>
+
 <body>
 
-  <div class="page">
-
-    <div class="card">
-      <div class="logo-ring">
-        <div class="logo-text">VAISHNEX</div>
-      </div>
-
-      <h2>Vaishnex Authentication</h2>
-
-      <div class="input-row">
-        <button id="countryBtn" class="country-btn">
-          <img id="countryFlag" src="https://flagcdn.com/w20/in.png">
-          <span id="countryCode">+91</span>
-        </button>
-
-        <input id="userInput" type="text" placeholder="Email or mobile number"/>
-      </div>
-
-      <p id="error" class="error"></p>
-
-      <button id="sendOtpBtn" class="primary-btn">Send OTP</button>
-
-      <input id="otpInput" type="text" placeholder="Enter OTP" class="hidden"/>
-
-      <button id="verifyOtpBtn" class="primary-btn hidden">Verify OTP</button>
-
-      <p id="timerText" class="timer hidden"></p>
-      <button id="resendBtn" class="link-btn hidden">Resend OTP</button>
-    </div>
-
+<div class="card">
+  <div class="logo-ring">
+    <span>VAISHNEX</span>
   </div>
 
-  <!-- COUNTRY MODAL -->
-  <div id="countryModal" class="modal hidden">
-    <div class="modal-box">
-      <input id="searchCountry" placeholder="Search country"/>
-      <div id="countryList"></div>
-    </div>
+  <h3>Welcome to Vaishnex</h3>
+
+  <!-- Country selector -->
+  <button class="btn country-btn" onclick="toggleCountries()">
+    🌍 <span id="selectedCountry">India (+91)</span>
+  </button>
+
+  <div class="country-list" id="countryList">
+    <div class="country-item" onclick="selectCountry('+91','India')">🇮🇳 India (+91)</div>
+    <div class="country-item" onclick="selectCountry('+1','United States')">🇺🇸 United States (+1)</div>
+    <div class="country-item" onclick="selectCountry('+44','United Kingdom')">🇬🇧 United Kingdom (+44)</div>
+    <div class="country-item" onclick="selectCountry('+971','UAE')">🇦🇪 UAE (+971)</div>
   </div>
 
-<script src="js/app.js"></script>
+  <input id="phone" class="input-box" placeholder="Mobile number"/>
+
+  <button class="btn" onclick="sendOTP()">Send OTP</button>
+
+  <div id="recaptcha-container"></div>
+</div>
+
+<script>
+  /* 🔥 Firebase CONFIG – YAHI REPLACE KARNA HAI */
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  let countryCode = "+91";
+  let confirmationResult;
+
+  function toggleCountries() {
+    const list = document.getElementById("countryList");
+    list.style.display = list.style.display === "block" ? "none" : "block";
+  }
+
+  function selectCountry(code, name) {
+    countryCode = code;
+    document.getElementById("selectedCountry").innerText =
+      name + " (" + code + ")";
+    document.getElementById("countryList").style.display = "none";
+  }
+
+  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+    "recaptcha-container",
+    { size: "invisible" }
+  );
+
+  function sendOTP() {
+    const phone = document.getElementById("phone").value.trim();
+    if (!phone) {
+      alert("Mobile number daalo");
+      return;
+    }
+
+    const fullNumber = countryCode + phone;
+    firebase.auth().signInWithPhoneNumber(
+      fullNumber,
+      window.recaptchaVerifier
+    )
+    .then(result => {
+      confirmationResult = result;
+      const code = prompt("OTP daalo:");
+      return result.confirm(code);
+    })
+    .then(() => {
+      alert("Login successful 🎉");
+    })
+    .catch(err => {
+      alert(err.message);
+    });
+  }
+</script>
+
 </body>
 </html>
