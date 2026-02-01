@@ -1,122 +1,88 @@
-/* ---------------- WELCOME TEXTS (NO REPEAT) ---------------- */
-
-const welcomeLines = [
-  "Welcome to Vaishnex",
-  "Vaishnex welcomes you",
-  "Start your journey with Vaishnex",
-  "Secure login to Vaishnex",
-  "Experience Vaishnex AI",
-  "Vaishnex is ready for you",
-  "Hello from Vaishnex",
-  "Your Vaishnex account awaits"
-];
-
-let usedWelcome = [];
-
-function changeWelcome() {
-  if (usedWelcome.length === welcomeLines.length) {
-    usedWelcome = [];
-  }
-
-  let line;
-  do {
-    line = welcomeLines[Math.floor(Math.random() * welcomeLines.length)];
-  } while (usedWelcome.includes(line));
-
-  usedWelcome.push(line);
-  document.getElementById("welcomeText").innerText = line;
-}
-
-changeWelcome();
-
-/* ---------------- COUNTRY LIST (230+) ---------------- */
-
-const countrySelect = document.getElementById("countrySelect");
-
-fetch("https://restcountries.com/v3.1/all")
-  .then(res => res.json())
-  .then(data => {
-    data
-      .sort((a, b) => a.name.common.localeCompare(b.name.common))
-      .forEach(c => {
-        if (!c.idd?.root) return;
-
-        const code = c.idd.root + (c.idd.suffixes ? c.idd.suffixes[0] : "");
-        const opt = document.createElement("option");
-        opt.value = code;
-        opt.textContent = `${c.flag} ${code}`;
-        countrySelect.appendChild(opt);
-      });
-  });
-
-/* ---------------- OTP LOGIC ---------------- */
-
+const userInput = document.getElementById("userInput");
+const otpInput = document.getElementById("otpInput");
 const sendOtpBtn = document.getElementById("sendOtpBtn");
 const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-const otpSection = document.getElementById("otpSection");
-const timerEl = document.getElementById("timer");
+const resendBtn = document.getElementById("resendBtn");
+const timerText = document.getElementById("timerText");
+
+const userError = document.getElementById("userError");
+const otpError = document.getElementById("otpError");
+
+const otpField = document.querySelector(".otp-field");
+const resendBox = document.querySelector(".resend");
 
 let generatedOtp = "";
-let timer = 30;
-let interval;
+let timer;
+let timeLeft = 30;
+
+const welcomes = [
+  "Welcome to Vaishnex",
+  "Welcome back to Vaishnex",
+  "Secure login to Vaishnex",
+  "Vaishnex welcomes you",
+  "Enter Vaishnex Network"
+];
+
+document.getElementById("welcomeText").innerText =
+  welcomes[Math.floor(Math.random() * welcomes.length)];
+
+function isValidInput(value) {
+  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phone = /^[0-9]{6,15}$/;
+  return email.test(value) || phone.test(value);
+}
 
 sendOtpBtn.onclick = () => {
-  const input = document.getElementById("userInput").value.trim();
-  const error = document.getElementById("inputError");
+  userError.innerText = "";
+  otpError.innerText = "";
 
-  error.innerText = "";
-
-  if (!input) {
-    error.innerText = "Vaishnex: input required";
-    return;
-  }
-
-  if (isNaN(input) && !input.includes("@")) {
-    error.innerText = "Vaishnex: invalid email or number";
+  if (!isValidInput(userInput.value)) {
+    userError.innerText = "Enter valid email or mobile number";
     return;
   }
 
   generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-  console.log("OTP (demo):", generatedOtp);
+  console.log("OTP:", generatedOtp); // demo
 
-  otpSection.classList.remove("hidden");
+  otpField.classList.remove("hidden");
+  verifyOtpBtn.classList.remove("hidden");
+  resendBox.classList.remove("hidden");
+
   startTimer();
 };
 
 verifyOtpBtn.onclick = () => {
-  const otpInput = document.getElementById("otpInput").value;
-  const err = document.getElementById("otpError");
+  otpError.innerText = "";
 
-  err.innerText = "";
-
-  if (!otpInput) {
-    err.innerText = "Vaishnex: OTP required";
+  if (otpInput.value !== generatedOtp) {
+    otpError.innerText = "Invalid OTP";
     return;
   }
 
-  if (otpInput !== generatedOtp) {
-    err.innerText = "Vaishnex: Invalid OTP";
-    return;
-  }
-
-  alert("Vaishnex login successful");
+  alert("Login successful – Vaishnex");
 };
 
-/* ---------------- TIMER ---------------- */
-
 function startTimer() {
-  timer = 30;
-  timerEl.innerText = timer;
+  clearInterval(timer);
+  timeLeft = 30;
+  resendBtn.disabled = true;
 
-  clearInterval(interval);
+  timerText.innerText = `Resend OTP in ${timeLeft}s`;
 
-  interval = setInterval(() => {
-    timer--;
-    timerEl.innerText = timer;
+  timer = setInterval(() => {
+    timeLeft--;
+    timerText.innerText = `Resend OTP in ${timeLeft}s`;
 
-    if (timer <= 0) {
-      clearInterval(interval);
-      document.getElementById("resendBox").innerText = "Resend OTP";
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      timerText.innerText = "You can resend OTP";
+      resendBtn.disabled = false;
     }
   }, 1000);
 }
+
+resendBtn.onclick = () => {
+  generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log("Resent OTP:", generatedOtp);
+  startTimer();
+};
