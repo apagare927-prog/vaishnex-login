@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Vaishnex Login</title>
 
 <!-- Firebase -->
@@ -13,127 +13,163 @@
 <link rel="stylesheet"
  href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
 
 <style>
 body{
   margin:0;height:100vh;
   background:radial-gradient(circle at top,#0a1a2f,#000);
   display:flex;align-items:center;justify-content:center;
-  font-family:Arial;color:#fff
+  font-family:Arial;color:#fff;
 }
 .card{
   width:92%;max-width:380px;
   background:#0f172a;
   padding:26px;border-radius:22px;
-  text-align:center
+  box-shadow:0 25px 70px rgba(0,0,0,.7);
+  text-align:center;
 }
 
-/* LOGO SAME */
+/* LOGO – SAME */
 .logo-ring{
   width:120px;height:120px;
+  margin:0 auto 16px;
   border-radius:50%;
   border:3px solid #3b82f6;
   display:flex;align-items:center;justify-content:center;
-  margin:0 auto 15px;
-  animation:glowPulse 1.6s ease-in-out infinite
+  animation:glowPulse 1.6s ease-in-out infinite;
 }
 @keyframes glowPulse{
   0%,100%{box-shadow:0 0 25px #3b82f6}
   50%{box-shadow:0 0 70px #3b82f6}
 }
 
+h3{margin-bottom:14px}
+
 input,button{
   width:100%;padding:14px;
-  margin-top:10px;border-radius:12px;
-  border:none;font-size:15px
+  border-radius:12px;
+  border:none;font-size:15px;
 }
-input{background:#020617;color:#fff}
-input.error{border:2px solid red}
-button{background:#3b82f6;color:#fff;cursor:pointer}
+input{
+  background:#020617;color:#fff;
+  border:2px solid transparent;
+}
+input:focus{border-color:#3b82f6}
+input.error{border-color:#ef4444}
+
+button{
+  margin-top:12px;
+  background:#3b82f6;
+  color:#fff;cursor:pointer;
+}
+button:disabled{opacity:.5}
+
 .hidden{display:none}
 .error-text{color:#f87171;font-size:14px;margin-top:6px}
-.timer{color:#94a3b8;margin-top:8px}
+.timer{color:#94a3b8;margin-top:10px}
+
+/* intl-tel-input FIX */
+.iti{width:100%}
+.iti--allow-dropdown input{
+  padding-left:90px !important;
+}
 </style>
 </head>
 
 <body>
 <div class="card">
 
-<div class="logo-ring"><b>VAISHNEX</b></div>
+  <div class="logo-ring"><b>VAISHNEX</b></div>
+  <h3>Login</h3>
 
-<h3>Login</h3>
+  <!-- SINGLE INPUT -->
+  <input id="loginInput" placeholder="Email or mobile number">
+  <div id="error" class="error-text hidden"></div>
 
-<!-- SINGLE INPUT -->
-<input id="loginInput" placeholder="Email or Mobile number">
-<div id="error" class="error-text hidden"></div>
+  <!-- OTP FIELD -->
+  <div id="otpBox" class="hidden">
+    <input id="otpInput" placeholder="Enter OTP">
+  </div>
 
-<!-- OTP -->
-<div id="otpBox" class="hidden">
-  <input id="otpInput" placeholder="Enter OTP">
-</div>
+  <button id="sendBtn">Send OTP</button>
 
-<button id="sendBtn" onclick="handleSend()">Send OTP</button>
+  <div id="timer" class="timer hidden"></div>
+  <button id="resendBtn" class="hidden">Resend OTP</button>
 
-<div id="timer" class="timer hidden"></div>
-<button id="resendBtn" class="hidden" onclick="resendOTP()">Resend OTP</button>
-
-<div id="recaptcha-container"></div>
+  <div id="recaptcha-container"></div>
 </div>
 
 <script>
-/* FIREBASE CONFIG */
+/* 🔥 FIREBASE CONFIG – REPLACE */
 firebase.initializeApp({
-  apiKey:"YOUR_API_KEY",
-  authDomain:"YOUR_PROJECT.firebaseapp.com",
-  projectId:"YOUR_PROJECT_ID",
-  appId:"YOUR_APP_ID"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  appId: "YOUR_APP_ID"
 });
-const auth=firebase.auth();
+const auth = firebase.auth();
 
-const input=document.getElementById("loginInput");
-const errorBox=document.getElementById("error");
-const otpBox=document.getElementById("otpBox");
-const timerBox=document.getElementById("timer");
-const resendBtn=document.getElementById("resendBtn");
+/* ELEMENTS */
+const input = document.getElementById("loginInput");
+const errorBox = document.getElementById("error");
+const otpBox = document.getElementById("otpBox");
+const otpInput = document.getElementById("otpInput");
+const sendBtn = document.getElementById("sendBtn");
+const resendBtn = document.getElementById("resendBtn");
+const timerBox = document.getElementById("timer");
 
 let confirmationResult;
-let iti;
 let timer;
+let iti;
 
-/* INIT REAL COUNTRY PICKER */
-iti=window.intlTelInput(input,{
-  separateDialCode:true,
+/* INIT REAL COUNTRY SELECTOR (HIDDEN BY DEFAULT) */
+iti = window.intlTelInput(input,{
   initialCountry:"in",
+  separateDialCode:true,
+  autoPlaceholder:"polite",
+  nationalMode:true,
   utilsScript:
- "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+   "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
 });
+iti.container.style.display="none";
 
-/* Detect input */
+/* INPUT DETECTION */
 input.addEventListener("input",()=>{
   clearError();
-  const val=input.value.trim();
-  if(/^[0-9+]/.test(val)){
-    iti.showDropdown();
-  }else{
-    iti.hideDropdown();
-  }
-});
+  const v=input.value.trim();
 
-/* Recaptcha */
-window.recaptchaVerifier=
- new firebase.auth.RecaptchaVerifier("recaptcha-container",{size:"invisible"});
-
-/* MAIN */
-function handleSend(){
-  clearError();
-  const val=input.value.trim();
-  if(!val)return showError("Field empty");
-
-  if(val.includes("@")){
-    showError("Email login next step (ready)");
+  // EMAIL
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+    iti.container.style.display="none";
     return;
   }
 
+  // NUMBER
+  if (/^[0-9+ ]+$/.test(v)){
+    iti.container.style.display="block";
+  }else{
+    iti.container.style.display="none";
+  }
+});
+
+/* RECAPTCHA */
+window.recaptchaVerifier =
+ new firebase.auth.RecaptchaVerifier("recaptcha-container",{size:"invisible"});
+
+/* SEND OTP */
+sendBtn.onclick = ()=>{
+  clearError();
+  const v=input.value.trim();
+
+  if(!v) return showError("Field empty");
+
+  // EMAIL FLOW (future)
+  if(v.includes("@")){
+    return showError("Email login next step (ready)");
+  }
+
+  // MOBILE FLOW
   if(!iti.isValidNumber()){
     return showError("Invalid mobile number");
   }
@@ -142,18 +178,30 @@ function handleSend(){
    .signInWithPhoneNumber(iti.getNumber(),window.recaptchaVerifier)
    .then(res=>{
      confirmationResult=res;
-     otpBox.classList.remove("hidden");
-     startTimer();
+     otpBox.classList.remove("hidden");   // OPEN OTP
+     otpInput.value="";
+     startTimer();                        // 30s TIMER
    })
    .catch(e=>showError(e.message));
-}
+};
 
-/* TIMER */
+/* VERIFY OTP (AUTO) */
+otpInput.addEventListener("input",()=>{
+  if(otpInput.value.length===6){
+    confirmationResult.confirm(otpInput.value)
+     .then(()=>alert("Login successful 🎉"))
+     .catch(()=>showError("Wrong OTP"));
+  }
+});
+
+/* TIMER 30s */
 function startTimer(){
   let t=30;
   resendBtn.classList.add("hidden");
   timerBox.classList.remove("hidden");
   timerBox.innerText=`Resend OTP in ${t}s`;
+  clearInterval(timer);
+
   timer=setInterval(()=>{
     t--;
     timerBox.innerText=`Resend OTP in ${t}s`;
@@ -165,10 +213,10 @@ function startTimer(){
   },1000);
 }
 
-function resendOTP(){
-  handleSend();
-}
+/* RESEND */
+resendBtn.onclick=()=>sendBtn.click();
 
+/* ERROR HELPERS */
 function showError(msg){
   input.classList.add("error");
   errorBox.innerText=msg;
