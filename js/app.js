@@ -1,3 +1,30 @@
+/* ======================================================
+   VAISHNEX LOGIN – FINAL APP.JS
+   - IP based tenant (INDIA / GLOBAL)
+   - Country selector
+   - OTP + resend timer
+   - No HTML change required
+====================================================== */
+
+/* ---------- TENANT DETECTION (IP + HARDCODE) ---------- */
+
+let TENANT = "GLOBAL";
+
+(async function detectTenant() {
+  try {
+    const res = await fetch("https://ipwho.is/?fields=country_code");
+    const data = await res.json();
+    if (data && data.country_code === "IN") {
+      TENANT = "INDIA";
+    }
+  } catch (e) {
+    TENANT = "GLOBAL";
+  }
+  console.log("Tenant selected:", TENANT);
+})();
+
+/* ---------- DOM ELEMENTS ---------- */
+
 const countryBtn = document.getElementById("countryBtn");
 const countryModal = document.getElementById("countryModal");
 const countryList = document.getElementById("countryList");
@@ -12,26 +39,27 @@ const otpInput = document.getElementById("otpInput");
 const timerText = document.getElementById("timerText");
 const error = document.getElementById("error");
 
+/* ---------- TIMER ---------- */
+
 let timer;
 let seconds = 30;
 
-/* REAL COUNTRY DATA */
+/* ---------- COUNTRY DATA ---------- */
+
 const countries = [
-  { name:"India", code:"+91", flag:"in" },
-  { name:"United States", code:"+1", flag:"us" },
-  { name:"United Kingdom", code:"+44", flag:"gb" },
-  { name:"Afghanistan", code:"+93", flag:"af" },
-  { name:"Albania", code:"+355", flag:"al" },
-  { name:"Algeria", code:"+213", flag:"dz" },
-  { name:"Australia", code:"+61", flag:"au" },
-  { name:"Canada", code:"+1", flag:"ca" },
-  { name:"France", code:"+33", flag:"fr" },
-  { name:"Germany", code:"+49", flag:"de" },
-  { name:"Japan", code:"+81", flag:"jp" },
-  { name:"UAE", code:"+971", flag:"ae" }
+  { name: "India", code: "+91", flag: "in" },
+  { name: "United States", code: "+1", flag: "us" },
+  { name: "United Kingdom", code: "+44", flag: "gb" },
+  { name: "Canada", code: "+1", flag: "ca" },
+  { name: "Australia", code: "+61", flag: "au" },
+  { name: "Germany", code: "+49", flag: "de" },
+  { name: "France", code: "+33", flag: "fr" },
+  { name: "Japan", code: "+81", flag: "jp" },
+  { name: "UAE", code: "+971", flag: "ae" }
 ];
 
-/* LOAD COUNTRIES */
+/* ---------- RENDER COUNTRIES ---------- */
+
 function renderCountries(list) {
   countryList.innerHTML = "";
   list.forEach(c => {
@@ -42,7 +70,7 @@ function renderCountries(list) {
       <span>${c.name} (${c.code})</span>
     `;
     div.onclick = () => {
-      countryFlag.src = `https://flagcdn.com/w20/${c.flag}.png`;
+      countryFlag.src = `https://flagcdn.com/w40/${c.flag}.png`;
       countryCode.textContent = c.code;
       countryModal.classList.add("hidden");
       document.body.style.overflow = "auto";
@@ -53,13 +81,13 @@ function renderCountries(list) {
 
 renderCountries(countries);
 
-/* MODAL OPEN */
+/* ---------- COUNTRY MODAL ---------- */
+
 countryBtn.onclick = () => {
   countryModal.classList.remove("hidden");
   document.body.style.overflow = "hidden";
 };
 
-/* MODAL CLOSE */
 countryModal.onclick = e => {
   if (e.target === countryModal) {
     countryModal.classList.add("hidden");
@@ -67,23 +95,23 @@ countryModal.onclick = e => {
   }
 };
 
-/* SEARCH */
+/* ---------- SEARCH COUNTRY ---------- */
+
 searchCountry.oninput = () => {
   const v = searchCountry.value.toLowerCase();
-  renderCountries(countries.filter(c =>
-    c.name.toLowerCase().includes(v) || c.code.includes(v)
-  ));
+  renderCountries(
+    countries.filter(
+      c => c.name.toLowerCase().includes(v) || c.code.includes(v)
+    )
+  );
 };
 
-/* OTP LOGIC (DEMO) */
-sendOtpBtn.onclick = () => {
-  error.textContent = "";
-  otpInput.classList.remove("hidden");
-  verifyOtpBtn.classList.remove("hidden");
+/* ---------- OTP LOGIC ---------- */
+
+function startTimer() {
+  seconds = 30;
   timerText.classList.remove("hidden");
   resendBtn.classList.add("hidden");
-
-  seconds = 30;
   timerText.textContent = `Resend OTP in ${seconds}s`;
 
   timer = setInterval(() => {
@@ -95,6 +123,33 @@ sendOtpBtn.onclick = () => {
       resendBtn.classList.remove("hidden");
     }
   }, 1000);
+}
+
+sendOtpBtn.onclick = () => {
+  error.textContent = "";
+
+  otpInput.classList.remove("hidden");
+  verifyOtpBtn.classList.remove("hidden");
+
+  console.log("Send OTP → Tenant:", TENANT);
+  startTimer();
 };
 
-resendBtn.onclick = sendOtpBtn;
+resendBtn.onclick = () => {
+  console.log("Resend OTP → Tenant:", TENANT);
+  startTimer();
+};
+
+verifyOtpBtn.onclick = () => {
+  const otp = otpInput.value.trim();
+
+  if (!otp || otp.length < 4) {
+    error.textContent = "Invalid OTP";
+    return;
+  }
+
+  console.log("Verify OTP → Tenant:", TENANT);
+
+  // SUCCESS (demo)
+  alert("Login / Signup Successful");
+};
